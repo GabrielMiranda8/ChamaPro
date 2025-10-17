@@ -8,16 +8,38 @@ public class Usuario {
     protected Date data;
     protected String cpf;
 
-    public static int geraId = 1;
-
-    private Usuario(String email, String nome, String senha, Date data, String cpf){
-        this.id = geraId++;
+    public int getId() {
+        return id;
     }
 
-    public Usuario getInstance(String email, String nome, String senha, Date data, String cpf){
-        if (email != null && nome != null && senha != null && data != null && cpf != null){
-            return new Usuario(email, nome, senha, data, cpf);
-        }
-        return null;
+    public String getEmail() {
+        return email;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public Date getData() {
+        return data;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public static int geraId = 1;
+
+    protected Usuario(String email, String nome, String senha, Date data, String cpf){
+        this.id = geraId++;
+        this.email = email;
+        this.nome = nome;
+        this.senha = senha;
+        this.data = data;
+        this.cpf = cpf;
     }
 }

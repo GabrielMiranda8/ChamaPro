@@ -7,7 +7,7 @@ public class UIPrincipal {
     protected UIProfissional uiProfissional;
     protected UIServico uiServico;
     protected UIUsuario uiUsuario;
-    protected UICaracteristica uiCaracteristica
+    protected UICaracteristica uiCaracteristica;
 
 
     public void Iniciar(){
