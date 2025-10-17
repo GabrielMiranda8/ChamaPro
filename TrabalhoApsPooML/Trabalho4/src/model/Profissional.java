@@ -9,7 +9,12 @@ public class Profissional extends Usuario {
         super(email, nome, senha, data, cpf);
         this.servicos = new ArrayList<Servico>();
         this.caracteristicas = new ArrayList<Caracteristica>();
-;
+    }
+
+    public Profissional(Profissional outro){
+        super(outro.email, outro.nome, outro.senha, outro.data, outro.cpf);
+        this.servicos = outro.servicos;
+        this.caracteristicas = outro.caracteristicas;
     }
 
     public Profissional getInstance(String email, String nome, String senha, Date data, String cpf) {

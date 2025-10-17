@@ -8,6 +8,28 @@ public class Usuario {
     protected Date data;
     protected String cpf;
 
+    public static int geraId = 1;
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
     public int getId() {
         return id;
     }
@@ -32,7 +54,7 @@ public class Usuario {
         return cpf;
     }
 
-    public static int geraId = 1;
+
 
     protected Usuario(String email, String nome, String senha, Date data, String cpf){
         this.id = geraId++;
