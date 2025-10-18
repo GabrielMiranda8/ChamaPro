@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RepositorioServico {
-    private List<Servico> servicos = new ArrayList<>();
+    protected List<Servico> servicos = new ArrayList<>();
 
     public void adicionar(Servico servico) {
         servicos.add(servico);
