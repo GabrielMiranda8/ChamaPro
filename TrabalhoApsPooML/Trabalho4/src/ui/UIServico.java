@@ -69,7 +69,7 @@ public class UIServico {
     public void listarServicosDoProfissional() {
         System.out.println("\n=== MEUS SERVIÇOS ===");
         List<Servico> meusServicos = controleServico.listarPorProfissional(profissionalLogado);
-        if (meusServicos.isEmpty()) {
+        if (meusServicos == null) {
             System.out.println("Você ainda não está associado a nenhum serviço.");
         } else {
             for (Servico s : meusServicos) {
