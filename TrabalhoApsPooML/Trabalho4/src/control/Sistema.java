@@ -16,28 +16,29 @@ public class Sistema {
     private Sistema() {
         cCaracteristica = new ControleCaracteristica();
         cProfissional = new ControleProfissional();
-        cServico = new ControleServico();
+        cServico = new ControleServico(); 
         cUsuario = new ControleUsuario();
         init();
     }
 
-    // singleton
     public static Sistema getInstance() {
         if (instance == null)
             instance = new Sistema();
         return instance;
     }
 
-    // Inicialização
+    public ControleServico getControleServico() {
+        return cServico;
+    }
+
     public void init(){
         cProfissional.Add("lelis@gmail.com", "Henrique", "123", 5, 7, 2007, "111.111.111-11"); 
-        cProfissional.Add("gabriel@gmail.com", "Gabriel", "123", 12, 06, 2009, "222.222.222-22");   
+        cProfissional.Add("gabriel@gmail.com", "Gabriel", "123", 12, 6, 2009, "222.222.222-22");   
         
         cServico.cadastrarServico("Pedreiro", "Faz serviços de construção", 1000, cProfissional.BuscarPorId(1));
         cServico.cadastrarServico("Babá", "Cuida de crianças", 300, cProfissional.BuscarPorId(2));
     }
 
-    // Profissional
     public void Add(String email, String nome, String senha, int dia, int mes, int ano, String cpf){
         cProfissional.Add(email, nome, senha, dia, mes, ano, cpf);
     }
@@ -54,11 +55,12 @@ public class Sistema {
         return cProfissional.ListarTodos();
     }
 
-    // Servico
     public void CadastrarServico(String nome, String descricao, double preco, int id){
         if (cProfissional.repoProfissional.idExiste(id)){
             Profissional profissional = cProfissional.BuscarPorId(id);
             cServico.cadastrarServico(nome, descricao, preco, profissional);
+        } else {
+            System.out.println("Profissional não existe com id: " + id);
         }
     }
 
@@ -74,5 +76,7 @@ public class Sistema {
         return cServico.listarServicos();
     }
 
-   
+    public ControleServico getCServico() {
+        return cServico;
+    }
 }
