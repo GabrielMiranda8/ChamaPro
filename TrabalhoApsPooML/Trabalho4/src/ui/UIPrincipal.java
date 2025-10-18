@@ -17,17 +17,17 @@ public class UIPrincipal {
         uiCaracteristica = new UICaracteristica();
     }
 
-    public void Iniciar(){
+    public void Iniciar() {
         int largura = 25;
         Scanner scn = new Scanner(System.in);
         int escolha = Menu(scn);
-        while (escolha > 0 && escolha < 15) {
+        while (escolha > 0 && escolha < 16) {
             switch (escolha) {
                 case 1:
                     uiProfissional.CadastrarProfissional();
                     break;
                 case 2:
-                    uiProfissional.ListarServicos(largura);
+                    uiProfissional.ListarProfissionais(largura);
                     break;
                 case 3:
                     uiProfissional.AlterarProfissional(largura);
@@ -36,34 +36,42 @@ public class UIPrincipal {
                     uiProfissional.RemoverProfissional(largura);
                     break;
                 case 5:
-                    uiProfissional.ListarServicos(largura);
+                    uiProfissional.ListarProfissionais(largura);
                     uiServico.CadastrarServico(largura);
                     break;
                 case 6:
                     uiServico.ListarServicos(largura);
                     break;
                 case 7:
-                    
+
                     break;
                 case 8:
-                    
+                    uiServico.ListarServicos(largura);
+                    uiServico.RemoverServico();
                     break;
                 case 9:
-                    
+                    uiProfissional.ListarProfissionais(largura);
+                    uiServico.ListarServicos(largura);
+                    uiProfissional.AssociarServico();
                     break;
                 case 10:
-                    
+                    uiProfissional.ListarProfissionais(largura);
+                    uiServico.ListarServicos(largura);
+                    uiProfissional.DesassociarServico();
                     break;
                 case 11:
-                    
+
                     break;
                 case 12:
-                    
+
                     break;
                 case 13:
-                    
+
                     break;
                 case 14:
+
+                    break;
+                case 15:
                     largura = EditarLargura(largura, scn);
                     break;
                 default:
@@ -80,16 +88,17 @@ public class UIPrincipal {
         System.out.println("    3. Alterar Profissional");
         System.out.println("    4. Remover Profissional");
         System.out.println("    5. Cadastrar Serviço");
-        System.out.println("    6. Listar Serviços"); // colocar opcao pra listar os servicos de algum profissional especifico
+        System.out.println("    6. Listar Serviços");
         System.out.println("    7. Alterar Serviço");
         System.out.println("    8. Remover Serviços");
         System.out.println("    9. Atribuir Serviço a Profissional");
-        System.out.println("    10. Cadastrar Característica");
-        System.out.println("    11. Listar Características");
-        System.out.println("    12. Alterar Característica");
-        System.out.println("    13. Remover Característica");
-        System.out.println("    14. Editar Largura");
-        System.out.println("    15. Sair");
+        System.out.println("    10. Desatribuir Serviço a Profissional");
+        System.out.println("    11. Cadastrar Característica");
+        System.out.println("    12. Listar Características");
+        System.out.println("    13. Alterar Característica");
+        System.out.println("    14. Remover Característica");
+        System.out.println("    15. Editar Largura");
+        System.out.println("    16. Sair");
         System.out.print("Escolha: ");
         int escolha = scn.nextInt();
         return escolha;

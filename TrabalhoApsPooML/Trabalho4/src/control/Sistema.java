@@ -16,7 +16,7 @@ public class Sistema {
     private Sistema() {
         cCaracteristica = new ControleCaracteristica();
         cProfissional = new ControleProfissional();
-        cServico = new ControleServico(); 
+        cServico = new ControleServico();
         cUsuario = new ControleUsuario();
         init();
     }
@@ -31,32 +31,55 @@ public class Sistema {
         return cServico;
     }
 
-    public void init(){
-        cProfissional.Add("lelis@gmail.com", "Henrique", "123", 5, 7, 2007, "111.111.111-11"); 
-        cProfissional.Add("gabriel@gmail.com", "Gabriel", "123", 12, 6, 2009, "222.222.222-22");   
-        
-        cServico.cadastrarServico("Pedreiro", "Faz serviços de construção", 1000, cProfissional.BuscarPorId(1));
+    public void init() {
+        cProfissional.Add("lelis@gmail.com", "Henrique", "123", 5, 7, 2007, "111.111.111-11");
+        cProfissional.Add("gabriel@gmail.com", "Gabriel", "123", 12, 6, 2009, "222.222.222-22");
+
+        cServico.cadastrarServico("Pedreiro", "Construções", 1000, cProfissional.BuscarPorId(1));
         cServico.cadastrarServico("Babá", "Cuida de crianças", 300, cProfissional.BuscarPorId(2));
     }
 
-    public void Add(String email, String nome, String senha, int dia, int mes, int ano, String cpf){
+    // PROFISSIONAL
+    public void Add(String email, String nome, String senha, int dia, int mes, int ano, String cpf) {
         cProfissional.Add(email, nome, senha, dia, mes, ano, cpf);
     }
 
-    public void ExcluirProfissional(int id){
+    public void ExcluirProfissional(int id) {
         cProfissional.Excluir(id);
+        cServico.DesassociarProfissionalDeServicos(id);
     }
 
-    public void Alterar(int id, String email, String nome, String senha, int dia, int mes, int ano, String cpf){
+    public void Alterar(int id, String email, String nome, String senha, int dia, int mes, int ano, String cpf) {
         cProfissional.Alterar(id, email, nome, senha, dia, mes, ano, cpf);
     }
 
-    public List<Profissional> ListarTodos(){
+    public List<Profissional> ListarTodos() {
         return cProfissional.ListarTodos();
     }
 
-    public void CadastrarServico(String nome, String descricao, double preco, int id){
-        if (cProfissional.repoProfissional.idExiste(id)){
+    public void AssociarServico(int idProfissional, int idServico) {
+        Servico s = cServico.buscarPorId(idServico);
+        if (s != null) {
+            cProfissional.AssociarServico(idProfissional, s);
+            Profissional p = cProfissional.BuscarPorId(idProfissional);
+            if (p != null)
+                cServico.AssociarProfissional(idServico, p);
+        }
+
+    }
+
+    public void DesassociarServico(int idProfissional, int idServico) {
+        cProfissional.DesassociarServico(idProfissional, idServico);
+        DesassociarProfissional(idServico, idProfissional);
+    }
+
+    public String ListarServicosDeProfissional(int id) {
+        return cProfissional.ListarServicos(id);
+    }
+
+    // SERVICO
+    public void CadastrarServico(String nome, String descricao, double preco, int id) {
+        if (cProfissional.repoProfissional.idExiste(id)) {
             Profissional profissional = cProfissional.BuscarPorId(id);
             cServico.cadastrarServico(nome, descricao, preco, profissional);
         } else {
@@ -64,19 +87,38 @@ public class Sistema {
         }
     }
 
-     public void ExcluirServico(int id){
+    public void ExcluirServico(int id) {
         cServico.removerServico(id);
-     }
+        cProfissional.RemoverServico(id);
+    }
 
-    public void AlterarServico(Servico servicoAtualizado){
+    public void AlterarServico(Servico servicoAtualizado) {
         cServico.atualizarServico(servicoAtualizado);
     }
 
-    public List<Servico> ListarServicos(){
+    public List<Servico> ListarServicos() {
         return cServico.listarServicos();
     }
 
     public ControleServico getCServico() {
         return cServico;
+    }
+
+    public String ListarProfissionaisDeServico(int id) {
+        return cServico.ListarProfissioais(id);
+    }
+
+    public void AssociarProfissional(int idServico, int idProfissional) {
+        Profissional p = cProfissional.BuscarPorId(idProfissional);
+        Servico s = cServico.buscarPorId(idServico);
+        if (p != null && s != null)
+            cServico.AssociarProfissional(idServico, p);
+    }
+
+    public void DesassociarProfissional(int idServico, int idProfissional) {
+        Profissional p = cProfissional.BuscarPorId(idProfissional);
+        Servico s = cServico.buscarPorId(idServico);
+        if (p != null && s != null)
+            cServico.DesassociarProfissional(idProfissional, p);
     }
 }

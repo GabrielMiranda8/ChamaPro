@@ -2,6 +2,7 @@ package control;
 
 import dados.RepositorioProfissional;
 import model.Profissional;
+import model.Servico;
 import model.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,5 +44,23 @@ public class ControleProfissional {
 
     public Profissional BuscarPorId(int id){
         return repoProfissional.buscarPorId(id);
+    }
+
+    public String ListarServicos(int id){
+        return repoProfissional.ListarServicos(id);
+    }
+
+    public void AssociarServico(int id, Servico s){
+        if (repoProfissional.idExiste(id) && !repoProfissional.ServicoExiste(id, s.getId()))
+        repoProfissional.AssociarServico(id, s);
+    }
+
+    public void DesassociarServico(int idProfissional, int idServico){
+        if (repoProfissional.idExiste(idProfissional) && repoProfissional.ServicoExiste(idProfissional, idServico))
+        repoProfissional.DesassociarServico(idProfissional, idServico);
+    }
+
+    public void RemoverServico(int id){
+        repoProfissional.RemoverServico(id);
     }
 }

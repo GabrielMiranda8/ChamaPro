@@ -15,7 +15,8 @@ public class ControleServico {
         List<Servico> lista = repo.listar();
         int max = 0;
         for (Servico s : lista) {
-            if (s.getId() > max) max = s.getId();
+            if (s.getId() > max)
+                max = s.getId();
         }
         this.nextId = max + 1;
     }
@@ -24,7 +25,8 @@ public class ControleServico {
         this.repo = repo;
         int max = 0;
         for (Servico s : repo.listar()) {
-            if (s.getId() > max) max = s.getId();
+            if (s.getId() > max)
+                max = s.getId();
         }
         this.nextId = max + 1;
     }
@@ -39,16 +41,6 @@ public class ControleServico {
         System.out.println("Serviço criado por " + criador.getNome());
     }
 
-    public void associarProfissionalAoServico(int idServico, Profissional profissional) {
-        Servico s = repo.buscarPorId(idServico);
-        if (s == null) {
-            System.out.println("Serviço não encontrado.");
-            return;
-        }
-        s.adicionarProfissional(profissional);
-        System.out.println("Profissional " + profissional.getNome() + " associado ao serviço " + s.getNome());
-    }
-
     public void removerAssociacao(int idServico, Profissional profissional) {
         Servico s = repo.buscarPorId(idServico);
         if (s == null) {
@@ -61,8 +53,10 @@ public class ControleServico {
 
     public void removerServico(int id) {
         boolean removed = repo.remover(id);
-        if (removed) System.out.println("Serviço removido.");
-        else System.out.println("Serviço não encontrado.");
+        if (removed)
+            System.out.println("Serviço removido.");
+        else
+            System.out.println("Serviço não encontrado.");
     }
 
     public boolean atualizarServico(Servico servicoAtualizado) {
@@ -73,11 +67,27 @@ public class ControleServico {
         return repo.listar();
     }
 
-    public List<Servico> listarPorProfissional(Profissional p) {
-        return repo.listarPorProfissional(p);
+    public List<Servico> listarPorProfissional(int id) {
+        return repo.listarPorProfissional(id);
     }
 
     public Servico buscarPorId(int id) {
         return repo.buscarPorId(id);
+    }
+
+    public String ListarProfissioais(int id) {
+        return repo.listarProfissionais(id);
+    }
+
+    public void AssociarProfissional(int id, Profissional p){
+        repo.AssociarProfissional(id, p);
+    }
+
+    public void DesassociarProfissional(int id, Profissional p){
+        repo.DesassociarProfissional(id, p.getId());
+    }
+
+    public void DesassociarProfissionalDeServicos(int id){
+        repo.DesassociarProfissionalDeServicos(id);
     }
 }

@@ -33,7 +33,7 @@ public class UIProfissional {
     sis.Add(email, nome, senha, dia, mes, ano, cpf);
   }
 
-  public void ListarServicos(int largura) {
+  public void ListarProfissionais(int largura) {
     System.out.printf("%-" + largura + "s", "ID");
     System.out.printf("%-" + largura + "s", "NOME");
     System.out.printf("%-" + largura + "s", "EMAIL");
@@ -45,13 +45,14 @@ public class UIProfissional {
 
     for (int i = 0; i < print.size(); i++) {
       if (print.get(i) != null) {
+        String servicos = sis.ListarServicosDeProfissional(print.get(i).getId());
         System.out.printf("%-" + largura + "d", print.get(i).getId());
         System.out.printf("%-" + largura + "s", print.get(i).getNome());
         System.out.printf("%-" + largura + "s", print.get(i).getEmail());
         System.out.printf("%-" + largura + "s", print.get(i).getCpf());
         System.out.printf("%-" + largura + "s", print.get(i).getData().getDia() + "/" + print.get(i).getData().getMes()
             + "/" + print.get(i).getData().getAno());
-        System.out.printf("%-" + largura + "s", " ");
+        System.out.printf("%-" + largura + "s", servicos);
         System.out.println();
       }
     }
@@ -59,7 +60,7 @@ public class UIProfissional {
   }
 
   public void AlterarProfissional(int largura) {
-    ListarServicos(largura);
+    ListarProfissionais(largura);
     System.out.print("ID do Profissional");
     int id = scn.nextInt();
     System.out.print("Email: ");
@@ -81,10 +82,28 @@ public class UIProfissional {
   }
 
   public void RemoverProfissional(int largura) {
-    ListarServicos(largura);
-    System.out.print("ID do Profissional");
+    ListarProfissionais(largura);
+    System.out.print("ID do Profissional: ");
     int id = scn.nextInt();
 
     sis.ExcluirProfissional(id);
+  }
+
+  public void AssociarServico() {
+    System.out.print("ID do Profissional: ");
+    int idProfissional = scn.nextInt();
+    System.out.print("ID do Serviço: ");
+    int idServico = scn.nextInt();
+
+    sis.AssociarServico(idProfissional, idServico);
+  }
+
+  public void DesassociarServico() {
+    System.out.print("ID do Profissional: ");
+    int idProfissional = scn.nextInt();
+    System.out.print("ID do Serviço: ");
+    int idServico = scn.nextInt();
+
+    sis.DesassociarServico(idProfissional, idServico);
   }
 }
