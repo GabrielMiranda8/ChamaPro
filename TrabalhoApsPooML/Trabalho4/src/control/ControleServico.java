@@ -8,17 +8,33 @@ import java.util.List;
 
 public class ControleServico {
     protected RepositorioServico repo;
+    private int nextId = 1;
+
+    public ControleServico() {
+        this.repo = new RepositorioServico();
+        List<Servico> lista = repo.listar();
+        int max = 0;
+        for (Servico s : lista) {
+            if (s.getId() > max) max = s.getId();
+        }
+        this.nextId = max + 1;
+    }
 
     public ControleServico(RepositorioServico repo) {
         this.repo = repo;
+        int max = 0;
+        for (Servico s : repo.listar()) {
+            if (s.getId() > max) max = s.getId();
+        }
+        this.nextId = max + 1;
     }
 
-    public void cadastrarServico(int id, String nome, String descricao, double preco, Profissional criador) {
+    public void cadastrarServico(String nome, String descricao, double preco, Profissional criador) {
         if (criador == null) {
             System.out.println("Criador inválido.");
             return;
         }
-        Servico serv = new Servico(id, nome, descricao, preco, criador);
+        Servico serv = new Servico(nextId++, nome, descricao, preco, criador);
         repo.adicionar(serv);
         System.out.println("Serviço criado por " + criador.getNome());
     }
@@ -43,7 +59,17 @@ public class ControleServico {
         System.out.println("Associação removida.");
     }
 
-    public List<Servico> listarTodos() {
+    public void removerServico(int id) {
+        boolean removed = repo.remover(id);
+        if (removed) System.out.println("Serviço removido.");
+        else System.out.println("Serviço não encontrado.");
+    }
+
+    public boolean atualizarServico(Servico servicoAtualizado) {
+        return repo.atualizar(servicoAtualizado);
+    }
+
+    public List<Servico> listarServicos() {
         return repo.listar();
     }
 
