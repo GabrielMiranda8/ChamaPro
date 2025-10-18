@@ -7,7 +7,7 @@ import dados.RepositorioServico;
 import java.util.List;
 
 public class ControleServico {
-    private RepositorioServico repo;
+    protected RepositorioServico repo;
 
     public ControleServico(RepositorioServico repo) {
         this.repo = repo;
