@@ -54,8 +54,6 @@ public class Usuario {
         return cpf;
     }
 
-
-
     protected Usuario(String email, String nome, String senha, Date data, String cpf){
         this.id = geraId++;
         this.email = email;
@@ -63,5 +61,14 @@ public class Usuario {
         this.senha = senha;
         this.data = data;
         this.cpf = cpf;
+    }
+    
+    protected Usuario(Usuario outro){
+        this.id = outro.id;
+        this.email = outro.email;
+        this.nome = outro.nome;
+        this.senha = outro.senha;
+        this.data = outro.data;
+        this.cpf = outro.cpf;
     }
 }

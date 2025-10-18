@@ -5,7 +5,7 @@ import model.Date;
 import model.Profissional;
 
 public class RepositorioProfissional {
-    protected List<Profissional> profissionais;
+    protected List<Profissional> profissionais = new ArrayList<Profissional>();
     protected int quantPro;
 
     public RepositorioProfissional(){
@@ -51,7 +51,7 @@ public class RepositorioProfissional {
         return lista;
     }
 
-    protected void contarProfissional() {
+    public void contarProfissional() {
 		quantPro = 0;
 		for (int i = 0; i < profissionais.size(); i++) {
 			if (profissionais.get(i) != null) {
@@ -59,5 +59,14 @@ public class RepositorioProfissional {
 			}
 		}
 	}
+
+    public boolean idExiste(int id){
+        contarProfissional();
+        for (int i = 0; i < quantPro; i++) {
+            if (profissionais.get(i).getId() == id)
+            return true;
+        }
+        return false;
+    }
 
 }

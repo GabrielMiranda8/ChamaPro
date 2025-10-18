@@ -4,22 +4,30 @@ import java.util.Scanner;
 
 public class UIPrincipal {
     protected Scanner scn;
-    protected UIProfissional uiProfissional;
     protected UIServico uiServico;
+    protected UIProfissional uiProfissional;
     protected UIUsuario uiUsuario;
     protected UICaracteristica uiCaracteristica;
 
+    public UIPrincipal() {
+        scn = new Scanner(System.in);
+        uiServico = new UIServico();
+        uiProfissional = new UIProfissional();
+        uiUsuario = new UIUsuario();
+        uiCaracteristica = new UICaracteristica();
+    }
 
     public void Iniciar(){
         int largura = 25;
+        Scanner scn = new Scanner(System.in);
         int escolha = Menu(scn);
-        while (escolha > 0 && escolha < 15) {
+        while (escolha > 0 && escolha < 10) {
             switch (escolha) {
                 case 1:
                     
                     break;
                 case 2:
-                    
+                    uiProfissional.ListarTodos();
                     break;
                 case 3:
                     

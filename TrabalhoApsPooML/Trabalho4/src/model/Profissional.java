@@ -12,15 +12,21 @@ public class Profissional extends Usuario {
     }
 
     public Profissional(Profissional outro){
-        super(outro.email, outro.nome, outro.senha, outro.data, outro.cpf);
+        super(outro);
+        this.id = outro.id;
         this.servicos = outro.servicos;
         this.caracteristicas = outro.caracteristicas;
     }
 
-    public Profissional getInstance(String email, String nome, String senha, Date data, String cpf) {
+    public static Profissional getInstance(String email, String nome, String senha, Date data, String cpf) {
         if (email != null && nome != null && senha != null && data != null && cpf != null) {
             return new Profissional(email, nome, senha, data, cpf);
         }
         return null;
+    }
+
+    @Override
+    public String toString(){
+        return " " + this.id + " - " + this.nome;
     }
 }
