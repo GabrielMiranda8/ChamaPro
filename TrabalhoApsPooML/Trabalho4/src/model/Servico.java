@@ -1,13 +1,26 @@
 package model;
 
 public class Servico {
-    protected int id;
-    protected String nome;
-    protected String descricao;
-    protected double precoMedio;
+    private int id;
+    private String nome;
+    private String descricao;
+    private double preco;
+    private Profissional profissional;
+
+    public Servico(int id, String nome, String descricao, double preco, Profissional profissional) {
+        this.id = id;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.preco = preco;
+        this.profissional = profissional;
+    }
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -26,24 +39,27 @@ public class Servico {
         this.descricao = descricao;
     }
 
-    public double getPrecoMedio() {
-        return precoMedio;
+    public double getPreco() {
+        return preco;
     }
 
-    public void setPrecoMedio(double precoMedio) {
-        this.precoMedio = precoMedio;
+    public void setPreco(double preco) {
+        this.preco = preco;
     }
 
-    public static void setGeraId(int geraId) {
-        Servico.geraId = geraId;
+    public Profissional getProfissional() {
+        return profissional;
     }
 
-    public static int geraId = 1;
+    public void setProfissional(Profissional profissional) {
+        this.profissional = profissional;
+    }
 
-    protected Servico(String nome, String descricao, double precoMedio){
-        this.id = geraId++;
-        this.nome = nome;
-        this.descricao = descricao;;
-        this.precoMedio = precoMedio;
+    @Override
+    public String toString() {
+        return "Serviço: " + nome +
+                " Descrição: " + descricao +
+                " Preço: R$" + preco +
+                " Profissional: " + profissional.getNome();
     }
 }
