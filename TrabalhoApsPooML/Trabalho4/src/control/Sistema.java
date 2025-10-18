@@ -16,11 +16,12 @@ public class Sistema {
     private Sistema() {
         cCaracteristica = new ControleCaracteristica();
         cProfissional = new ControleProfissional();
-        cServico = new ControleServico(); 
+        cServico = new ControleServico(); // construtor padrão em ControleServico
         cUsuario = new ControleUsuario();
         init();
     }
 
+    // singleton
     public static Sistema getInstance() {
         if (instance == null)
             instance = new Sistema();
@@ -29,6 +30,10 @@ public class Sistema {
 
     public ControleServico getControleServico() {
         return cServico;
+    }
+
+    public ControleCaracteristica getControleCaracteristica() {
+        return cCaracteristica;
     }
 
     public void init(){
@@ -53,6 +58,10 @@ public class Sistema {
 
     public List<Profissional> ListarTodos(){
         return cProfissional.ListarTodos();
+    }
+
+    public Profissional BuscarProfissional(int id) {
+        return cProfissional.BuscarPorId(id);
     }
 
     public void CadastrarServico(String nome, String descricao, double preco, int id){
