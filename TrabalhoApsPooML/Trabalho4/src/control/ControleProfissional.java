@@ -13,8 +13,10 @@ public class ControleProfissional {
     public void Add(String email, String nome, String senha, int dia, int mes, int ano, String cpf) {
         Date data = Date.getInstance(dia, mes, ano);
         if (email != null && nome != null && senha != null && data != null && cpf != null) {
-            Profissional p = Profissional.getInstance(email, nome, senha, data, cpf);
-            repoProfissional.Add(p);
+            if (!repoProfissional.verificarRepetido(email, nome, cpf)) {
+                Profissional p = Profissional.getInstance(email, nome, senha, data, cpf);
+                repoProfissional.Add(p);
+            }
         }
     }
 

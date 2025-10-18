@@ -1,4 +1,5 @@
 package dados;
+
 import java.util.ArrayList;
 import java.util.List;
 import model.Date;
@@ -8,29 +9,29 @@ public class RepositorioProfissional {
     protected List<Profissional> profissionais = new ArrayList<Profissional>();
     protected int quantPro;
 
-    public RepositorioProfissional(){
+    public RepositorioProfissional() {
 
     }
 
-    public void Add(Profissional p){
+    public void Add(Profissional p) {
         contarProfissional();
-        if (p != null){
+        if (p != null) {
             profissionais.add(p);
         }
     }
 
-    public void Excluir(int id){
+    public void Excluir(int id) {
         contarProfissional();
         for (int i = 0; i < quantPro; i++) {
             if (profissionais.get(i).getId() == id)
-            profissionais.remove(profissionais.get(i));
+                profissionais.remove(profissionais.get(i));
         }
     }
 
-    public void Alterar(int id, String email, String nome, String senha, Date data, String cpf){
+    public void Alterar(int id, String email, String nome, String senha, Date data, String cpf) {
         contarProfissional();
         for (int i = 0; i < quantPro; i++) {
-            if (profissionais.get(i).getId() == id){
+            if (profissionais.get(i).getId() == id) {
                 profissionais.get(i).setCpf(cpf);
                 profissionais.get(i).setData(data);
                 profissionais.get(i).setEmail(email);
@@ -40,7 +41,7 @@ public class RepositorioProfissional {
         }
     }
 
-    public List<Profissional> ListarTodos(){
+    public List<Profissional> ListarTodos() {
         contarProfissional();
         List<Profissional> lista = new ArrayList<Profissional>();
 
@@ -52,19 +53,33 @@ public class RepositorioProfissional {
     }
 
     public void contarProfissional() {
-		quantPro = 0;
-		for (int i = 0; i < profissionais.size(); i++) {
-			if (profissionais.get(i) != null) {
-				quantPro++;
-			}
-		}
-	}
+        quantPro = 0;
+        for (int i = 0; i < profissionais.size(); i++) {
+            if (profissionais.get(i) != null) {
+                quantPro++;
+            }
+        }
+    }
 
-    public boolean idExiste(int id){
+    public boolean idExiste(int id) {
         contarProfissional();
         for (int i = 0; i < quantPro; i++) {
             if (profissionais.get(i).getId() == id)
-            return true;
+                return true;
+        }
+        return false;
+    }
+
+    public boolean verificarRepetido(String email, String nome, String cpf) {
+        contarProfissional();
+        for (int i = 0; i < quantPro; i++) {
+            if (profissionais.get(i).getEmail().equals(email))
+                return true;
+            if (profissionais.get(i).getNome().equals(nome))
+                return true;
+            if (profissionais.get(i).getCpf().equals(cpf))
+                return true;
+
         }
         return false;
     }

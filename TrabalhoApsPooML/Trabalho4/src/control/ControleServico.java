@@ -6,11 +6,7 @@ import model.Profissional;
 
 
 public class ControleServico {
-    private RepositorioServico repositorioServico;
-
-    public ControleServico(RepositorioServico repositorioServico) {
-        this.repositorioServico = repositorioServico;
-    }
+    private RepositorioServico repositorioServico = new RepositorioServico();
 
     public void cadastrarServico(int id, String nome, String descricao, double preco, Profissional profissional) {
         Servico servico = new Servico(id, nome, descricao, preco, profissional);
