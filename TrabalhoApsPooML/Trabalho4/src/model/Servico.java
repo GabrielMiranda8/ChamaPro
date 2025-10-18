@@ -1,28 +1,26 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Servico {
     private int id;
     private String nome;
     private String descricao;
     private double preco;
-    private Profissional profissional;
+    private List<Integer> idsProfissionais; 
 
-    public static int geraId = 1;
-
-    public Servico(String nome, String descricao, double preco, Profissional profissional) {
-        this.id = geraId++;
+    public Servico(int id, String nome, String descricao, double preco, int idCriador) {
+        this.id = id;
         this.nome = nome;
         this.descricao = descricao;
         this.preco = preco;
-        this.profissional = profissional;
+        this.idsProfissionais = new ArrayList<>();
+        this.idsProfissionais.add(idCriador);
     }
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getNome() {
@@ -49,19 +47,25 @@ public class Servico {
         this.preco = preco;
     }
 
-    public Profissional getProfissional() {
-        return profissional;
+    public List<Integer> getIdsProfissionais() {
+        return idsProfissionais;
     }
 
-    public void setProfissional(Profissional profissional) {
-        this.profissional = profissional;
+    public void adicionarProfissional(int idProfissional) {
+        if (!idsProfissionais.contains(idProfissional)) {
+            idsProfissionais.add(idProfissional);
+        }
+    }
+
+    public void removerProfissional(int idProfissional) {
+        idsProfissionais.remove(Integer.valueOf(idProfissional));
     }
 
     @Override
     public String toString() {
         return "Serviço: " + nome +
-                " Descrição: " + descricao +
-                " Preço: R$" + preco +
-                " Profissional: " + profissional.getNome();
+               " | Descrição: " + descricao +
+               " | Preço: R$" + preco +
+               " | IDs Profissionais: " + idsProfissionais;
     }
 }
