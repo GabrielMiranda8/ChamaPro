@@ -1,8 +1,9 @@
 package dados;
+
 import java.util.ArrayList;
 import java.util.List;
 import model.Servico;
-import model.Profissional;
+
 
 public class RepositorioServico {
     private List<Servico> servicos;
@@ -24,16 +25,6 @@ public class RepositorioServico {
         return null;
     }
 
-    public List<Servico> buscarPorNome(String nome) {
-        List<Servico> encontrados = new ArrayList<>();
-        for (Servico servico : servicos) {
-            if (servico.getNome().toLowerCase().contains(nome.toLowerCase())) {
-                encontrados.add(servico);
-            }
-        }
-        return encontrados;
-    }
-
     public List<Servico> listar() {
         return servicos;
     }
@@ -52,10 +43,10 @@ public class RepositorioServico {
         return servicos.removeIf(s -> s.getId() == id);
     }
 
-    public List<Servico> listarPorProfissional(int id) {
-        List<Servico> resultado = new ArrayList<Servico>();
+    public List<Servico> listarPorProfissional(int idProfissional) {
+        List<Servico> resultado = new ArrayList<>();
         for (Servico s : servicos) {
-            if (s.getProfissional().getId() == id) {
+            if (s.getIdsProfissionais().contains(idProfissional)) {
                 resultado.add(s);
             }
         }
