@@ -6,7 +6,7 @@ import model.Servico;
 
 
 public class RepositorioServico {
-    private List<Servico> servicos;
+    protected List<Servico> servicos;
 
     public RepositorioServico() {
         servicos = new ArrayList<>();
