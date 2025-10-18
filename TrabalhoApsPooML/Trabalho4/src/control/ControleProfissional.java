@@ -13,20 +13,20 @@ public class ControleProfissional {
     public void Add(String email, String nome, String senha, int dia, int mes, int ano, String cpf) {
         Date data = Date.getInstance(dia, mes, ano);
         if (email != null && nome != null && senha != null && data != null && cpf != null) {
-            if (!repoProfissional.verificarRepetido(email, nome, cpf)) {
+            if (!repoProfissional.verificarRepetido(email, cpf)) {
                 Profissional p = Profissional.getInstance(email, nome, senha, data, cpf);
                 repoProfissional.Add(p);
             }
         }
     }
 
-    // Excluir - Validar CPF
+    // Excluir 
     public void Excluir(int id) {
         if (repoProfissional.idExiste(id))
             repoProfissional.Excluir(id);
     }
 
-    // Update
+    // Update - Validar CPF
     public void Alterar(int id, String email, String nome, String senha, int dia, int mes, int ano, String cpf) {
         Date data = Date.getInstance(dia, mes, ano);
         if (repoProfissional.idExiste(id)) {

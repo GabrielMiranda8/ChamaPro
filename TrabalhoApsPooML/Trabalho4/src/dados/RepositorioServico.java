@@ -52,10 +52,10 @@ public class RepositorioServico {
         return servicos.removeIf(s -> s.getId() == id);
     }
 
-    public List<Servico> listarPorProfissional(Profissional profissional) {
-        List<Servico> resultado = new ArrayList<>();
+    public List<Servico> listarPorProfissional(int id) {
+        List<Servico> resultado = new ArrayList<Servico>();
         for (Servico s : servicos) {
-            if (s.getProfissional().equals(profissional)) {
+            if (s.getProfissional().getId() == id) {
                 resultado.add(s);
             }
         }

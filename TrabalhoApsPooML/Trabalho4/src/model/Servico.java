@@ -7,8 +7,10 @@ public class Servico {
     private double preco;
     private Profissional profissional;
 
-    public Servico(int id, String nome, String descricao, double preco, Profissional profissional) {
-        this.id = id;
+    public static int geraId = 1;
+
+    public Servico(String nome, String descricao, double preco, Profissional profissional) {
+        this.id = geraId++;
         this.nome = nome;
         this.descricao = descricao;
         this.preco = preco;

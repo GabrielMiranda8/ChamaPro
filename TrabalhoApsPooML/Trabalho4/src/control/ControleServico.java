@@ -1,36 +1,32 @@
 package control;
+
 import dados.RepositorioServico;
 import model.Servico;
 import java.util.List;
 import model.Profissional;
 
-
 public class ControleServico {
     private RepositorioServico repositorioServico = new RepositorioServico();
 
-    public void cadastrarServico(int id, String nome, String descricao, double preco, Profissional profissional) {
-        Servico servico = new Servico(id, nome, descricao, preco, profissional);
-        repositorioServico.adicionar(servico);
-        System.out.println("Serviço cadastrado com sucesso: " + servico.getNome());
-    }
-
-    public void listarServicos() {
-        List<Servico> servicos = repositorioServico.listar();
-        if (servicos.isEmpty()) {
-            System.out.println("Nenhum serviço cadastrado ainda.");
-        } else {
-            for (Servico s : servicos) {
-                System.out.println(s);
-            }
+    public void cadastrarServico(String nome, String descricao, double preco, Profissional profissional) {
+        if (nome != null && descricao != null && preco > 0 && profissional != null) {
+            Servico servico = new Servico(nome, descricao, preco, profissional);
+            repositorioServico.adicionar(servico);
+            System.out.println("Serviço cadastrado com sucesso: " + servico.getNome());
         }
+
     }
 
-    public void listarServicosPorProfissional(Profissional profissional) {
-        List<Servico> servicos = repositorioServico.listarPorProfissional(profissional);
+    public List<Servico> listarServicos() {
+        return repositorioServico.listar();
+    }
+
+    public void listarServicosPorProfissional(int id) {
+        List<Servico> servicos = repositorioServico.listarPorProfissional(id);
         if (servicos.isEmpty()) {
-            System.out.println("Nenhum serviço encontrado para o profissional: " + profissional.getNome());
+            System.out.println("Nenhum serviço encontrado. ");
         } else {
-            System.out.println("Serviços de " + profissional.getNome() + ":");
+            System.out.println("Serviços:");
             for (Servico s : servicos) {
                 System.out.println(s);
             }

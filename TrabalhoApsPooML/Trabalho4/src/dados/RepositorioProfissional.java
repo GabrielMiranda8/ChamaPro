@@ -70,12 +70,10 @@ public class RepositorioProfissional {
         return false;
     }
 
-    public boolean verificarRepetido(String email, String nome, String cpf) {
+    public boolean verificarRepetido(String email, String cpf) {
         contarProfissional();
         for (int i = 0; i < quantPro; i++) {
             if (profissionais.get(i).getEmail().equals(email))
-                return true;
-            if (profissionais.get(i).getNome().equals(nome))
                 return true;
             if (profissionais.get(i).getCpf().equals(cpf))
                 return true;

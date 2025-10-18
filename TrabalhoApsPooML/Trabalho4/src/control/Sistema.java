@@ -3,6 +3,7 @@ package control;
 import java.util.List;
 
 import model.Profissional;
+import model.Servico;
 
 public class Sistema {
     private ControleCaracteristica cCaracteristica;
@@ -38,7 +39,7 @@ public class Sistema {
         cProfissional.Add(email, nome, senha, dia, mes, ano, cpf);
     }
 
-    public void Excluir(int id){
+    public void ExcluirProfissional(int id){
         cProfissional.Excluir(id);
     }
 
@@ -49,4 +50,23 @@ public class Sistema {
     public List<Profissional> ListarTodos(){
         return cProfissional.ListarTodos();
     }
+
+    // Servico
+    public void CadastrarServico(String nome, String descricao, double preco, Profissional profissional){
+        cServico.cadastrarServico(nome, descricao, preco, profissional);
+    }
+
+     public void ExcluirServico(int id){
+        cServico.removerServico(id);
+     }
+
+    public void AlterarServico(Servico servicoAtualizado){
+        cServico.atualizarServico(servicoAtualizado);
+    }
+
+    public List<Servico> ListarServicos(){
+        return cServico.listarServicos();
+    }
+
+   
 }

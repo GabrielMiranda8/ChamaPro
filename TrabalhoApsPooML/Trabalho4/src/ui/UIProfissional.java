@@ -49,11 +49,42 @@ public class UIProfissional {
         System.out.printf("%-" + largura + "s", print.get(i).getNome());
         System.out.printf("%-" + largura + "s", print.get(i).getEmail());
         System.out.printf("%-" + largura + "s", print.get(i).getCpf());
-        System.out.printf("%-" + largura + "s", print.get(i).getData().getDia() + "/" + print.get(i).getData().getMes() + "/" + print.get(i).getData().getAno());
+        System.out.printf("%-" + largura + "s", print.get(i).getData().getDia() + "/" + print.get(i).getData().getMes()
+            + "/" + print.get(i).getData().getAno());
         System.out.printf("%-" + largura + "s", " ");
         System.out.println();
       }
     }
-    
+
+  }
+
+  public void AlterarProfissional(int largura) {
+    ListarTodos(largura);
+    System.out.print("ID do Profissional");
+    int id = scn.nextInt();
+    System.out.print("Email: ");
+    String email = scn.next();
+    System.out.print("Nome: ");
+    String nome = scn.next();
+    System.out.print("Senha: ");
+    String senha = scn.next();
+    System.out.print("Dia de nascimento: ");
+    int dia = scn.nextInt();
+    System.out.print("Mês de nascimento: ");
+    int mes = scn.nextInt();
+    System.out.print("Ano de nascimento: ");
+    int ano = scn.nextInt();
+    System.out.print("CPF: ");
+    String cpf = scn.next();
+
+    sis.Alterar(id, email, nome, senha, dia, mes, ano, cpf);
+  }
+
+  public void RemoverProfissional(int largura) {
+    ListarTodos(largura);
+    System.out.print("ID do Profissional");
+    int id = scn.nextInt();
+
+    sis.ExcluirProfissional(id);
   }
 }

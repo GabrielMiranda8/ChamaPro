@@ -30,10 +30,10 @@ public class UIPrincipal {
                     uiProfissional.ListarTodos(largura);
                     break;
                 case 3:
-                    
+                    uiProfissional.AlterarProfissional(largura);
                     break;
                 case 4:
-                    
+                    uiProfissional.RemoverProfissional(largura);
                     break;
                 case 5:
                     
