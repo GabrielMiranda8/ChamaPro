@@ -9,7 +9,7 @@ public class ControleServico {
     private RepositorioServico repositorioServico = new RepositorioServico();
 
     public void cadastrarServico(String nome, String descricao, double preco, Profissional profissional) {
-        if (nome != null && descricao != null && preco > 0 && profissional != null) {
+        if (nome != null && descricao != null && preco > 0) {
             Servico servico = new Servico(nome, descricao, preco, profissional);
             repositorioServico.adicionar(servico);
             System.out.println("Serviço cadastrado com sucesso: " + servico.getNome());

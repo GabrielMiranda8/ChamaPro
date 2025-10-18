@@ -33,7 +33,7 @@ public class UIProfissional {
     sis.Add(email, nome, senha, dia, mes, ano, cpf);
   }
 
-  public void ListarTodos(int largura) {
+  public void ListarServicos(int largura) {
     System.out.printf("%-" + largura + "s", "ID");
     System.out.printf("%-" + largura + "s", "NOME");
     System.out.printf("%-" + largura + "s", "EMAIL");
@@ -59,7 +59,7 @@ public class UIProfissional {
   }
 
   public void AlterarProfissional(int largura) {
-    ListarTodos(largura);
+    ListarServicos(largura);
     System.out.print("ID do Profissional");
     int id = scn.nextInt();
     System.out.print("Email: ");
@@ -81,7 +81,7 @@ public class UIProfissional {
   }
 
   public void RemoverProfissional(int largura) {
-    ListarTodos(largura);
+    ListarServicos(largura);
     System.out.print("ID do Profissional");
     int id = scn.nextInt();
 

@@ -40,4 +40,8 @@ public class ControleProfissional {
     public List<Profissional> ListarTodos() {
         return repoProfissional.ListarTodos();
     }
+
+    public Profissional BuscarPorId(int id){
+        return repoProfissional.buscarPorId(id);
+    }
 }

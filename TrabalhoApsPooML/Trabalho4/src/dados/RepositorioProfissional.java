@@ -82,4 +82,12 @@ public class RepositorioProfissional {
         return false;
     }
 
+    public Profissional buscarPorId(int id){
+        contarProfissional();
+        for (int i = 0; i < quantPro; i++) {
+            if (profissionais.get(i).getId() == id)
+            return new Profissional(profissionais.get(i));
+        }
+        return null;
+    }
 }

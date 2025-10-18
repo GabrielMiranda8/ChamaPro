@@ -27,7 +27,7 @@ public class UIPrincipal {
                     uiProfissional.CadastrarProfissional();
                     break;
                 case 2:
-                    uiProfissional.ListarTodos(largura);
+                    uiProfissional.ListarServicos(largura);
                     break;
                 case 3:
                     uiProfissional.AlterarProfissional(largura);
@@ -36,10 +36,11 @@ public class UIPrincipal {
                     uiProfissional.RemoverProfissional(largura);
                     break;
                 case 5:
-                    
+                    uiProfissional.ListarServicos(largura);
+                    uiServico.CadastrarServico(largura);
                     break;
                 case 6:
-                    
+                    uiServico.ListarServicos(largura);
                     break;
                 case 7:
                     
