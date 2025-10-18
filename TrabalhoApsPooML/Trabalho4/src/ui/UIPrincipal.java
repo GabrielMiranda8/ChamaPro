@@ -43,27 +43,32 @@ public class UIPrincipal {
                     uiServico.ListarServicos(largura);
                     break;
                 case 7:
-                    
+                    uiServico.AlterarServico(largura);
                     break;
                 case 8:
-                    
+                    uiServico.RemoverServico(largura);
                     break;
                 case 9:
-                    
+                    uiProfissional.ListarServicos(largura);
+                    uiServico.AtribuirServicoAProfissional(largura);
                     break;
                 case 10:
-                    
+                    uiCaracteristica.CadastrarCaracteristica(largura);
                     break;
                 case 11:
-                    
+                    uiCaracteristica.ListarCaracteristicas(largura);
                     break;
                 case 12:
-                    
+                    uiCaracteristica.AlterarCaracteristica(largura);
                     break;
                 case 13:
-                    
+                    uiCaracteristica.RemoverCaracteristica(largura);
                     break;
                 case 14:
+                    uiProfissional.ListarServicos(largura);
+                    uiCaracteristica.AtribuirCaracteristicaAProfissional(largura);;
+                    break;
+                case 15:
                     largura = EditarLargura(largura, scn);
                     break;
                 default:
@@ -88,8 +93,9 @@ public class UIPrincipal {
         System.out.println("    11. Listar Características");
         System.out.println("    12. Alterar Característica");
         System.out.println("    13. Remover Característica");
-        System.out.println("    14. Editar Largura");
-        System.out.println("    15. Sair");
+        System.out.println("    14. Atrubuir Característica a Profissional");
+        System.out.println("    15. Editar Largura");
+        System.out.println("    16. Sair");
         System.out.print("Escolha: ");
         int escolha = scn.nextInt();
         return escolha;
