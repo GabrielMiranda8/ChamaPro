@@ -2,70 +2,89 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Servico {
     private int id;
-    private String nome;
-    private String descricao;
+    private String nome;        
+    private String descricao;   
     private double preco;
-    private List<Integer> idsProfissionais; 
+    private List<Profissional> profissionais;
 
-    public Servico(int id, String nome, String descricao, double preco, int idCriador) {
+    public Servico(int id, String nome, String descricao, double preco, Profissional criador) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
         this.preco = preco;
-        this.idsProfissionais = new ArrayList<>();
-        this.idsProfissionais.add(idCriador);
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public double getPreco() {
-        return preco;
-    }
-
-    public void setPreco(double preco) {
-        this.preco = preco;
-    }
-
-    public List<Integer> getIdsProfissionais() {
-        return idsProfissionais;
-    }
-
-    public void adicionarProfissional(int idProfissional) {
-        if (!idsProfissionais.contains(idProfissional)) {
-            idsProfissionais.add(idProfissional);
+        this.profissionais = new ArrayList<>();
+        if (criador != null) {
+            adicionarProfissional(criador); 
         }
     }
 
-    public void removerProfissional(int idProfissional) {
-        idsProfissionais.remove(Integer.valueOf(idProfissional));
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
+
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
+
+    public double getPreco() { return preco; }
+    public void setPreco(double preco) { this.preco = preco; }
+
+    public List<Profissional> getProfissionais() { return profissionais; }
+
+    public void adicionarProfissional(Profissional profissional) {
+        if (profissional == null) return;
+        if (!profissionais.contains(profissional)) {
+            profissionais.add(profissional);
+            if (profissional.servicos == null) {
+                profissional.servicos = new ArrayList<>();
+            }
+            if (!profissional.servicos.contains(this)) {
+                profissional.servicos.add(this);
+            }
+        }
+    }
+
+    public void removerProfissional(Profissional profissional) {
+        if (profissional == null) return;
+        profissionais.remove(profissional);
+        if (profissional.servicos != null) {
+            profissional.servicos.remove(this);
+        }
     }
 
     @Override
     public String toString() {
-        return "Serviço: " + nome +
-               " | Descrição: " + descricao +
-               " | Preço: R$" + preco +
-               " | IDs Profissionais: " + idsProfissionais;
+        StringBuilder sb = new StringBuilder();
+        sb.append(id).append(" - ").append(nome)
+          .append(" | ").append(descricao)
+          .append(" | R$").append(preco)
+          .append(" | Prof.: ");
+        if (profissionais.isEmpty()) {
+            sb.append("nenhum");
+        } else {
+            for (Profissional p : profissionais) {
+                sb.append(p.getNome()).append("(").append(p.id).append(")").append(", ");
+            }
+            sb.setLength(sb.length()-2);
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Servico)) return false;
+        Servico servico = (Servico) o;
+        return id == servico.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
