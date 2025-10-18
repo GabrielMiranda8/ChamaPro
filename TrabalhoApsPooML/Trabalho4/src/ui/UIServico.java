@@ -7,9 +7,9 @@ import model.Profissional;
 import model.Servico;
 
 public class UIServico {
-    private ControleServico controleServico;
-    private Profissional profissionalLogado;
-    private Scanner sc;
+    protected ControleServico controleServico;
+    protected Profissional profissionalLogado;
+    protected Scanner sc;
 
     public UIServico(ControleServico controleServico, Profissional profissionalLogado) {
         this.controleServico = controleServico;
