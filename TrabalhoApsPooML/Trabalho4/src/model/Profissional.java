@@ -36,4 +36,8 @@ public class Profissional extends Usuario {
         return servicos;
     }
 
+    public List<Caracteristica> getCaracteristicas() {
+        return caracteristicas;
+    }
+
 }

@@ -16,11 +16,12 @@ public class Sistema {
     private Sistema() {
         cCaracteristica = new ControleCaracteristica();
         cProfissional = new ControleProfissional();
-        cServico = new ControleServico();
+        cServico = new ControleServico(); // construtor padrão em ControleServico
         cUsuario = new ControleUsuario();
         init();
     }
 
+    // singleton
     public static Sistema getInstance() {
         if (instance == null)
             instance = new Sistema();
@@ -29,6 +30,10 @@ public class Sistema {
 
     public ControleServico getControleServico() {
         return cServico;
+    }
+
+    public ControleCaracteristica getControleCaracteristica() {
+        return cCaracteristica;
     }
 
     public void init() {
@@ -47,6 +52,8 @@ public class Sistema {
     public void ExcluirProfissional(int id) {
         cProfissional.Excluir(id);
         cServico.DesassociarProfissionalDeServicos(id);
+        Profissional p = cProfissional.BuscarPorId(id);
+        cCaracteristica.removerAssociacao(id, p);
     }
 
     public void Alterar(int id, String email, String nome, String senha, int dia, int mes, int ano, String cpf) {
@@ -75,6 +82,14 @@ public class Sistema {
 
     public String ListarServicosDeProfissional(int id) {
         return cProfissional.ListarServicos(id);
+    }
+
+    public String ListarCaracteristicasDeProfissional(int id){
+        return cProfissional.ListarCaracteristicas(id);
+    }
+
+    public Profissional BuscarPorId(int id) {
+        return cProfissional.BuscarPorId(id);
     }
 
     // SERVICO
@@ -120,5 +135,13 @@ public class Sistema {
         Servico s = cServico.buscarPorId(idServico);
         if (p != null && s != null)
             cServico.DesassociarProfissional(idProfissional, p);
+    }
+
+    // CARACTERÍSTICA
+    
+
+
+    public String ListarProfissioaisDeCaracteristica(int id) {
+        return cCaracteristica.ListarProfissioais(id);
     }
 }

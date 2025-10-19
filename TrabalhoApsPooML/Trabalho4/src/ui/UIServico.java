@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import control.Sistema;
-import model.Profissional;
 import model.Servico;
 
 public class UIServico {

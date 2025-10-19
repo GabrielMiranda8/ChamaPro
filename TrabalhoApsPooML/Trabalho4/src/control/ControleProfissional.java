@@ -50,6 +50,10 @@ public class ControleProfissional {
         return repoProfissional.ListarServicos(id);
     }
 
+     public String ListarCaracteristicas(int id){
+        return repoProfissional.ListarCaracteristicas(id);
+    }
+
     public void AssociarServico(int id, Servico s){
         if (repoProfissional.idExiste(id) && !repoProfissional.ServicoExiste(id, s.getId()))
         repoProfissional.AssociarServico(id, s);

@@ -26,7 +26,7 @@ public class RepositorioProfissional {
         for (int i = 0; i < quantPro; i++) {
             if (profissionais.get(i).getId() == id)
                 profissionais.remove(i);
-                contarProfissional();
+            contarProfissional();
         }
     }
 
@@ -75,13 +75,13 @@ public class RepositorioProfissional {
     public boolean ServicoExiste(int idProfissional, int idServico) {
         contarProfissional();
         for (int i = 0; i < quantPro; i++) {
-            if (profissionais.get(i).getId() == idProfissional){
+            if (profissionais.get(i).getId() == idProfissional) {
                 for (int j = 0; j < profissionais.get(i).getServicos().size(); j++) {
                     if (profissionais.get(i).getServicos().get(i).getId() == idServico)
-                    return true;
+                        return true;
                 }
             }
-                
+
         }
         return false;
     }
@@ -155,5 +155,23 @@ public class RepositorioProfissional {
             }
         }
         return servicos;
+    }
+
+    public String ListarCaracteristicas(int id) {
+        String caracteristicas = "";
+        if (idExiste(id)) {
+            contarProfissional();
+            for (int i = 0; i < quantPro; i++) {
+                if (profissionais.get(i).getId() == id) {
+                    for (int j = 0; j < profissionais.get(i).getCaracteristicas().size(); j++) {
+                        if (j + 1 < profissionais.get(i).getCaracteristicas().size())
+                            caracteristicas += profissionais.get(i).getCaracteristicas().get(j).getNome() + ", ";
+                        else
+                            caracteristicas += profissionais.get(i).getCaracteristicas().get(j).getNome();
+                    }
+                }
+            }
+        }
+        return caracteristicas;
     }
 }

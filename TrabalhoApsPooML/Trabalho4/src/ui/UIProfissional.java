@@ -40,12 +40,14 @@ public class UIProfissional {
     System.out.printf("%-" + largura + "s", "CPF");
     System.out.printf("%-" + largura + "s", "DATA NASC");
     System.out.printf("%-" + largura + "s", "SERVIÇOS");
+    System.out.printf("%-" + largura + "s", "CARACTERÍSTICAS");
     System.out.println();
     List<Profissional> print = sis.ListarTodos();
 
     for (int i = 0; i < print.size(); i++) {
       if (print.get(i) != null) {
         String servicos = sis.ListarServicosDeProfissional(print.get(i).getId());
+        String carateristicas = sis.ListarCaracteristicasDeProfissional(print.get(i).getId());
         System.out.printf("%-" + largura + "d", print.get(i).getId());
         System.out.printf("%-" + largura + "s", print.get(i).getNome());
         System.out.printf("%-" + largura + "s", print.get(i).getEmail());
@@ -53,6 +55,7 @@ public class UIProfissional {
         System.out.printf("%-" + largura + "s", print.get(i).getData().getDia() + "/" + print.get(i).getData().getMes()
             + "/" + print.get(i).getData().getAno());
         System.out.printf("%-" + largura + "s", servicos);
+        System.out.printf("%-" + largura + "s", carateristicas);
         System.out.println();
       }
     }
