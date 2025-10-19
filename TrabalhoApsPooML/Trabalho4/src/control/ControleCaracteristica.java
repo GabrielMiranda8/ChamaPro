@@ -30,38 +30,36 @@ public class ControleCaracteristica {
         this.nextId = max + 1;
     }
 
-    public void cadastrarCaracteristica(String nome, String descricao, Profissional criador) {
+    public String cadastrarCaracteristica(String nome, String descricao, Profissional criador) {
         if (nome == null || descricao == null) {
-            System.out.println("Dados inválidos.");
-            return;
+            return("Dados inválidos.");
+            
         }
         if (repo.verificarRepetido(nome)) {
-            System.out.println("Característica com esse nome já existe.");
-            return;
+            return("Característica com esse nome já existe.");
         }
         Caracteristica c = new Caracteristica(nextId++, nome, descricao, criador);
         repo.adicionar(c);
-        System.out.println("Característica cadastrada: " + nome);
+        return("Característica cadastrada: " + nome);
     }
 
-    public void associarProfissionalACaracteristica(int idCaracteristica, Profissional profissional) {
+    public String associarProfissionalACaracteristica(int idCaracteristica, Profissional profissional) {
         Caracteristica c = repo.buscarPorId(idCaracteristica);
         if (c == null) {
-            System.out.println("Característica não encontrada.");
-            return;
+            return("Característica não encontrada.");
+            
         }
         c.adicionarProfissional(profissional);
-        System.out.println("Profissional " + profissional.getNome() + " associado à característica " + c.getNome());
+        return("Profissional " + profissional.getNome() + " associado à característica " + c.getNome());
     }
 
-    public void removerAssociacao(int idCaracteristica, Profissional profissional) {
+    public String removerAssociacao(int idCaracteristica, Profissional profissional) {
         Caracteristica c = repo.buscarPorId(idCaracteristica);
-        if (c == null) {
-            System.out.println("Característica não encontrada.");
-            return;
+        if (c == null || profissional == null) {
+            return("Erro.");
         }
         c.removerProfissional(profissional);
-        System.out.println("Associação removida.");
+        return("Associação removida.");
     }
     public void removerProfissionalDeTodasCaracteristicas(Profissional profissional) {
         if (profissional == null) return;
@@ -70,12 +68,12 @@ public class ControleCaracteristica {
         }
     }
 
-    public void removerCaracteristica(int id) {
+    public String removerCaracteristica(int id) {
         boolean removed = repo.remover(id);
         if (removed)
-            System.out.println("Característica removida.");
+            return("Característica removida.");
         else
-            System.out.println("Característica não encontrada.");
+            return("Característica não encontrada.");
     }
 
     public boolean atualizarCaracteristica(Caracteristica carAtualizada) {

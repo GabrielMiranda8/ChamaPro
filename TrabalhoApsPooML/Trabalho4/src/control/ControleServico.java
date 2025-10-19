@@ -31,32 +31,31 @@ public class ControleServico {
         this.nextId = max + 1;
     }
 
-    public void cadastrarServico(String nome, String descricao, double preco, Profissional criador) {
+    public String cadastrarServico(String nome, String descricao, double preco, Profissional criador) {
         if (criador == null) {
-            System.out.println("Criador inválido.");
-            return;
+            return("Criador inválido.");
         }
         Servico serv = new Servico(nextId++, nome, descricao, preco, criador);
         repo.adicionar(serv);
-        System.out.println("Serviço criado por " + criador.getNome());
+        return("Serviço criado por " + criador.getNome());
     }
 
-    public void removerAssociacao(int idServico, Profissional profissional) {
+    public String removerAssociacao(int idServico, Profissional profissional) {
         Servico s = repo.buscarPorId(idServico);
         if (s == null) {
-            System.out.println("Serviço não encontrado.");
-            return;
+            return("Serviço não encontrado.");
+            
         }
         s.removerProfissional(profissional);
-        System.out.println("Associação removida.");
+        return("Associação removida.");
     }
 
-    public void removerServico(int id) {
+    public String removerServico(int id) {
         boolean removed = repo.remover(id);
         if (removed)
-            System.out.println("Serviço removido.");
+            return("Serviço removido.");
         else
-            System.out.println("Serviço não encontrado.");
+            return("Serviço não encontrado.");
     }
 
     public boolean atualizarServico(Servico servicoAtualizado) {

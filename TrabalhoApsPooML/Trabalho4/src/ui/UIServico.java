@@ -31,7 +31,7 @@ public class UIServico {
         double preco = sc.nextDouble();
         sc.nextLine();
 
-        sis.CadastrarServico(nome, descricao, preco, idProf);;
+        System.out.println(sis.CadastrarServico(nome, descricao, preco, idProf));
     }
 
     public void ListarServicos(int largura) {
@@ -65,6 +65,6 @@ public class UIServico {
         System.out.print("ID do Servico: ");
         int id = sc.nextInt();
 
-        sis.ExcluirServico(id);
+        System.out.println(sis.ExcluirServico(id));
     }
 }

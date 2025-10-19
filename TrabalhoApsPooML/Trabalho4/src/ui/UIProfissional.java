@@ -30,7 +30,7 @@ public class UIProfissional {
     System.out.print("CPF: ");
     String cpf = scn.next();
 
-    sis.Add(email, nome, senha, dia, mes, ano, cpf);
+    System.out.println(sis.Add(email, nome, senha, dia, mes, ano, cpf));
   }
 
   public void ListarProfissionais(int largura) {
@@ -81,7 +81,7 @@ public class UIProfissional {
     System.out.print("CPF: ");
     String cpf = scn.next();
 
-    sis.Alterar(id, email, nome, senha, dia, mes, ano, cpf);
+    System.out.println(sis.Alterar(id, email, nome, senha, dia, mes, ano, cpf));
   }
 
   public void RemoverProfissional(int largura) {
@@ -89,7 +89,7 @@ public class UIProfissional {
     System.out.print("ID do Profissional: ");
     int id = scn.nextInt();
 
-    sis.ExcluirProfissional(id);
+    System.out.println(sis.ExcluirProfissional(id));
   }
 
   public void AssociarServico() {
@@ -98,7 +98,7 @@ public class UIProfissional {
     System.out.print("ID do Serviço: ");
     int idServico = scn.nextInt();
 
-    sis.AssociarServico(idProfissional, idServico);
+    System.out.println(sis.AssociarServico(idProfissional, idServico));
   }
 
   public void DesassociarServico() {
@@ -107,6 +107,6 @@ public class UIProfissional {
     System.out.print("ID do Serviço: ");
     int idServico = scn.nextInt();
 
-    sis.DesassociarServico(idProfissional, idServico);
+    System.out.println(sis.DesassociarServico(idProfissional, idServico));
   }
 }

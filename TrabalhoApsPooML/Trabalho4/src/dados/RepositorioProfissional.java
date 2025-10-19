@@ -2,6 +2,7 @@ package dados;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import model.Date;
 import model.Profissional;
 import model.Servico;
@@ -77,7 +78,21 @@ public class RepositorioProfissional {
         for (int i = 0; i < quantPro; i++) {
             if (profissionais.get(i).getId() == idProfissional) {
                 for (int j = 0; j < profissionais.get(i).getServicos().size(); j++) {
-                    if (profissionais.get(i).getServicos().get(i).getId() == idServico)
+                    if (profissionais.get(i).getServicos().get(j).getId() == idServico)
+                        return true;
+                }
+            }
+
+        }
+        return false;
+    }
+
+    public boolean CaracteristicaExiste(int idProfissional, int idCaracteristica) {
+        contarProfissional();
+        for (int i = 0; i < quantPro; i++) {
+            if (profissionais.get(i).getId() == idProfissional) {
+                for (int j = 0; j < profissionais.get(i).getCaracteristicas().size(); j++) {
+                    if (profissionais.get(i).getCaracteristicas().get(j).getId() == idCaracteristica)
                         return true;
                 }
             }
@@ -132,6 +147,27 @@ public class RepositorioProfissional {
         }
     }
 
+    public void DesassociarCaracteristica(int idProfissional, int idCaracteristica) {
+        if (idExiste(idProfissional)) {
+            contarProfissional();
+            for (int i = 0; i < quantPro; i++) {
+                if (profissionais.get(i).getId() == idProfissional) {
+                    for (int j = 0; j < profissionais.get(i).getCaracteristicas().size(); j++) {
+                        if (profissionais.get(i).getCaracteristicas().get(j).getId() == idCaracteristica)
+                            profissionais.get(i).getCaracteristicas().remove(j);
+                    }
+                }
+            }
+        }
+    }
+
+    public void RemoverCaracteristica(int idCaracteristica) {
+        contarProfissional();
+        for (int i = 0; i < quantPro; i++) {
+            DesassociarCaracteristica(profissionais.get(i).getId(), idCaracteristica);
+        }
+    }
+
     public void RemoverServico(int idServico) {
         contarProfissional();
         for (int i = 0; i < quantPro; i++) {
@@ -173,5 +209,64 @@ public class RepositorioProfissional {
             }
         }
         return caracteristicas;
+    }
+
+    public static boolean ValidarCPF(String cpf) {
+        if (cpf == null)
+            return false;
+        String numeros = "";
+        for (int i = 0; i < cpf.length(); i++) {
+            char c = cpf.charAt(i);
+            if (c >= '0' && c <= '9') {
+                numeros += c;
+            }
+        }
+        cpf = numeros;
+
+        if (cpf.length() != 11)
+            return false;
+
+        boolean repetido = true;
+        for (int i = 1; i < cpf.length(); i++) {
+            if (cpf.charAt(i) != cpf.charAt(0)) {
+                repetido = false;
+                break;
+            }
+        }
+        if (repetido)
+            return false;
+
+        // o '0' é pra subtrair em ascii o valor dos digitos
+        int soma = 0;
+        for (int i = 0; i < 9; i++) {
+            soma = soma + (cpf.charAt(i) - '0') * (10 - i);
+        }
+
+        int resto = soma % 11;
+        int digito1;
+        if (resto < 2) {
+            digito1 = 0;
+        } else {
+            digito1 = 11 - resto;
+        }
+
+        soma = 0;
+        for (int i = 0; i < 10; i++) {
+            soma = soma + (cpf.charAt(i) - '0') * (11 - i);
+        }
+
+        resto = soma % 11;
+        int digito2;
+        if (resto < 2) {
+            digito2 = 0;
+        } else {
+            digito2 = 11 - resto;
+        }
+
+        if (digito1 == (cpf.charAt(9) - '0') && digito2 == (cpf.charAt(10) - '0')) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

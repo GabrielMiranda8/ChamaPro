@@ -16,7 +16,7 @@ public class Sistema {
     protected Sistema() {
         cCaracteristica = new ControleCaracteristica();
         cProfissional = new ControleProfissional();
-        cServico = new ControleServico(); 
+        cServico = new ControleServico();
         cUsuario = new ControleUsuario();
         init();
     }
@@ -35,23 +35,27 @@ public class Sistema {
         return cCaracteristica;
     }
 
+    // INICIALIZACAO
     public void init() {
-        cProfissional.Add("lelis@gmail.com", "Henrique", "123", 5, 7, 2007, "111.111.111-11");
-        cProfissional.Add("gabriel@gmail.com", "Gabriel", "123", 12, 6, 2009, "222.222.222-22");
+        cProfissional.Add("lelis@gmail.com", "Henrique", "123", 5, 7, 2007, "202.479.140-96");
+        cProfissional.Add("gabriel@gmail.com", "Gabriel", "123", 12, 6, 2009, "134.796.276-09");
 
         cServico.cadastrarServico("Pedreiro", "Construções", 1000, cProfissional.BuscarPorId(1));
         cServico.cadastrarServico("Babá", "Cuida de crianças", 300, cProfissional.BuscarPorId(2));
-    }
-    
-    public void Add(String email, String nome, String senha, int dia, int mes, int ano, String cpf) {
-        cProfissional.Add(email, nome, senha, dia, mes, ano, cpf);
+
+        cCaracteristica.cadastrarCaracteristica("Cego", "Não enxerga", cProfissional.BuscarPorId(1));
+        cCaracteristica.cadastrarCaracteristica("Cadeirante", "Usa cadeira de rodas", cProfissional.BuscarPorId(2));
     }
 
-    public void ExcluirProfissional(int id) {
+    // PROFISSIONAL
+    public String Add(String email, String nome, String senha, int dia, int mes, int ano, String cpf) {
+        return (cProfissional.Add(email, nome, senha, dia, mes, ano, cpf));
+    }
+
+    public String ExcluirProfissional(int id) {
         Profissional p = cProfissional.BuscarPorId(id);
         if (p == null) {
-            System.out.println("Profissional não encontrado.");
-            return;
+            return ("Profissional não encontrado.");
         }
 
         cServico.DesassociarProfissionalDeServicos(id);
@@ -59,37 +63,44 @@ public class Sistema {
         cCaracteristica.removerProfissionalDeTodasCaracteristicas(p);
 
         cProfissional.Excluir(id);
+
+        return ("Profissional excluído com sucesso.");
     }
 
-    public void Alterar(int id, String email, String nome, String senha, int dia, int mes, int ano, String cpf) {
-        cProfissional.Alterar(id, email, nome, senha, dia, mes, ano, cpf);
+    public String Alterar(int id, String email, String nome, String senha, int dia, int mes, int ano, String cpf) {
+        return (cProfissional.Alterar(id, email, nome, senha, dia, mes, ano, cpf));
     }
 
     public List<Profissional> ListarTodos() {
         return cProfissional.ListarTodos();
     }
 
-    public void AssociarServico(int idProfissional, int idServico) {
+    public String AssociarServico(int idProfissional, int idServico) {
         Servico s = cServico.buscarPorId(idServico);
         if (s != null) {
-            cProfissional.AssociarServico(idProfissional, s);
             Profissional p = cProfissional.BuscarPorId(idProfissional);
             if (p != null)
                 cServico.AssociarProfissional(idServico, p);
+            return (cProfissional.AssociarServico(idProfissional, s));
         }
-
+        return ("Serviço não associado.");
     }
 
-    public void DesassociarServico(int idProfissional, int idServico) {
-        cProfissional.DesassociarServico(idProfissional, idServico);
+    public String DesassociarServico(int idProfissional, int idServico) {
         DesassociarProfissional(idServico, idProfissional);
+        return(cProfissional.DesassociarServico(idProfissional, idServico));
+    }
+
+    public String DesassociarCaracteristica(int idProfissional, int idCaracteristica) {
+        cProfissional.DesassociarCaracteristica(idProfissional, idCaracteristica);
+        return(cCaracteristica.removerAssociacao(idCaracteristica, cProfissional.BuscarPorId(idProfissional)));
     }
 
     public String ListarServicosDeProfissional(int id) {
         return cProfissional.ListarServicos(id);
     }
 
-    public String ListarCaracteristicasDeProfissional(int id){
+    public String ListarCaracteristicasDeProfissional(int id) {
         return cProfissional.ListarCaracteristicas(id);
     }
 
@@ -97,18 +108,23 @@ public class Sistema {
         return cProfissional.BuscarPorId(id);
     }
 
-    public void CadastrarServico(String nome, String descricao, double preco, int id) {
+    public void RemoverCaracteristicaProfissional(int idCaracteristica) {
+        cProfissional.RemoverCaracteristica(idCaracteristica);
+    }
+
+    // SERVICO
+    public String CadastrarServico(String nome, String descricao, double preco, int id) {
         if (cProfissional.repoProfissional.idExiste(id)) {
             Profissional profissional = cProfissional.BuscarPorId(id);
-            cServico.cadastrarServico(nome, descricao, preco, profissional);
+            return cServico.cadastrarServico(nome, descricao, preco, profissional);
         } else {
-            System.out.println("Profissional não existe com id: " + id);
+            return ("Profissional não existe com id: " + id);
         }
     }
 
-    public void ExcluirServico(int id) {
-        cServico.removerServico(id);
+    public String ExcluirServico(int id) {
         cProfissional.RemoverServico(id);
+        return (cServico.removerServico(id));
     }
 
     public void AlterarServico(Servico servicoAtualizado) {
@@ -127,6 +143,7 @@ public class Sistema {
         return cServico.ListarProfissioais(id);
     }
 
+    // SERVICO / PROFISSIONAL
     public void AssociarProfissional(int idServico, int idProfissional) {
         Profissional p = cProfissional.BuscarPorId(idProfissional);
         Servico s = cServico.buscarPorId(idServico);
@@ -140,6 +157,8 @@ public class Sistema {
         if (p != null && s != null)
             cServico.DesassociarProfissional(idProfissional, p);
     }
+
+    // CARACTERISTICA
     public String ListarProfissioaisDeCaracteristica(int id) {
         return cCaracteristica.ListarProfissioais(id);
     }

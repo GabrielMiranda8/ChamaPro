@@ -39,7 +39,7 @@ public class UICaracteristica {
             }
         }
 
-        controle.cadastrarCaracteristica(nome, descricao, p);
+        System.out.println(controle.cadastrarCaracteristica(nome, descricao, p));  
     }
 
     public void ListarCaracteristicas(int largura) {
@@ -102,7 +102,8 @@ public class UICaracteristica {
         int id = sc.nextInt();
         sc.nextLine();
 
-        controle.removerCaracteristica(id);
+        System.out.println(controle.removerCaracteristica(id));
+        sis.RemoverCaracteristicaProfissional(id);
     }
 
     public void AtribuirCaracteristicaAProfissional(int largura) {
@@ -122,6 +123,26 @@ public class UICaracteristica {
             return;
         }
 
-        controle.associarProfissionalACaracteristica(idCar, p);
+        System.out.println(controle.associarProfissionalACaracteristica(idCar, p));
+    }
+
+    public void DesatribuirCaracteristicaAProfissional(int largura) {
+        System.out.println("\n=== DESATRIBUIR CARACTERÍSTICA A PROFISSIONAL ===");
+        ListarCaracteristicas(largura);
+        System.out.print("ID da característica: ");
+        int idCar = sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("ID do profissional a desassociar: ");
+        int idProf = sc.nextInt();
+        sc.nextLine();
+
+        Profissional p = Sistema.getInstance().BuscarPorId(idProf);
+        if (p == null) {
+            System.out.println("Profissional não encontrado.");
+            return;
+        }
+
+        System.out.println(sis.DesassociarCaracteristica(idProf, idCar));
     }
 }

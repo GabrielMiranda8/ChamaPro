@@ -21,7 +21,7 @@ public class UIPrincipal {
         int largura = 25;
         Scanner scn = new Scanner(System.in);
         int escolha = Menu(scn);
-        while (escolha > 0 && escolha < 17) {
+        while (escolha > 0 && escolha < 18) {
             switch (escolha) {
                 case 1:
                     uiProfissional.CadastrarProfissional();
@@ -74,9 +74,14 @@ public class UIPrincipal {
                     uiCaracteristica.RemoverCaracteristica(largura);
                     break;
                 case 15:
+                    uiProfissional.ListarProfissionais(largura);
                     uiCaracteristica.AtribuirCaracteristicaAProfissional(largura);
                     break;
                 case 16:
+                    uiProfissional.ListarProfissionais(largura);
+                    uiCaracteristica.DesatribuirCaracteristicaAProfissional(largura);
+                    break;
+                case 17:
                     largura = EditarLargura(largura, scn);
                     break;
                 default:
@@ -103,8 +108,9 @@ public class UIPrincipal {
         System.out.println("    13. Alterar Característica");
         System.out.println("    14. Remover Característica");
         System.out.println("    15. Atribuir Característica a Profissional");
-        System.out.println("    16. Editar Largura");
-        System.out.println("    17. Sair");
+        System.out.println("    16. Desatribuir Característica a Profissional");
+        System.out.println("    17. Editar Largura");
+        System.out.println("    18. Sair");
         System.out.print("Escolha: ");
         int escolha = scn.nextInt();
         return escolha;
