@@ -6,14 +6,14 @@ import model.Profissional;
 import model.Servico;
 
 public class Sistema {
-    private ControleCaracteristica cCaracteristica;
-    private ControleProfissional cProfissional;
-    private ControleServico cServico;
-    private ControleUsuario cUsuario;
+    protected ControleCaracteristica cCaracteristica;
+    protected ControleProfissional cProfissional;
+    protected ControleServico cServico;
+    protected ControleUsuario cUsuario;
 
     private static Sistema instance;
 
-    private Sistema() {
+    protected Sistema() {
         cCaracteristica = new ControleCaracteristica();
         cProfissional = new ControleProfissional();
         cServico = new ControleServico(); 
@@ -42,8 +42,7 @@ public class Sistema {
         cServico.cadastrarServico("Pedreiro", "Construções", 1000, cProfissional.BuscarPorId(1));
         cServico.cadastrarServico("Babá", "Cuida de crianças", 300, cProfissional.BuscarPorId(2));
     }
-
-    // PROFISSIONAL
+    
     public void Add(String email, String nome, String senha, int dia, int mes, int ano, String cpf) {
         cProfissional.Add(email, nome, senha, dia, mes, ano, cpf);
     }
