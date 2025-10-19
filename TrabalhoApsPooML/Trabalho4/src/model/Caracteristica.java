@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,22 +42,48 @@ public class Caracteristica {
 
     public void adicionarProfissional(Profissional profissional) {
         if (profissional == null) return;
-        if (!profissionais.contains(profissional)) {
-            profissionais.add(profissional);
-            if (profissional.caracteristicas == null) {
+        for (Profissional p : profissionais) {
+            if (p != null && p.getId() == profissional.getId()) {
+                return;
+            }
+        }
+        profissionais.add(profissional);
+
+        if (profissional.getCaracteristicas() == null) {
+            try {
                 profissional.caracteristicas = new ArrayList<>();
+            } catch (Throwable t) {
             }
-            if (!profissional.caracteristicas.contains(this)) {
-                profissional.caracteristicas.add(this);
+        }
+        boolean existe = false;
+        for (Caracteristica c : profissional.getCaracteristicas()) {
+            if (c != null && c.getId() == this.id) {
+                existe = true;
+                break;
             }
+        }
+        if (!existe) {
+            profissional.getCaracteristicas().add(this);
         }
     }
 
     public void removerProfissional(Profissional profissional) {
         if (profissional == null) return;
-        profissionais.remove(profissional);
-        if (profissional.caracteristicas != null) {
-            profissional.caracteristicas.remove(this);
+        Iterator<Profissional> it = profissionais.iterator();
+        while (it.hasNext()) {
+            Profissional p = it.next();
+            if (p != null && p.getId() == profissional.getId()) {
+                it.remove();
+            }
+        }
+        if (profissional.getCaracteristicas() != null) {
+            Iterator<Caracteristica> itc = profissional.getCaracteristicas().iterator();
+            while (itc.hasNext()) {
+                Caracteristica c = itc.next();
+                if (c != null && c.getId() == this.id) {
+                    itc.remove();
+                }
+            }
         }
     }
 
