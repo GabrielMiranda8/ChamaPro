@@ -1,143 +1,100 @@
-package dados;
+package control;
 
+import dados.RepositorioCaracteristica;
 import model.Caracteristica;
 import model.Profissional;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class RepositorioCaracteristica {
-    protected List<Caracteristica> caracteristicas = new ArrayList<Caracteristica>();
-    protected int quantCarac;
+public class ControleCaracteristica {
+    protected RepositorioCaracteristica repo;
+    private int nextId = 1;
 
-    public RepositorioCaracteristica() {
-
+    public ControleCaracteristica() {
+        this.repo = new RepositorioCaracteristica();
+        int max = 0;
+        for (Caracteristica c : repo.listar()) {
+            if (c.getId() > max)
+                max = c.getId();
+        }
+        this.nextId = max + 1;
     }
 
-    public void Add(Caracteristica c) {
-        contarCaracteristica();
-        if (c != null) {
-            caracteristicas.add(c);
+    public ControleCaracteristica(RepositorioCaracteristica repo) {
+        this.repo = repo;
+        int max = 0;
+        for (Caracteristica c : repo.listar()) {
+            if (c.getId() > max)
+                max = c.getId();
+        }
+        this.nextId = max + 1;
+    }
+
+    public void cadastrarCaracteristica(String nome, String descricao, Profissional criador) {
+        if (nome == null || descricao == null) {
+            System.out.println("Dados inválidos.");
+            return;
+        }
+        if (repo.verificarRepetido(nome)) {
+            System.out.println("Característica com esse nome já existe.");
+            return;
+        }
+        Caracteristica c = new Caracteristica(nextId++, nome, descricao, criador);
+        repo.adicionar(c);
+        System.out.println("Característica cadastrada: " + nome);
+    }
+
+    public void associarProfissionalACaracteristica(int idCaracteristica, Profissional profissional) {
+        Caracteristica c = repo.buscarPorId(idCaracteristica);
+        if (c == null) {
+            System.out.println("Característica não encontrada.");
+            return;
+        }
+        c.adicionarProfissional(profissional);
+        System.out.println("Profissional " + profissional.getNome() + " associado à característica " + c.getNome());
+    }
+
+    public void removerAssociacao(int idCaracteristica, Profissional profissional) {
+        Caracteristica c = repo.buscarPorId(idCaracteristica);
+        if (c == null) {
+            System.out.println("Característica não encontrada.");
+            return;
+        }
+        c.removerProfissional(profissional);
+        System.out.println("Associação removida.");
+    }
+    public void removerProfissionalDeTodasCaracteristicas(Profissional profissional) {
+        if (profissional == null) return;
+        for (Caracteristica c : repo.listar()) {
+            c.removerProfissional(profissional);
         }
     }
 
-    public void Excluir(int id) {
-        contarCaracteristica();
-        for (int i = 0; i < quantCarac; i++) {
-            if (caracteristicas.get(i).getId() == id) {
-                caracteristicas.remove(caracteristicas.get(i));
-                contarCaracteristica();
-                i = -1;
-            }
-        }
+    public void removerCaracteristica(int id) {
+        boolean removed = repo.remover(id);
+        if (removed)
+            System.out.println("Característica removida.");
+        else
+            System.out.println("Característica não encontrada.");
     }
 
-    public void Alterar(int id, String nome, String descricao) {
-        contarCaracteristica();
-        for (int i = 0; i < quantCarac; i++) {
-            if (caracteristicas.get(i).getId() == id) {
-                caracteristicas.get(i).setNome(nome);
-                caracteristicas.get(i).setDescricao(descricao);
-            }
-        }
+    public boolean atualizarCaracteristica(Caracteristica carAtualizada) {
+        return repo.atualizar(carAtualizada);
     }
 
-    public List<Caracteristica> ListarTodos() {
-        contarCaracteristica();
-        List<Caracteristica> lista = new ArrayList<Caracteristica>();
-        for (int i = 0; i < quantCarac; i++) {
-            lista.add(new Caracteristica(caracteristicas.get(i)));
-        }
-        return lista;
+    public List<Caracteristica> listarCaracteristicas() {
+        return repo.listar();
     }
 
-    public void contarCaracteristica() {
-        quantCarac = 0;
-        for (int i = 0; i < caracteristicas.size(); i++) {
-            if (caracteristicas.get(i) != null) {
-                quantCarac++;
-            }
-        }
-    }
-
-    public boolean idExiste(int id) {
-        contarCaracteristica();
-        for (int i = 0; i < quantCarac; i++) {
-            if (caracteristicas.get(i).getId() == id)
-                return true;
-        }
-        return false;
-    }
-
-    public boolean verificarRepetido(String nome) {
-        contarCaracteristica();
-        if (nome == null)
-            return false;
-        for (int i = 0; i < quantCarac; i++) {
-            if (caracteristicas.get(i).getNome().equals(nome))
-                return true;
-        }
-        return false;
+    public List<Caracteristica> listarPorProfissional(Profissional p) {
+        return repo.listarPorProfissional(p);
     }
 
     public Caracteristica buscarPorId(int id) {
-        for (Caracteristica c : caracteristicas) {
-            if (c.getId() == id)
-                return c;
-        }
-        return null;
+        return repo.buscarPorId(id);
     }
 
-    public void adicionar(Caracteristica c) {
-        this.Add(c);
-    }
-
-    public List<Caracteristica> listar() {
-        return new ArrayList<Caracteristica>(caracteristicas);
-    }
-
-    public boolean atualizar(Caracteristica carAtualizada) {
-        for (int i = 0; i < caracteristicas.size(); i++) {
-            if (caracteristicas.get(i).getId() == carAtualizada.getId()) {
-                caracteristicas.set(i, carAtualizada);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean remover(int id) {
-        return caracteristicas.removeIf(c -> c.getId() == id);
-    }
-
-    public List<Caracteristica> listarPorProfissional(Profissional prof) {
-        List<Caracteristica> resultado = new ArrayList<>();
-        if (prof == null)
-            return resultado;
-        for (Caracteristica c : caracteristicas) {
-            for (Profissional p : c.getProfissionais()) {
-                if (p != null && p.getId() == prof.getId()) {
-                    resultado.add(c);
-                    break;
-                }
-            }
-        }
-        return resultado;
-    }
-
-    public String listarProfissionais(int id) {
-        String profs = "";
-        for (int i = 0; i < caracteristicas.size(); i++) {
-            if (caracteristicas.get(i).getId() == id) {
-                for (int j = 0; j < caracteristicas.get(i).getProfissionais().size(); j++) {
-                    if (j + 1 < caracteristicas.get(i).getProfissionais().size())
-                        profs += caracteristicas.get(i).getProfissionais().get(j).getNome() + ", ";
-                    else
-                        profs += caracteristicas.get(i).getProfissionais().get(j).getNome();
-
-                }
-            }
-        }
-        return profs;
+    public String ListarProfissioais(int id) {
+        return repo.listarProfissionais(id);
     }
 }
