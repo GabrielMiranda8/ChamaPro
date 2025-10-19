@@ -115,8 +115,12 @@ public class RepositorioCaracteristica {
         if (prof == null)
             return resultado;
         for (Caracteristica c : caracteristicas) {
-            if (c.getProfissionais().contains(prof))
-                resultado.add(c);
+            for (Profissional p : c.getProfissionais()) {
+                if (p != null && p.getId() == prof.getId()) {
+                    resultado.add(c);
+                    break;
+                }
+            }
         }
         return resultado;
     }
