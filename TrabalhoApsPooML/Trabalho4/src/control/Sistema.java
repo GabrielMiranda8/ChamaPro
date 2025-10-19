@@ -16,12 +16,11 @@ public class Sistema {
     private Sistema() {
         cCaracteristica = new ControleCaracteristica();
         cProfissional = new ControleProfissional();
-        cServico = new ControleServico(); // construtor padrão em ControleServico
+        cServico = new ControleServico(); 
         cUsuario = new ControleUsuario();
         init();
     }
 
-    // singleton
     public static Sistema getInstance() {
         if (instance == null)
             instance = new Sistema();
@@ -50,10 +49,17 @@ public class Sistema {
     }
 
     public void ExcluirProfissional(int id) {
-        cProfissional.Excluir(id);
-        cServico.DesassociarProfissionalDeServicos(id);
         Profissional p = cProfissional.BuscarPorId(id);
-        cCaracteristica.removerAssociacao(id, p);
+        if (p == null) {
+            System.out.println("Profissional não encontrado.");
+            return;
+        }
+
+        cServico.DesassociarProfissionalDeServicos(id);
+
+        cCaracteristica.removerProfissionalDeTodasCaracteristicas(p);
+
+        cProfissional.Excluir(id);
     }
 
     public void Alterar(int id, String email, String nome, String senha, int dia, int mes, int ano, String cpf) {
@@ -92,7 +98,6 @@ public class Sistema {
         return cProfissional.BuscarPorId(id);
     }
 
-    // SERVICO
     public void CadastrarServico(String nome, String descricao, double preco, int id) {
         if (cProfissional.repoProfissional.idExiste(id)) {
             Profissional profissional = cProfissional.BuscarPorId(id);
@@ -136,11 +141,6 @@ public class Sistema {
         if (p != null && s != null)
             cServico.DesassociarProfissional(idProfissional, p);
     }
-
-    // CARACTERÍSTICA
-    
-
-
     public String ListarProfissioaisDeCaracteristica(int id) {
         return cCaracteristica.ListarProfissioais(id);
     }
