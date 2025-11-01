@@ -10,12 +10,14 @@ public class Caracteristica {
     private String nome;
     private String descricao;
     private List<Profissional> profissionais;
+    private List<Cliente> clientes;
 
     public Caracteristica(int id, String nome, String descricao, Profissional criador) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
-        this.profissionais = new ArrayList<>();
+        this.profissionais = new ArrayList<Profissional>();
+        this.clientes = new ArrayList<Cliente>();
         if (criador != null) {
             adicionarProfissional(criador);
         }

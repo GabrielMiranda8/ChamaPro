@@ -33,29 +33,29 @@ public class ControleServico {
 
     public String cadastrarServico(String nome, String descricao, double preco, Profissional criador) {
         if (criador == null) {
-            return("Criador inválido.");
+            return ("Criador inválido.");
         }
         Servico serv = new Servico(nextId++, nome, descricao, preco, criador);
         repo.adicionar(serv);
-        return("Serviço criado por " + criador.getNome());
+        return ("Serviço criado por " + criador.getNome());
     }
 
     public String removerAssociacao(int idServico, Profissional profissional) {
         Servico s = repo.buscarPorId(idServico);
         if (s == null) {
-            return("Serviço não encontrado.");
-            
+            return ("Serviço não encontrado.");
+
         }
         s.removerProfissional(profissional);
-        return("Associação removida.");
+        return ("Associação removida.");
     }
 
     public String removerServico(int id) {
         boolean removed = repo.remover(id);
         if (removed)
-            return("Serviço removido.");
+            return ("Serviço removido.");
         else
-            return("Serviço não encontrado.");
+            return ("Serviço não encontrado.");
     }
 
     public boolean atualizarServico(Servico servicoAtualizado) {
@@ -78,15 +78,19 @@ public class ControleServico {
         return repo.listarProfissionais(id);
     }
 
-    public void AssociarProfissional(int id, Profissional p){
+    public void AssociarProfissional(int id, Profissional p) {
         repo.AssociarProfissional(id, p);
     }
 
-    public void DesassociarProfissional(int id, Profissional p){
+    public void DesassociarProfissional(int id, Profissional p) {
         repo.DesassociarProfissional(id, p.getId());
     }
 
-    public void DesassociarProfissionalDeServicos(int id){
+    public void DesassociarProfissionalDeServicos(int id) {
         repo.DesassociarProfissionalDeServicos(id);
+    }
+
+    public Servico servicoExiste(int id) {
+        return repo.servicoExiste(id);
     }
 }

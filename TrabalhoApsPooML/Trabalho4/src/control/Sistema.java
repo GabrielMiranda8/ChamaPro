@@ -2,6 +2,8 @@ package control;
 
 import java.util.List;
 
+import model.Caracteristica;
+import model.Cliente;
 import model.Profissional;
 import model.Servico;
 
@@ -10,6 +12,7 @@ public class Sistema {
     protected ControleProfissional cProfissional;
     protected ControleServico cServico;
     protected ControleUsuario cUsuario;
+    protected ControleCliente cCliente;
 
     private static Sistema instance;
 
@@ -18,6 +21,7 @@ public class Sistema {
         cProfissional = new ControleProfissional();
         cServico = new ControleServico();
         cUsuario = new ControleUsuario();
+        cCliente = new ControleCliente();
         init();
     }
 
@@ -37,8 +41,13 @@ public class Sistema {
 
     // INICIALIZACAO
     public void init() {
-        cProfissional.Add("lelis@gmail.com", "Henrique", "123", 5, 7, 2007, "202.479.140-96");
+        cProfissional.Add("henrique@gmail.com", "Henrique", "123", 5, 7, 2007, "202.479.140-96");
         cProfissional.Add("gabriel@gmail.com", "Gabriel", "123", 12, 6, 2009, "134.796.276-09");
+
+        cCliente.Add("lelis@gmail.com", "Lelis", "123", 5, 7, 2007, "202.479.140-96", 1, "Ruazona", "Bairrozão",
+                "Timóteo");
+        cCliente.Add("miranda@gmail.com", "Miranda", "123", 12, 6, 2009, "134.796.276-09", 2, "Ruazinha", "Bairrozinho",
+                "Coronel Fabriciano");
 
         cServico.cadastrarServico("Pedreiro", "Construções", 1000, cProfissional.BuscarPorId(1));
         cServico.cadastrarServico("Babá", "Cuida de crianças", 300, cProfissional.BuscarPorId(2));
@@ -88,12 +97,12 @@ public class Sistema {
 
     public String DesassociarServico(int idProfissional, int idServico) {
         DesassociarProfissional(idServico, idProfissional);
-        return(cProfissional.DesassociarServico(idProfissional, idServico));
+        return (cProfissional.DesassociarServico(idProfissional, idServico));
     }
 
     public String DesassociarCaracteristica(int idProfissional, int idCaracteristica) {
         cProfissional.DesassociarCaracteristica(idProfissional, idCaracteristica);
-        return(cCaracteristica.removerAssociacao(idCaracteristica, cProfissional.BuscarPorId(idProfissional)));
+        return (cCaracteristica.removerAssociacao(idCaracteristica, cProfissional.BuscarPorId(idProfissional)));
     }
 
     public String ListarServicosDeProfissional(int id) {
@@ -110,6 +119,61 @@ public class Sistema {
 
     public void RemoverCaracteristicaProfissional(int idCaracteristica) {
         cProfissional.RemoverCaracteristica(idCaracteristica);
+    }
+
+    // CLIENTE
+    public String CadastrarCliente(String email, String nome, String senha, int dia, int mes, int ano, String cpf,
+            int numero,
+            String rua, String bairro, String cidade) {
+        return (cCliente.Add(email, nome, senha, dia, mes, ano, cpf, numero, rua, bairro, cidade));
+    }
+
+    public String ExcluirCliente(int id) {
+        Cliente c = cCliente.BuscarPorId(id);
+        if (c == null) {
+            return ("Cliente não encontrado.");
+        }
+
+        cCaracteristica.removerClienteDeTodasCaracteristicas(c);
+
+        cCliente.Excluir(id);
+
+        return ("Cliente excluído com sucesso.");
+    }
+
+    public String AlterarCliente(int id, String email, String nome, String senha, int dia, int mes, int ano, String cpf,
+            int numero,
+            String rua, String bairro, String cidade) {
+        return (cCliente.Alterar(id, email, nome, senha, dia, mes, ano, cpf, numero,
+                rua, bairro, cidade));
+    }
+
+    public List<Cliente> ListarTodosClientes() {
+        return cCliente.ListarTodos();
+    }
+
+    public Cliente BuscarClientePorId(int id) {
+        return cCliente.BuscarPorId(id);
+    }
+
+    public void AssociarCaracteristica(int idCliente, int idCaracteristica) {
+        Caracteristica c = cCaracteristica.buscarPorId(idCaracteristica);
+        if (c != null) {
+            cCliente.AssociarCaracteristica(idCliente, c);
+        }
+    }
+
+    public String DesassociarCaracteristicaDeCliente(int idCliente, int idCaracteristica) {
+        cCliente.DesassociarCaracteristica(idCliente, idCaracteristica);
+        return (cCaracteristica.removerAssociacao(idCaracteristica, cCliente.BuscarPorId(idCliente)));
+    }
+
+    public String ListarCaracteristicasDeCliente(int id) {
+        return cCliente.ListarCaracteristicas(id);
+    }
+
+    public void RemoverCaracteristicaCliente(int idCaracteristica) {
+        cCliente.RemoverCaracteristica(idCaracteristica);
     }
 
     // SERVICO
@@ -129,6 +193,7 @@ public class Sistema {
 
     public void AlterarServico(Servico servicoAtualizado) {
         cServico.atualizarServico(servicoAtualizado);
+        cProfissional.atualizarServico(servicoAtualizado);
     }
 
     public List<Servico> ListarServicos() {
@@ -137,6 +202,10 @@ public class Sistema {
 
     public ControleServico getCServico() {
         return cServico;
+    }
+
+    public Servico servicoExiste(int id) {
+        return cServico.servicoExiste(id);
     }
 
     public String ListarProfissionaisDeServico(int id) {

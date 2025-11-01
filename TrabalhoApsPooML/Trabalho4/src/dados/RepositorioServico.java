@@ -83,15 +83,24 @@ public class RepositorioServico {
             if (servicos.get(i).getId() == id) {
                 for (int j = 0; j < servicos.get(i).getProfissionais().size(); j++) {
                     if (servicos.get(i).getProfissionais().get(j).getId() == idProfissional)
-                    servicos.get(i).getProfissionais().remove(j);
+                        servicos.get(i).getProfissionais().remove(j);
                 }
             }
         }
     }
 
-    public void DesassociarProfissionalDeServicos(int idProfissional){
+    public void DesassociarProfissionalDeServicos(int idProfissional) {
         for (int i = 0; i < servicos.size(); i++) {
             DesassociarProfissional(servicos.get(i).getId(), idProfissional);
         }
+    }
+
+    public Servico servicoExiste(int id) {
+        for (int i = 0; i < servicos.size(); i++) {
+            if (servicos.get(i).getId() == id) {
+                return new Servico(servicos.get(i));
+            }
+        }
+        return null;
     }
 }

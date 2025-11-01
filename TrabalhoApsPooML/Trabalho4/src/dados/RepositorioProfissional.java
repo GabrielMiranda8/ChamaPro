@@ -3,6 +3,7 @@ package dados;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Caracteristica;
 import model.Date;
 import model.Profissional;
 import model.Servico;
@@ -209,6 +210,34 @@ public class RepositorioProfissional {
             }
         }
         return caracteristicas;
+    }
+
+    public void AtualizarServico(Servico s) {
+        contarProfissional();
+        for (int i = 0; i < profissionais.size(); i++) {
+            if (profissionais.get(i).getServicos() != null) {
+                for (int j = 0; j < profissionais.get(i).getServicos().size(); j++) {
+                    if (profissionais.get(i).getServicos().get(j).getId() == s.getId()) {
+                        profissionais.get(i).getServicos().remove(j);
+                        profissionais.get(i).getServicos().add(s);
+                    }
+                }
+            }
+        }
+    }
+
+    public void atualizarCaracteristica(Caracteristica c) {
+        contarProfissional();
+        for (int i = 0; i < profissionais.size(); i++) {
+            if (profissionais.get(i).getCaracteristicas() != null) {
+                for (int j = 0; j < profissionais.get(i).getCaracteristicas().size(); j++) {
+                    if (profissionais.get(i).getCaracteristicas().get(j).getId() == c.getId()) {
+                        profissionais.get(i).getCaracteristicas().remove(j);
+                        profissionais.get(i).getCaracteristicas().add(c);
+                    }
+                }
+            }
+        }
     }
 
     public static boolean ValidarCPF(String cpf) {

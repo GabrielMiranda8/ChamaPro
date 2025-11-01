@@ -8,6 +8,7 @@ public class UIPrincipal {
     protected UIProfissional uiProfissional;
     protected UIUsuario uiUsuario;
     protected UICaracteristica uiCaracteristica;
+    protected UICliente uiCliente;
 
     public UIPrincipal() {
         scn = new Scanner(System.in);
@@ -15,13 +16,14 @@ public class UIPrincipal {
         uiProfissional = new UIProfissional();
         uiUsuario = new UIUsuario();
         uiCaracteristica = new UICaracteristica();
+        uiCliente = new UICliente();
     }
 
     public void Iniciar() {
         int largura = 25;
         Scanner scn = new Scanner(System.in);
         int escolha = Menu(scn);
-        while (escolha > 0 && escolha < 18) {
+        while (escolha > 0 && escolha < 24) {
             switch (escolha) {
                 case 1:
                     uiProfissional.CadastrarProfissional();
@@ -43,7 +45,8 @@ public class UIPrincipal {
                     uiServico.ListarServicos(largura);
                     break;
                 case 7:
-
+                    uiServico.ListarServicos(largura);
+                    uiServico.AlterarServico();
                     break;
                 case 8:
                     uiServico.ListarServicos(largura);
@@ -82,6 +85,26 @@ public class UIPrincipal {
                     uiCaracteristica.DesatribuirCaracteristicaAProfissional(largura);
                     break;
                 case 17:
+                    uiCliente.CadastrarCliente();
+                    break;
+                case 18:
+                    uiCliente.ListarClientes(largura);
+                    break;
+                case 19:
+                    uiCliente.AlterarCliente(largura);
+                    break;
+                case 20:
+                    uiCliente.RemoverCliente(largura);
+                    break;
+                case 21:
+                    uiCliente.ListarClientes(largura);
+                    uiCaracteristica.AtribuirCaracteristicaACliente(largura);
+                    break;
+                case 22:
+                    uiCliente.ListarClientes(largura);
+                    uiCaracteristica.DesatribuirCaracteristicaACliente(largura);
+                    break;
+                case 23:
                     largura = EditarLargura(largura, scn);
                     break;
                 default:
@@ -109,8 +132,14 @@ public class UIPrincipal {
         System.out.println("    14. Remover Característica");
         System.out.println("    15. Atribuir Característica a Profissional");
         System.out.println("    16. Desatribuir Característica a Profissional");
-        System.out.println("    17. Editar Largura");
-        System.out.println("    18. Sair");
+        System.out.println("    17. Cadastrar Cliente");
+        System.out.println("    18. Listar Clientes");
+        System.out.println("    19. Alterar Cliente");
+        System.out.println("    20. Remover Cliente");
+        System.out.println("    21. Atribuir Característica a Cliente");
+        System.out.println("    22. Desatribuir Característica a Cliente");
+        System.out.println("    23. Editar Largura");
+        System.out.println("    24. Sair");
         System.out.print("Escolha: ");
         int escolha = scn.nextInt();
         return escolha;

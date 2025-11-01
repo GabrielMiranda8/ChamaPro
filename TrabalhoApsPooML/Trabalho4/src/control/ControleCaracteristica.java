@@ -32,37 +32,39 @@ public class ControleCaracteristica {
 
     public String cadastrarCaracteristica(String nome, String descricao, Profissional criador) {
         if (nome == null || descricao == null) {
-            return("Dados inválidos.");
-            
+            return ("Dados inválidos.");
+
         }
         if (repo.verificarRepetido(nome)) {
-            return("Característica com esse nome já existe.");
+            return ("Característica com esse nome já existe.");
         }
         Caracteristica c = new Caracteristica(nextId++, nome, descricao, criador);
         repo.adicionar(c);
-        return("Característica cadastrada: " + nome);
+        return ("Característica cadastrada: " + nome);
     }
 
     public String associarProfissionalACaracteristica(int idCaracteristica, Profissional profissional) {
         Caracteristica c = repo.buscarPorId(idCaracteristica);
         if (c == null) {
-            return("Característica não encontrada.");
-            
+            return ("Característica não encontrada.");
+
         }
         c.adicionarProfissional(profissional);
-        return("Profissional " + profissional.getNome() + " associado à característica " + c.getNome());
+        return ("Profissional " + profissional.getNome() + " associado à característica " + c.getNome());
     }
 
     public String removerAssociacao(int idCaracteristica, Profissional profissional) {
         Caracteristica c = repo.buscarPorId(idCaracteristica);
         if (c == null || profissional == null) {
-            return("Erro.");
+            return ("Erro.");
         }
         c.removerProfissional(profissional);
-        return("Associação removida.");
+        return ("Associação removida.");
     }
+
     public void removerProfissionalDeTodasCaracteristicas(Profissional profissional) {
-        if (profissional == null) return;
+        if (profissional == null)
+            return;
         for (Caracteristica c : repo.listar()) {
             c.removerProfissional(profissional);
         }
@@ -71,9 +73,9 @@ public class ControleCaracteristica {
     public String removerCaracteristica(int id) {
         boolean removed = repo.remover(id);
         if (removed)
-            return("Característica removida.");
+            return ("Característica removida.");
         else
-            return("Característica não encontrada.");
+            return ("Característica não encontrada.");
     }
 
     public boolean atualizarCaracteristica(Caracteristica carAtualizada) {

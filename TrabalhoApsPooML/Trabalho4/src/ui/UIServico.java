@@ -67,4 +67,34 @@ public class UIServico {
 
         System.out.println(sis.ExcluirServico(id));
     }
+
+        public void AlterarServico() {
+        System.out.println("\n=== ALTERAR SERVIÇO ===");
+        System.out.print("ID do serviço a alterar: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+
+        Servico s = sis.servicoExiste(id);
+        if (s == null) {
+            System.out.println("Serviço não encontrada.");
+            return;
+        }
+
+        System.out.print("Novo nome (vazio para manter '" + s.getNome() + "'): ");
+        String nome = sc.nextLine();
+        if (nome != null && !nome.trim().isEmpty())
+            s.setNome(nome);
+
+        System.out.print("Nova descrição (vazio para manter): ");
+        String descricao = sc.nextLine();
+        if (descricao != null && !descricao.trim().isEmpty())
+            s.setDescricao(descricao);
+
+        System.out.print("Novo preço (vazio para manter): ");
+        double preco = sc.nextDouble();
+        if (preco > 0)
+            s.setPreco(preco);
+
+        sis.AlterarServico(s);
+    }
 }

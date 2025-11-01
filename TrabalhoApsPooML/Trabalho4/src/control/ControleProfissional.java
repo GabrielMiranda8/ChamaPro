@@ -76,6 +76,10 @@ public class ControleProfissional {
         repoProfissional.RemoverServico(id);
     }
 
+    public void atualizarServico(Servico s){
+        repoProfissional.AtualizarServico(s);
+    }
+
     public void DesassociarCaracteristica(int idProfissional, int idCaracteristica) {
         if (repoProfissional.idExiste(idProfissional) && repoProfissional.CaracteristicaExiste(idProfissional, idCaracteristica))
             repoProfissional.DesassociarCaracteristica(idProfissional, idCaracteristica);

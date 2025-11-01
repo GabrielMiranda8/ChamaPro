@@ -110,6 +110,7 @@ public class RepositorioCaracteristica {
         return caracteristicas.removeIf(c -> c.getId() == id);
     }
 
+
     public List<Caracteristica> listarPorProfissional(Profissional prof) {
         List<Caracteristica> resultado = new ArrayList<>();
         if (prof == null)

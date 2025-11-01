@@ -6,6 +6,7 @@ import java.util.Scanner;
 import control.Sistema;
 import control.ControleCaracteristica;
 import model.Caracteristica;
+import model.Cliente;
 import model.Profissional;
 
 public class UICaracteristica {
@@ -144,5 +145,46 @@ public class UICaracteristica {
         }
 
         System.out.println(sis.DesassociarCaracteristica(idProf, idCar));
+    }
+
+    public void AtribuirCaracteristicaACliente(int largura) {
+        System.out.println("\n=== ATRIBUIR CARACTERÍSTICA A CLIENTE ===");
+        ListarCaracteristicas(largura);
+        System.out.print("ID da característica: ");
+        int idCar = sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("ID do cliente a associar: ");
+        int idCliente = sc.nextInt();
+        sc.nextLine();
+
+        Cliente c = Sistema.getInstance().BuscarClientePorId(idCliente);
+        if (c == null) {
+            System.out.println("Cliente não encontrado.");
+            return;
+        }
+
+        sis.AssociarCaracteristica(idCliente, idCar);
+    }
+
+    // TA DANDO ERRADO
+    public void DesatribuirCaracteristicaACliente(int largura) {
+        System.out.println("\n=== DESATRIBUIR CARACTERÍSTICA A CLIENTE ===");
+        ListarCaracteristicas(largura);
+        System.out.print("ID da característica: ");
+        int idCar = sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("ID do cliente a desassociar: ");
+        int idCliente = sc.nextInt();
+        sc.nextLine();
+
+        Cliente c = Sistema.getInstance().BuscarClientePorId(idCliente);
+        if (c == null) {
+            System.out.println("Cliente não encontrado.");
+            return;
+        }
+
+        sis.DesassociarCaracteristicaDeCliente(idCliente, idCar);
     }
 }
