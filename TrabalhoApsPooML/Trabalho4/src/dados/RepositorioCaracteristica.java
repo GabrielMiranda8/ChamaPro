@@ -2,6 +2,7 @@ package dados;
 
 import model.Caracteristica;
 import model.Profissional;
+import model.Cliente;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -140,5 +141,21 @@ public class RepositorioCaracteristica {
             }
         }
         return profs;
+    }
+
+    // lista os nomes dos clientes associados a uma caracterÃ­stica (para exibiÃ§Ã£o)
+    public String listarClientes(int id) {
+        String clientesStr = "";
+        for (int i = 0; i < caracteristicas.size(); i++) {
+            if (caracteristicas.get(i).getId() == id) {
+                for (int j = 0; j < caracteristicas.get(i).getClientes().size(); j++) {
+                    if (j + 1 < caracteristicas.get(i).getClientes().size())
+                        clientesStr += caracteristicas.get(i).getClientes().get(j).getNome() + ", ";
+                    else
+                        clientesStr += caracteristicas.get(i).getClientes().get(j).getNome();
+                }
+            }
+        }
+        return clientesStr;
     }
 }
