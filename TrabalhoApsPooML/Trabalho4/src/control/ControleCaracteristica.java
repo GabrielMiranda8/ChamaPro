@@ -3,6 +3,7 @@ package control;
 import dados.RepositorioCaracteristica;
 import model.Caracteristica;
 import model.Profissional;
+import model.Cliente;
 
 import java.util.List;
 
@@ -62,6 +63,25 @@ public class ControleCaracteristica {
         return ("Associação removida.");
     }
 
+    // --- métodos para lidar com clientes ---
+    public String associarClienteACaracteristica(int idCaracteristica, Cliente cliente) {
+        Caracteristica c = repo.buscarPorId(idCaracteristica);
+        if (c == null || cliente == null) {
+            return ("Característica ou cliente não encontrado.");
+        }
+        c.adicionarCliente(cliente);
+        return ("Cliente " + cliente.getNome() + " associado à característica " + c.getNome());
+    }
+
+    public String removerAssociacaoCliente(int idCaracteristica, Cliente cliente) {
+        Caracteristica c = repo.buscarPorId(idCaracteristica);
+        if (c == null || cliente == null) {
+            return ("Erro.");
+        }
+        c.removerCliente(cliente);
+        return ("Associação removida.");
+    }
+
     public void removerProfissionalDeTodasCaracteristicas(Profissional profissional) {
         if (profissional == null)
             return;
@@ -69,6 +89,15 @@ public class ControleCaracteristica {
             c.removerProfissional(profissional);
         }
     }
+
+    public void removerClienteDeTodasCaracteristicas(Cliente cliente) {
+        if (cliente == null)
+            return;
+        for (Caracteristica c : repo.listar()) {
+            c.removerCliente(cliente);
+        }
+    }
+    // --- fim novos métodos ---
 
     public String removerCaracteristica(int id) {
         boolean removed = repo.remover(id);
@@ -96,5 +125,9 @@ public class ControleCaracteristica {
 
     public String ListarProfissioais(int id) {
         return repo.listarProfissionais(id);
+    }
+
+    public String ListarClientes(int id) {
+        return repo.listarClientes(id);
     }
 }

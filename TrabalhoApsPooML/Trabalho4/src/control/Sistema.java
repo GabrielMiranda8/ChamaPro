@@ -156,16 +156,33 @@ public class Sistema {
         return cCliente.BuscarPorId(id);
     }
 
-    public void AssociarCaracteristica(int idCliente, int idCaracteristica) {
+    // agora retorna mensagem e mantém ambas as estruturas atualizadas
+    public String AssociarCaracteristica(int idCliente, int idCaracteristica) {
         Caracteristica c = cCaracteristica.buscarPorId(idCaracteristica);
         if (c != null) {
             cCliente.AssociarCaracteristica(idCliente, c);
+            Cliente cliente = cCliente.BuscarPorId(idCliente);
+            if (cliente != null) {
+                c.adicionarCliente(cliente);
+                return ("Característica associada ao cliente.");
+            } else {
+                return ("Cliente não encontrado.");
+            }
         }
+        return ("Característica não encontrada.");
     }
 
     public String DesassociarCaracteristicaDeCliente(int idCliente, int idCaracteristica) {
+        Cliente cliente = cCliente.BuscarPorId(idCliente);
+        if (cliente == null) {
+            return ("Cliente não encontrado.");
+        }
         cCliente.DesassociarCaracteristica(idCliente, idCaracteristica);
-        return (cCaracteristica.removerAssociacao(idCaracteristica, cCliente.BuscarPorId(idCliente)));
+        Caracteristica c = cCaracteristica.buscarPorId(idCaracteristica);
+        if (c != null) {
+            c.removerCliente(cliente);
+        }
+        return ("Característica desassociada.");
     }
 
     public String ListarCaracteristicasDeCliente(int id) {
@@ -174,6 +191,11 @@ public class Sistema {
 
     public void RemoverCaracteristicaCliente(int idCaracteristica) {
         cCliente.RemoverCaracteristica(idCaracteristica);
+    }
+
+    // expõe listagem de clientes de uma característica para UI
+    public String ListarClientesDeCaracteristica(int id) {
+        return cCaracteristica.ListarClientes(id);
     }
 
     // SERVICO
@@ -206,6 +228,10 @@ public class Sistema {
 
     public Servico servicoExiste(int id) {
         return cServico.servicoExiste(id);
+    }
+
+    public String ListarProfissionaisDeCaracteristica(int id) {
+        return cCaracteristica.ListarProfissioais(id);
     }
 
     public String ListarProfissionaisDeServico(int id) {
