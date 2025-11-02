@@ -54,14 +54,17 @@ public class UICaracteristica {
         System.out.printf("%-" + largura + "s", "NOME");
         System.out.printf("%-" + largura + "s", "DESCRIÇÃO");
         System.out.printf("%-" + largura + "s", "PROFISSIONAIS");
+        System.out.printf("%-" + largura + "s", "CLIENTES");
         System.out.println();
         for (Caracteristica c : lista) {
             if (c != null) {
                 String profs = sis.ListarProfissioaisDeCaracteristica(c.getId());
+                String clients = sis.ListarClientesDeCaracteristica(c.getId());
                 System.out.printf("%-" + largura + "d", c.getId());
                 System.out.printf("%-" + largura + "s", c.getNome());
                 System.out.printf("%-" + largura + "s", c.getDescricao());
                 System.out.printf("%-" + largura + "s", profs);
+                System.out.printf("%-" + largura + "s", clients);
                 System.out.println();
             }
         }
@@ -105,6 +108,7 @@ public class UICaracteristica {
 
         System.out.println(controle.removerCaracteristica(id));
         sis.RemoverCaracteristicaProfissional(id);
+        sis.RemoverCaracteristicaCliente(id);
     }
 
     public void AtribuirCaracteristicaAProfissional(int largura) {
@@ -164,10 +168,9 @@ public class UICaracteristica {
             return;
         }
 
-        sis.AssociarCaracteristica(idCliente, idCar);
+        System.out.println(sis.AssociarCaracteristica(idCliente, idCar));
     }
 
-    // TA DANDO ERRADO
     public void DesatribuirCaracteristicaACliente(int largura) {
         System.out.println("\n=== DESATRIBUIR CARACTERÍSTICA A CLIENTE ===");
         ListarCaracteristicas(largura);
@@ -185,6 +188,6 @@ public class UICaracteristica {
             return;
         }
 
-        sis.DesassociarCaracteristicaDeCliente(idCliente, idCar);
+        System.out.println(sis.DesassociarCaracteristicaDeCliente(idCliente, idCar));
     }
 }
