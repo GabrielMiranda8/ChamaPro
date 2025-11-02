@@ -23,12 +23,14 @@ public class Caracteristica {
         }
     }
 
+    // copia profundas das listas (novas listas com objetos de referência)
     public Caracteristica(Caracteristica outro) {
         if (outro == null) return;
         this.id = outro.id;
         this.nome = outro.nome;
         this.descricao = outro.descricao;
-        this.profissionais = new ArrayList<>(outro.profissionais);
+        this.profissionais = new ArrayList<>(outro.profissionais == null ? new ArrayList<>() : outro.profissionais);
+        this.clientes = new ArrayList<>(outro.clientes == null ? new ArrayList<>() : outro.clientes);
     }
 
     public int getId() { return id; }
@@ -41,6 +43,8 @@ public class Caracteristica {
     public void setDescricao(String descricao) { this.descricao = descricao; }
 
     public List<Profissional> getProfissionais() { return profissionais; }
+
+    public List<Cliente> getClientes() { return clientes; }
 
     public void adicionarProfissional(Profissional profissional) {
         if (profissional == null) return;
@@ -88,6 +92,55 @@ public class Caracteristica {
             }
         }
     }
+
+    // --- CLIENTE: métodos para manter associação bidirecional ---
+    public void adicionarCliente(Cliente cliente) {
+        if (cliente == null) return;
+        for (Cliente cl : clientes) {
+            if (cl != null && cl.getId() == cliente.getId()) {
+                return;
+            }
+        }
+        clientes.add(cliente);
+
+        if (cliente.getCaracteristicas() == null) {
+            try {
+                cliente.caracteristicas = new ArrayList<>();
+            } catch (Throwable t) {
+            }
+        }
+        boolean existe = false;
+        for (Caracteristica c : cliente.getCaracteristicas()) {
+            if (c != null && c.getId() == this.id) {
+                existe = true;
+                break;
+            }
+        }
+        if (!existe) {
+            cliente.getCaracteristicas().add(this);
+        }
+    }
+
+    public void removerCliente(Cliente cliente) {
+        if (cliente == null) return;
+        Iterator<Cliente> it = clientes.iterator();
+        while (it.hasNext()) {
+            Cliente cl = it.next();
+            if (cl != null && cl.getId() == cliente.getId()) {
+                it.remove();
+            }
+        }
+        if (cliente.getCaracteristicas() != null) {
+            Iterator<Caracteristica> itc = cliente.getCaracteristicas().iterator();
+            while (itc.hasNext()) {
+                Caracteristica c = itc.next();
+                if (c != null && c.getId() == this.id) {
+                    itc.remove();
+                }
+            }
+        }
+    }
+    // --- fim cliente ---
 
     @Override
     public String toString() {
