@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Caracteristica;
-import model.Date;
 import model.Profissional;
 import model.Servico;
 
@@ -32,12 +31,10 @@ public class RepositorioProfissional {
         }
     }
 
-    public void Alterar(int id, String email, String nome, String senha, Date data, String cpf) {
+    public void Alterar(int id, String email, String nome, String senha) {
         contarProfissional();
         for (int i = 0; i < quantPro; i++) {
             if (profissionais.get(i).getId() == id) {
-                profissionais.get(i).setCpf(cpf);
-                profissionais.get(i).setData(data);
                 profissionais.get(i).setEmail(email);
                 profissionais.get(i).setNome(nome);
                 profissionais.get(i).setSenha(senha);

@@ -1,7 +1,6 @@
 package control;
 
 import java.util.List;
-
 import model.Caracteristica;
 import model.Cliente;
 import model.Profissional;
@@ -41,12 +40,12 @@ public class Sistema {
 
     // INICIALIZACAO
     public void init() {
-        cProfissional.Add("henrique@gmail.com", "Henrique", "123", 5, 7, 2007, "202.479.140-96");
-        cProfissional.Add("gabriel@gmail.com", "Gabriel", "123", 12, 6, 2009, "134.796.276-09");
+        cProfissional.Add("henrique@gmail.com", "Henrique", "123", "05/07/2007", "202.479.140-96");
+        cProfissional.Add("gabriel@gmail.com", "Gabriel", "123", "12/06/2009", "134.796.276-09");
 
-        cCliente.Add("lelis@gmail.com", "Lelis", "123", 5, 7, 2007, "202.479.140-96", 1, "Ruazona", "Bairrozão",
+        cCliente.Add("lelis@gmail.com", "Lelis", "123", "05/07/2007", "202.479.140-96", 1, "Ruazona", "Bairrozão",
                 "Timóteo");
-        cCliente.Add("miranda@gmail.com", "Miranda", "123", 12, 6, 2009, "134.796.276-09", 2, "Ruazinha", "Bairrozinho",
+        cCliente.Add("miranda@gmail.com", "Miranda", "123", "12/06/2009", "134.796.276-09", 2, "Ruazinha", "Bairrozinho",
                 "Coronel Fabriciano");
 
         cServico.cadastrarServico("Pedreiro", "Construções", 1000, cProfissional.BuscarPorId(1));
@@ -57,8 +56,8 @@ public class Sistema {
     }
 
     // PROFISSIONAL
-    public String Add(String email, String nome, String senha, int dia, int mes, int ano, String cpf) {
-        return (cProfissional.Add(email, nome, senha, dia, mes, ano, cpf));
+    public void Add(String email, String nome, String senha, String data, String cpf) {
+        cProfissional.Add(email, nome, senha, data, cpf);
     }
 
     public String ExcluirProfissional(int id) {
@@ -76,8 +75,8 @@ public class Sistema {
         return ("Profissional excluído com sucesso.");
     }
 
-    public String Alterar(int id, String email, String nome, String senha, int dia, int mes, int ano, String cpf) {
-        return (cProfissional.Alterar(id, email, nome, senha, dia, mes, ano, cpf));
+    public void Alterar(int id, String email, String nome, String senha) {
+        cProfissional.Alterar(id, email, nome, senha);
     }
 
     public List<Profissional> ListarTodos() {
@@ -122,10 +121,10 @@ public class Sistema {
     }
 
     // CLIENTE
-    public String CadastrarCliente(String email, String nome, String senha, int dia, int mes, int ano, String cpf,
+    public void CadastrarCliente(String email, String nome, String senha, String data, String cpf,
             int numero,
             String rua, String bairro, String cidade) {
-        return (cCliente.Add(email, nome, senha, dia, mes, ano, cpf, numero, rua, bairro, cidade));
+        cCliente.Add(email, nome, senha, data, cpf, numero, rua, bairro, cidade);
     }
 
     public String ExcluirCliente(int id) {
@@ -141,11 +140,8 @@ public class Sistema {
         return ("Cliente excluído com sucesso.");
     }
 
-    public String AlterarCliente(int id, String email, String nome, String senha, int dia, int mes, int ano, String cpf,
-            int numero,
-            String rua, String bairro, String cidade) {
-        return (cCliente.Alterar(id, email, nome, senha, dia, mes, ano, cpf, numero,
-                rua, bairro, cidade));
+    public void AlterarCliente(int id, String email, String nome, String senha,int numero,String rua, String bairro, String cidade) {
+        cCliente.Alterar(id, email, nome, senha, numero,rua, bairro, cidade);
     }
 
     public List<Cliente> ListarTodosClientes() {

@@ -1,25 +1,34 @@
 package control;
 
+import control.exceptions.DataInvalidaException;
 import dados.RepositorioProfissional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import model.Profissional;
 import model.Servico;
-import model.Date;
-import java.util.List;
 
 public class ControleProfissional {
     protected RepositorioProfissional repoProfissional = new RepositorioProfissional();
 
     // Cadastrar
-    public String Add(String email, String nome, String senha, int dia, int mes, int ano, String cpf) {
-        Date data = Date.getInstance(dia, mes, ano);
+    public void Add(String email, String nome, String senha, String data, String cpf) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+			Date data2 = sdf.parse(data);
+			System.out.println("pq não deu erro");
+			System.out.println(data2);
+		} catch (ParseException e) {
+            throw new DataInvalidaException("Data inválida: " + data);
+		}
+    
         if (email != null && nome != null && senha != null && data != null && cpf != null) {
             if (!repoProfissional.verificarRepetido(email, cpf) && repoProfissional.ValidarCPF(cpf)) {
                 Profissional p = Profissional.getInstance(email, nome, senha, data, cpf);
                 repoProfissional.Add(p);
-                return("Profissional cadastrado com sucesso.");
             }
         }
-        return("Profissional não cadastrado");
     }
 
     // Excluir
@@ -29,14 +38,11 @@ public class ControleProfissional {
     }
 
     // Update 
-    public String Alterar(int id, String email, String nome, String senha, int dia, int mes, int ano, String cpf) {
-        Date data = Date.getInstance(dia, mes, ano);
-        if (repoProfissional.idExiste(id) && repoProfissional.ValidarCPF(cpf)) {
-            if (email != null && nome != null && senha != null && data != null && cpf != null)
-                repoProfissional.Alterar(id, email, nome, senha, data, cpf);
-                return("Profissional alterado com sucesso.");
-        }
-        return("Profissional não alterado.");
+    public void Alterar(int id, String email, String nome, String senha) {
+        if (repoProfissional.idExiste(id)) {
+            if (email != null && nome != null && senha != null)
+                repoProfissional.Alterar(id, email, nome, senha);
+        };
     }
 
     // Imprimir

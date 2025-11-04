@@ -1,12 +1,14 @@
 package control;
 
-import java.util.List;
-
+import control.exceptions.DataInvalidaException;
 import dados.RepositorioCliente;
-import model.Date;
-import model.Endereco;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import model.Caracteristica;
 import model.Cliente;
+import model.Endereco;
 
 public class ControleCliente {
     protected RepositorioCliente repoCliente;
@@ -16,18 +18,24 @@ public class ControleCliente {
     }
 
     // Cadastrar
-    public String Add(String email, String nome, String senha, int dia, int mes, int ano, String cpf, int numero,
-            String rua, String bairro, String cidade) {
-        Date data = Date.getInstance(dia, mes, ano);
-        Endereco endereco = Endereco.getInstance(mes, rua, bairro, cidade);
+    public void Add(String email, String nome, String senha, String data, String cpf, int numero, String rua,
+            String bairro, String cidade) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date data2 = sdf.parse(data);
+            System.out.println("pq não deu erro");
+            System.out.println(data2);
+        } catch (ParseException e) {
+            throw new DataInvalidaException("Data inválida: " + data);
+        }
+
+        Endereco endereco = Endereco.getInstance(numero, rua, bairro, cidade);
         if (email != null && nome != null && senha != null && data != null && cpf != null && endereco != null) {
             if (!repoCliente.verificarRepetido(email, cpf) && repoCliente.ValidarCPF(cpf)) {
                 Cliente c = Cliente.getInstance(email, nome, senha, data, cpf, endereco);
                 repoCliente.Add(c);
-                return ("Cliente cadastrado com sucesso.");
             }
         }
-        return ("Cliente não cadastrado");
     }
 
     // Imprimir
@@ -44,31 +52,29 @@ public class ControleCliente {
     }
 
     // Alterar
-    public String Alterar(int id, String email, String nome, String senha, int dia, int mes, int ano, String cpf,
-            int numero,
-            String rua, String bairro, String cidade) {
-        Date data = Date.getInstance(dia, mes, ano);
-        Endereco endereco = Endereco.getInstance(mes, rua, bairro, cidade);
-        if (repoCliente.idExiste(id) && repoCliente.ValidarCPF(cpf)) {
-            if (email != null && nome != null && senha != null && data != null && cpf != null)
-                repoCliente.Alterar(id, email, nome, senha, data, cpf, endereco);
-            return ("Cliente alterado com sucesso.");
+    public void Alterar(int id, String email, String nome, String senha, int numero, String rua, String bairro,
+            String cidade) {
+        Endereco endereco = Endereco.getInstance(numero, rua, bairro, cidade);
+        if (repoCliente.idExiste(id)) {
+            if (email != null && nome != null && senha != null) {
+                repoCliente.Alterar(id, email, nome, senha, endereco);
+            }
         }
-        return ("Cliente não alterado.");
     }
 
     // Excluir
     public void Excluir(int id) {
-        if (repoCliente.idExiste(id))
+        if (repoCliente.idExiste(id)) {
             repoCliente.Excluir(id);
+        }
     }
 
     // Caracteristica / Cliente
-    public void AssociarCaracteristica(int idCliente, Caracteristica c){
-        if (repoCliente.idExiste(idCliente)){
-             if (!repoCliente.CaracteristicaExiste(idCliente, c.getId())){
+    public void AssociarCaracteristica(int idCliente, Caracteristica c) {
+        if (repoCliente.idExiste(idCliente)) {
+            if (!repoCliente.CaracteristicaExiste(idCliente, c.getId())) {
                 repoCliente.AssociarCaracteristica(idCliente, c);
-             }
+            }
         }
     }
 

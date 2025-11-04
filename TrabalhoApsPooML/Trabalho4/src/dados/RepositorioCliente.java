@@ -3,7 +3,6 @@ package dados;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Date;
 import model.Endereco;
 import model.Caracteristica;
 import model.Cliente;
@@ -32,12 +31,10 @@ public class RepositorioCliente {
         }
     }
 
-    public void Alterar(int id, String email, String nome, String senha, Date data, String cpf, Endereco endereco) {
+    public void Alterar(int id, String email, String nome, String senha, Endereco endereco) {
         contarCliente();
         for (int i = 0; i < quantCliente; i++) {
             if (clientes.get(i).getId() == id) {
-                clientes.get(i).setCpf(cpf);
-                clientes.get(i).setData(data);
                 clientes.get(i).setEmail(email);
                 clientes.get(i).setNome(nome);
                 clientes.get(i).setSenha(senha);

@@ -1,8 +1,8 @@
 package ui;
 
+import control.Sistema;
 import java.util.List;
 import java.util.Scanner;
-import control.Sistema;
 import model.Profissional;
 
 public class UIProfissional {
@@ -22,15 +22,11 @@ public class UIProfissional {
     System.out.print("Senha: ");
     String senha = scn.next();
     System.out.print("Dia de nascimento: ");
-    int dia = scn.nextInt();
-    System.out.print("Mês de nascimento: ");
-    int mes = scn.nextInt();
-    System.out.print("Ano de nascimento: ");
-    int ano = scn.nextInt();
+    String data = scn.next();
     System.out.print("CPF: ");
     String cpf = scn.next();
 
-    System.out.println(sis.Add(email, nome, senha, dia, mes, ano, cpf));
+    sis.Add(email, nome, senha, data, cpf);
   }
 
   public void ListarProfissionais(int largura) {
@@ -52,8 +48,7 @@ public class UIProfissional {
         System.out.printf("%-" + largura + "s", print.get(i).getNome());
         System.out.printf("%-" + largura + "s", print.get(i).getEmail());
         System.out.printf("%-" + largura + "s", print.get(i).getCpf());
-        System.out.printf("%-" + largura + "s", print.get(i).getData().getDia() + "/" + print.get(i).getData().getMes()
-            + "/" + print.get(i).getData().getAno());
+        System.out.printf("%-" + largura + "s", print.get(i).getData());
         System.out.printf("%-" + largura + "s", servicos);
         System.out.printf("%-" + largura + "s", carateristicas);
         System.out.println();
@@ -72,16 +67,8 @@ public class UIProfissional {
     String nome = scn.next();
     System.out.print("Senha: ");
     String senha = scn.next();
-    System.out.print("Dia de nascimento: ");
-    int dia = scn.nextInt();
-    System.out.print("Mês de nascimento: ");
-    int mes = scn.nextInt();
-    System.out.print("Ano de nascimento: ");
-    int ano = scn.nextInt();
-    System.out.print("CPF: ");
-    String cpf = scn.next();
 
-    System.out.println(sis.Alterar(id, email, nome, senha, dia, mes, ano, cpf));
+    sis.Alterar(id, email, nome, senha);
   }
 
   public void RemoverProfissional(int largura) {

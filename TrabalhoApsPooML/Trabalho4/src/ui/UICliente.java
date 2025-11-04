@@ -1,9 +1,8 @@
 package ui;
 
+import control.Sistema;
 import java.util.List;
 import java.util.Scanner;
-
-import control.Sistema;
 import model.Cliente;
 
 public class UICliente {
@@ -23,11 +22,7 @@ public class UICliente {
         System.out.print("Senha: ");
         String senha = scn.next();
         System.out.print("Dia de nascimento: ");
-        int dia = scn.nextInt();
-        System.out.print("Mês de nascimento: ");
-        int mes = scn.nextInt();
-        System.out.print("Ano de nascimento: ");
-        int ano = scn.nextInt();
+        String data = scn.next();
         System.out.print("CPF: ");
         String cpf = scn.next();
         System.out.print("Número da casa: ");
@@ -39,7 +34,7 @@ public class UICliente {
         System.out.print("Cidade: ");
         String cidade = scn.next();
 
-        System.out.println(sis.CadastrarCliente(email, nome, senha, dia, mes, ano, cpf, numero, rua, bairro, cidade));
+        sis.CadastrarCliente(email, nome, senha, data, cpf, numero, rua, bairro, cidade);
     }
 
     public void ListarClientes(int largura) {
@@ -60,9 +55,7 @@ public class UICliente {
                 System.out.printf("%-" + largura + "s", print.get(i).getNome());
                 System.out.printf("%-" + largura + "s", print.get(i).getEmail());
                 System.out.printf("%-" + largura + "s", print.get(i).getCpf());
-                System.out.printf("%-" + largura + "s",
-                        print.get(i).getData().getDia() + "/" + print.get(i).getData().getMes()
-                                + "/" + print.get(i).getData().getAno());
+                System.out.printf("%-" + largura + "s", print.get(i).getData());
                 System.out.printf("%-" + largura + "s", carateristicas);
                 System.out.printf("%-" + largura + "s",
                         print.get(i).getEndereco().getRua() + ", N" + print.get(i).getEndereco().getNumero() + ", "
@@ -84,14 +77,6 @@ public class UICliente {
         String nome = scn.next();
         System.out.print("Senha: ");
         String senha = scn.next();
-        System.out.print("Dia de nascimento: ");
-        int dia = scn.nextInt();
-        System.out.print("Mês de nascimento: ");
-        int mes = scn.nextInt();
-        System.out.print("Ano de nascimento: ");
-        int ano = scn.nextInt();
-        System.out.print("CPF: ");
-        String cpf = scn.next();
         System.out.print("Número da casa: ");
         int numero = scn.nextInt();
         System.out.print("Rua: ");
@@ -101,7 +86,7 @@ public class UICliente {
         System.out.print("Cidade: ");
         String cidade = scn.next();
 
-        System.out.println(sis.AlterarCliente(id, email, nome, senha, dia, mes, ano, cpf, numero, rua, bairro, cidade));
+        sis.AlterarCliente(id, email, nome, senha, numero, rua, bairro, cidade);
     }
 
     public void RemoverCliente(int largura) {

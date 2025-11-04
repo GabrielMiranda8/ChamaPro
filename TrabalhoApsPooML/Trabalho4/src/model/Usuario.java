@@ -5,7 +5,7 @@ public class Usuario {
     protected String email;
     protected String nome;
     protected String senha;
-    protected Date data;
+    protected String data;
     protected String cpf;
 
     public static int geraId = 1;
@@ -22,7 +22,7 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public void setData(Date data) {
+    public void setData(String data) {
         this.data = data;
     }
 
@@ -46,7 +46,7 @@ public class Usuario {
         return senha;
     }
 
-    public Date getData() {
+    public String getData() {
         return data;
     }
 
@@ -54,7 +54,7 @@ public class Usuario {
         return cpf;
     }
 
-    protected Usuario(String email, String nome, String senha, Date data, String cpf){
+    protected Usuario(String email, String nome, String senha, String data, String cpf){
         this.id = geraId++;
         this.email = email;
         this.nome = nome;

@@ -7,7 +7,7 @@ public class Cliente extends Usuario {
     protected Endereco endereco;
     protected List<Caracteristica> caracteristicas;
 
-    private Cliente(String email, String nome, String senha, Date data, String cpf, Endereco endereco) {
+    private Cliente(String email, String nome, String senha, String data, String cpf, Endereco endereco) {
         super(email, nome, senha, data, cpf);
         this.endereco = endereco;
         this.caracteristicas = new ArrayList<Caracteristica>();
@@ -20,7 +20,7 @@ public class Cliente extends Usuario {
         this.caracteristicas = outro.caracteristicas;
     }
 
-    public static Cliente getInstance(String email, String nome, String senha, Date data, String cpf,
+    public static Cliente getInstance(String email, String nome, String senha, String data, String cpf,
             Endereco endereco) {
         if (email != null && nome != null && senha != null && data != null && cpf != null && endereco != null) {
             return new Cliente(email, nome, senha, data, cpf, endereco);

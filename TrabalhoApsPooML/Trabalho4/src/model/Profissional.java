@@ -7,7 +7,7 @@ public class Profissional extends Usuario {
     protected List<Servico> servicos;
     protected List<Caracteristica> caracteristicas;
 
-    private Profissional(String email, String nome, String senha, Date data, String cpf) {
+    private Profissional(String email, String nome, String senha, String data, String cpf) {
         super(email, nome, senha, data, cpf);
         this.servicos = new ArrayList<Servico>();
         this.caracteristicas = new ArrayList<Caracteristica>();
@@ -20,7 +20,7 @@ public class Profissional extends Usuario {
         this.caracteristicas = outro.caracteristicas;
     }
 
-    public static Profissional getInstance(String email, String nome, String senha, Date data, String cpf) {
+    public static Profissional getInstance(String email, String nome, String senha, String data, String cpf) {
         if (email != null && nome != null && senha != null && data != null && cpf != null) {
             return new Profissional(email, nome, senha, data, cpf);
         }
