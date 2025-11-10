@@ -1,6 +1,6 @@
-package src.control.exceptions;
+package control.exceptions;
 
-public class UsuarioNaoEncontradoException extends Exception {
+public class UsuarioNaoEncontradoException extends RuntimeException {
     public UsuarioNaoEncontradoException() {
         super("Usuario não encontrado!");
     }

@@ -17,11 +17,12 @@ public class UIProfissional {
   public void CadastrarProfissional() {
     System.out.print("Email: ");
     String email = scn.next();
+    // Se inserir nome com espaço da erro por causa do next   
     System.out.print("Nome: ");
     String nome = scn.next();
     System.out.print("Senha: ");
     String senha = scn.next();
-    System.out.print("Dia de nascimento: ");
+    System.out.print("Data de nascimento: ");
     String data = scn.next();
     System.out.print("CPF: ");
     String cpf = scn.next();

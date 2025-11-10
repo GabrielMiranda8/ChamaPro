@@ -1,5 +1,6 @@
 package control;
 
+import control.exceptions.UsuarioNaoEncontradoException;
 import java.util.List;
 import model.Caracteristica;
 import model.Cliente;
@@ -60,19 +61,25 @@ public class Sistema {
         cProfissional.Add(email, nome, senha, data, cpf);
     }
 
-    public String ExcluirProfissional(int id) {
+    public String ExcluirProfissional(int id) throws UsuarioNaoEncontradoException {
+        try {
+            Profissional p = cProfissional.BuscarPorId(id);
+        } catch (Exception e) {
+            throw new UsuarioNaoEncontradoException("Usuário não encontrado");
+        }
         Profissional p = cProfissional.BuscarPorId(id);
-        if (p == null) {
-            return ("Profissional não encontrado.");
+        if (p != null){
+            cServico.DesassociarProfissionalDeServicos(id);
+    
+            cCaracteristica.removerProfissionalDeTodasCaracteristicas(p);
+    
+            cProfissional.Excluir(id);
+    
+            return ("Profissional excluído com sucesso.");
+        } else {
+            throw new UsuarioNaoEncontradoException("Usuário não encontrado");
         }
 
-        cServico.DesassociarProfissionalDeServicos(id);
-
-        cCaracteristica.removerProfissionalDeTodasCaracteristicas(p);
-
-        cProfissional.Excluir(id);
-
-        return ("Profissional excluído com sucesso.");
     }
 
     public void Alterar(int id, String email, String nome, String senha) {
@@ -127,17 +134,22 @@ public class Sistema {
         cCliente.Add(email, nome, senha, data, cpf, numero, rua, bairro, cidade);
     }
 
-    public String ExcluirCliente(int id) {
-        Cliente c = cCliente.BuscarPorId(id);
-        if (c == null) {
-            return ("Cliente não encontrado.");
+    public String ExcluirCliente(int id) throws UsuarioNaoEncontradoException {
+        try {
+            Cliente c = cCliente.BuscarPorId(id);
+        } catch (Exception e) {
+            throw new UsuarioNaoEncontradoException("Usuário não encontrado");
         }
+        Cliente c = cCliente.BuscarPorId(id);
+        if (c != null){
+            cCaracteristica.removerClienteDeTodasCaracteristicas(c);
 
-        cCaracteristica.removerClienteDeTodasCaracteristicas(c);
-
-        cCliente.Excluir(id);
-
-        return ("Cliente excluído com sucesso.");
+            cCliente.Excluir(id);
+    
+            return ("Cliente excluído com sucesso.");
+        } else {
+            throw new UsuarioNaoEncontradoException("Usuário não encontrado");
+        }
     }
 
     public void AlterarCliente(int id, String email, String nome, String senha,int numero,String rua, String bairro, String cidade) {
@@ -153,30 +165,39 @@ public class Sistema {
     }
 
     // agora retorna mensagem e mantém ambas as estruturas atualizadas
-    public String AssociarCaracteristica(int idCliente, int idCaracteristica) {
+    public String AssociarCaracteristica(int idCliente, int idCaracteristica) throws UsuarioNaoEncontradoException{
         Caracteristica c = cCaracteristica.buscarPorId(idCaracteristica);
         if (c != null) {
             cCliente.AssociarCaracteristica(idCliente, c);
+            try {
+                Cliente cliente = cCliente.BuscarPorId(idCliente);
+            } catch (Exception e) {
+                throw new UsuarioNaoEncontradoException("Usuário não encontrado");
+            }
             Cliente cliente = cCliente.BuscarPorId(idCliente);
             if (cliente != null) {
                 c.adicionarCliente(cliente);
                 return ("Característica associada ao cliente.");
             } else {
-                return ("Cliente não encontrado.");
-            }
+                throw new UsuarioNaoEncontradoException("Usuário não encontrado");
+            } 
         }
         return ("Característica não encontrada.");
     }
 
-    public String DesassociarCaracteristicaDeCliente(int idCliente, int idCaracteristica) {
-        Cliente cliente = cCliente.BuscarPorId(idCliente);
-        if (cliente == null) {
-            return ("Cliente não encontrado.");
+    public String DesassociarCaracteristicaDeCliente(int idCliente, int idCaracteristica) throws UsuarioNaoEncontradoException{
+        try {
+            Cliente c = cCliente.BuscarPorId(idCliente);
+        } catch (Exception e) {
+            throw new UsuarioNaoEncontradoException("Usuário não encontrado");
         }
+        Cliente cliente = cCliente.BuscarPorId(idCliente);
         cCliente.DesassociarCaracteristica(idCliente, idCaracteristica);
         Caracteristica c = cCaracteristica.buscarPorId(idCaracteristica);
         if (c != null) {
             c.removerCliente(cliente);
+        } else {
+            throw new UsuarioNaoEncontradoException("Usuário não encontrado");
         }
         return ("Característica desassociada.");
     }
@@ -200,7 +221,7 @@ public class Sistema {
             Profissional profissional = cProfissional.BuscarPorId(id);
             return cServico.cadastrarServico(nome, descricao, preco, profissional);
         } else {
-            return ("Profissional não existe com id: " + id);
+            throw new UsuarioNaoEncontradoException("Usuário não encontrado");
         }
     }
 
