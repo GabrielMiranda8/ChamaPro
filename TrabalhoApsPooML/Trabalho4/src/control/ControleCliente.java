@@ -23,8 +23,6 @@ public class ControleCliente {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         try {
             Date data2 = sdf.parse(data);
-            System.out.println("pq não deu erro");
-            System.out.println(data2);
         } catch (ParseException e) {
             throw new DataInvalidaException("Data inválida: " + data);
         }

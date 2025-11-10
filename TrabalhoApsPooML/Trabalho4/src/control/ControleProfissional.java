@@ -1,6 +1,8 @@
 package control;
 
 import control.exceptions.DataInvalidaException;
+import control.exceptions.ServicoNaoEncontradoException;
+import control.exceptions.UsuarioNaoEncontradoException;
 import dados.RepositorioProfissional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,8 +19,6 @@ public class ControleProfissional {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         try {
 			Date data2 = sdf.parse(data);
-			System.out.println("pq não deu erro");
-			System.out.println(data2);
 		} catch (ParseException e) {
             throw new DataInvalidaException("Data inválida: " + data);
 		}
@@ -42,6 +42,8 @@ public class ControleProfissional {
         if (repoProfissional.idExiste(id)) {
             if (email != null && nome != null && senha != null)
                 repoProfissional.Alterar(id, email, nome, senha);
+        }else {
+            throw new UsuarioNaoEncontradoException("Usuário não encontrado");
         };
     }
 
@@ -63,9 +65,14 @@ public class ControleProfissional {
     }
 
     public String AssociarServico(int id, Servico s) {
-        if (repoProfissional.idExiste(id) && !repoProfissional.ServicoExiste(id, s.getId())){
-            repoProfissional.AssociarServico(id, s);
-            return("Serviço atribuído com sucesso.");
+        if (repoProfissional.idExiste(id)){
+            if (!repoProfissional.ServicoExiste(id, s.getId())){
+                repoProfissional.AssociarServico(id, s);
+                return("Serviço atribuído com sucesso.");
+            } else {
+                throw new ServicoNaoEncontradoException("Serviço não encontrado");
+            }
+
         }
         return("Serviço não atribuído."); 
     }

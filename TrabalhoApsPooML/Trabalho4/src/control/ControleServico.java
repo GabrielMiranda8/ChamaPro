@@ -1,10 +1,10 @@
 package control;
 
+import control.exceptions.ValorInvalidoException;
+import dados.RepositorioServico;
+import java.util.List;
 import model.Profissional;
 import model.Servico;
-import dados.RepositorioServico;
-
-import java.util.List;
 
 public class ControleServico {
     protected RepositorioServico repo;
@@ -31,9 +31,12 @@ public class ControleServico {
         this.nextId = max + 1;
     }
 
-    public String cadastrarServico(String nome, String descricao, double preco, Profissional criador) {
+    public String cadastrarServico(String nome, String descricao, double preco, Profissional criador) throws ValorInvalidoException {
         if (criador == null) {
             return ("Criador inválido.");
+        }
+        if (preco <= 0){
+            throw new ValorInvalidoException("Valor inválido: " + preco);
         }
         Servico serv = new Servico(nextId++, nome, descricao, preco, criador);
         repo.adicionar(serv);

@@ -116,30 +116,18 @@ public class UIPrincipal {
     }
 
     static int Menu(Scanner scn) {
-        System.out.println("    1. Cadastrar Profissional");
-        System.out.println("    2. Listar Profissionais");
-        System.out.println("    3. Alterar Profissional");
-        System.out.println("    4. Remover Profissional");
-        System.out.println("    5. Cadastrar Serviço");
-        System.out.println("    6. Listar Serviços");
-        System.out.println("    7. Alterar Serviço");
-        System.out.println("    8. Remover Serviços");
-        System.out.println("    9. Atribuir Serviço a Profissional");
-        System.out.println("    10. Desatribuir Serviço a Profissional");
-        System.out.println("    11. Cadastrar Característica");
-        System.out.println("    12. Listar Características");
-        System.out.println("    13. Alterar Característica");
-        System.out.println("    14. Remover Característica");
-        System.out.println("    15. Atribuir Característica a Profissional");
-        System.out.println("    16. Desatribuir Característica a Profissional");
-        System.out.println("    17. Cadastrar Cliente");
-        System.out.println("    18. Listar Clientes");
-        System.out.println("    19. Alterar Cliente");
-        System.out.println("    20. Remover Cliente");
-        System.out.println("    21. Atribuir Característica a Cliente");
-        System.out.println("    22. Desatribuir Característica a Cliente");
-        System.out.println("    23. Editar Largura");
-        System.out.println("    24. Sair");
+        System.out.println("    1. Cadastrar Profissional                    13. Alterar Característica");
+        System.out.println("    2. Listar Profissionais                      14. Remover Característica");
+        System.out.println("    3. Alterar Profissional                      15. Atribuir Característica a Profissional");
+        System.out.println("    4. Remover Profissional                      16. Desatribuir Característica a Profissional");
+        System.out.println("    5. Cadastrar Serviço                         17. Cadastrar Cliente");
+        System.out.println("    6. Listar Serviços                           18. Listar Clientes");
+        System.out.println("    7. Alterar Serviço                           19. Alterar Cliente");
+        System.out.println("    8. Remover Serviços                          20. Remover Cliente");
+        System.out.println("    9. Atribuir Serviço a Profissional           21. Atribuir Característica a Cliente");
+        System.out.println("    10. Desatribuir Serviço a Profissional       22. Desatribuir Característica a Cliente");
+        System.out.println("    11. Cadastrar Característica                 23. Editar Largura");
+        System.out.println("    12. Listar Características                   24. Sair");
         System.out.print("Escolha: ");
         int escolha = scn.nextInt();
         return escolha;

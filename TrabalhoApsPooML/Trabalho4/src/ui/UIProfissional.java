@@ -60,7 +60,7 @@ public class UIProfissional {
 
   public void AlterarProfissional(int largura) {
     ListarProfissionais(largura);
-    System.out.print("ID do Profissional");
+    System.out.print("ID do Profissional: ");
     int id = scn.nextInt();
     System.out.print("Email: ");
     String email = scn.next();

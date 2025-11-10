@@ -1,9 +1,9 @@
 package ui;
 
+import control.Sistema;
+import control.exceptions.ServicoNaoEncontradoException;
 import java.util.List;
 import java.util.Scanner;
-
-import control.Sistema;
 import model.Servico;
 
 public class UIServico {
@@ -68,7 +68,7 @@ public class UIServico {
         System.out.println(sis.ExcluirServico(id));
     }
 
-        public void AlterarServico() {
+    public void AlterarServico() {
         System.out.println("\n=== ALTERAR SERVIÇO ===");
         System.out.print("ID do serviço a alterar: ");
         int id = sc.nextInt();
@@ -76,8 +76,7 @@ public class UIServico {
 
         Servico s = sis.servicoExiste(id);
         if (s == null) {
-            System.out.println("Serviço não encontrada.");
-            return;
+            throw new ServicoNaoEncontradoException("Serviço não encontrado");
         }
 
         System.out.print("Novo nome (vazio para manter '" + s.getNome() + "'): ");
