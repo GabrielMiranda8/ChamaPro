@@ -1,0 +1,7 @@
+{
+  "name": "ChamaPro",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
