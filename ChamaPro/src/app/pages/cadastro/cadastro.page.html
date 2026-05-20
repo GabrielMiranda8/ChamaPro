@@ -2,135 +2,62 @@
   <div class="cadastro-wrapper">
 
     <!-- Header -->
-    <div class="cadastro-header">
+    <div class="cadastro-header ion-text-center">
       <div class="logo-container">
-        <img
-          src="https://api.builder.io/api/v1/image/assets/TEMP/944de1fdba3fd4b63f21ffe1f709737088096b16?width=180"
-          alt="Logo"
-          class="logo-img"
-        />
+        <img src="https://api.builder.io/api/v1/image/assets/TEMP/944de1fdba3fd4b63f21ffe1f709737088096b16?width=180"
+          alt="Logo" class="logo-img" />
       </div>
       <h1 class="cadastro-title">Criar Conta</h1>
       <p class="cadastro-subtitle">Preencha seus dados para começar</p>
     </div>
 
     <!-- Back button -->
-    <div class="back-button-container">
-      <ion-button fill="clear" class="back-btn" routerLink="/">
+    <div class="back-button-container" style="padding-left: 15px;">
+      <ion-button fill="clear" class="back-btn" routerLink="/login">
         <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
         Voltar
       </ion-button>
     </div>
 
     <!-- Form -->
-    <form (ngSubmit)="onSubmit()" novalidate class="cadastro-form">
+    <form (ngSubmit)="onSubmit()" novalidate class="cadastro-form" style="padding: 30px;">
 
       <!-- Nome completo -->
       <div class="field-group">
         <ion-label class="field-label">Nome completo</ion-label>
-        <ion-item
-          lines="none"
-          class="field-item"
-          [class.field-error]="submitted && errors['nome']"
-        >
-          <ion-input
-            type="text"
-            placeholder="João da Silva"
-            [(ngModel)]="nome"
-            name="nome"
-            required
-          ></ion-input>
-        </ion-item>
-        <ion-note color="danger" *ngIf="submitted && errors['nome']">
-          {{ errors['nome'] }}
-        </ion-note>
+        <ion-input class="input" type="text" placeholder="João da Silva" name="nome" required
+          [(ngModel)]="nome"></ion-input>
       </div>
 
       <!-- E-mail -->
       <div class="field-group">
         <ion-label class="field-label">E-mail</ion-label>
-        <ion-item
-          lines="none"
-          class="field-item"
-          [class.field-error]="submitted && errors['email']"
-        >
-          <ion-input
-            type="email"
-            placeholder="seu@email.com"
-            [(ngModel)]="email"
-            name="email"
-            required
-          ></ion-input>
-        </ion-item>
-        <ion-note color="danger" *ngIf="submitted && errors['email']">
-          {{ errors['email'] }}
-        </ion-note>
+        <ion-input class="input" type="email" placeholder="seu@email.com" [(ngModel)]="email" name="email"
+          required></ion-input>
       </div>
 
       <!-- Senha -->
       <div class="field-group">
         <ion-label class="field-label">Senha</ion-label>
-        <ion-item
-          lines="none"
-          class="field-item"
-          [class.field-error]="submitted && errors['senha']"
-        >
-          <ion-input
-            [type]="showSenha() ? 'text' : 'password'"
-            placeholder="••••••••"
-            [(ngModel)]="senha"
-            name="senha"
-            required
-          ></ion-input>
-          <ion-button
-            slot="end"
-            fill="clear"
-            class="eye-btn"
-            type="button"
-            (click)="toggleSenha()"
-          >
-            <ion-icon
-              slot="icon-only"
-              [name]="showSenha() ? 'eye-off-outline' : 'eye-outline'"
-            ></ion-icon>
+        <ion-input class="input" [type]="showSenha() ? 'text' : 'password'" placeholder="••••••••" [(ngModel)]="senha"
+          name="senha" required>
+          <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleSenha()">
+            <ion-icon slot="icon-only" [name]="showSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
           </ion-button>
-        </ion-item>
-        <ion-note color="danger" *ngIf="submitted && errors['senha']">
-          {{ errors['senha'] }}
-        </ion-note>
+        </ion-input>
+
       </div>
 
       <!-- Confirmar Senha -->
       <div class="field-group">
         <ion-label class="field-label">Confirmar senha</ion-label>
-        <ion-item
-          lines="none"
-          class="field-item"
-          [class.field-error]="submitted && errors['confirmarSenha']"
-        >
-          <ion-input
-            [type]="showConfirmarSenha() ? 'text' : 'password'"
-            placeholder="••••••••"
-            [(ngModel)]="confirmarSenha"
-            name="confirmarSenha"
-            required
-          ></ion-input>
-          <ion-button
-            slot="end"
-            fill="clear"
-            class="eye-btn"
-            type="button"
-            (click)="toggleConfirmarSenha()"
-          >
-            <ion-icon
-              slot="icon-only"
-              [name]="showConfirmarSenha() ? 'eye-off-outline' : 'eye-outline'"
-            ></ion-icon>
+        <ion-input class="input" [type]="showConfirmarSenha() ? 'text' : 'password'" placeholder="••••••••"
+          [(ngModel)]="confirmarSenha" name="confirmarSenha" required>
+          <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleConfirmarSenha()">
+            <ion-icon slot="icon-only" [name]="showConfirmarSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
           </ion-button>
-        </ion-item>
-        <ion-note color="danger" *ngIf="submitted && errors['confirmarSenha']">
-          {{ errors['confirmarSenha'] }}
-        </ion-note>
+        </ion-input>
+
       </div>
 
       <!-- Data de nascimento + CPF -->
@@ -139,107 +66,46 @@
         <!-- Data de nascimento -->
         <div class="field-group flex-1">
           <ion-label class="field-label">Data de nascimento</ion-label>
-          <ion-item
-            lines="none"
-            class="field-item"
-            [class.field-error]="submitted && errors['dataNascimento']"
-          >
-            <ion-input
-              type="text"
-              placeholder="dd/mm/aaaa"
-              [value]="dataNascimento"
-              (ionInput)="onDataInput($event)"
-              name="dataNascimento"
-              maxlength="10"
-              inputmode="numeric"
-              required
-            ></ion-input>
-          </ion-item>
-          <ion-note color="danger" *ngIf="submitted && errors['dataNascimento']">
-            {{ errors['dataNascimento'] }}
-          </ion-note>
+          <ion-input class="input" type="text" placeholder="dd/mm/aaaa" [value]="dataNascimento"
+            (ionInput)="onDataInput($event)" name="dataNascimento" maxlength="10" inputmode="numeric"
+            required></ion-input>
         </div>
 
         <!-- CPF -->
         <div class="field-group flex-1">
           <ion-label class="field-label">CPF</ion-label>
-          <ion-item
-            lines="none"
-            class="field-item"
-            [class.field-error]="submitted && errors['cpf']"
-          >
-            <ion-input
-              type="text"
-              placeholder="000.000.000-00"
-              [value]="cpf"
-              (ionInput)="onCpfInput($event)"
-              name="cpf"
-              maxlength="14"
-              inputmode="numeric"
-              required
-            ></ion-input>
-          </ion-item>
-          <ion-note color="danger" *ngIf="submitted && errors['cpf']">
-            {{ errors['cpf'] }}
-          </ion-note>
+          <ion-input class="input" type="text" placeholder="000.000.000-00" [value]="cpf"
+            (ionInput)="onCpfInput($event)" name="cpf" maxlength="14" inputmode="numeric" required></ion-input>
         </div>
-
       </div>
 
       <!-- CEP -->
       <div class="field-group">
         <ion-label class="field-label">CEP</ion-label>
-        <ion-item
-          lines="none"
-          class="field-item"
-          [class.field-error]="submitted && errors['cep']"
-        >
-          <ion-input
-            type="text"
-            placeholder="35920-000"
-            [value]="cep"
-            (ionInput)="onCepInput($event)"
-            name="cep"
-            maxlength="9"
-            inputmode="numeric"
-            required
-          ></ion-input>
-        </ion-item>
-        <ion-note color="danger" *ngIf="submitted && errors['cep']">
-          {{ errors['cep'] }}
-        </ion-note>
+        <ion-input class="input" type="text" placeholder="35920-000" [value]="cep" (ionInput)="onCepInput($event)"
+          name="cep" maxlength="9" inputmode="numeric" required></ion-input>
       </div>
 
       <!-- Sou Profissional -->
-      <ion-item lines="none" class="profissional-item">
-        <div class="profissional-info">
-          <span class="profissional-title">Sou Profissional</span>
-          <span class="profissional-subtitle">Quero oferecer meus serviços</span>
-        </div>
-        <ion-toggle
-          slot="end"
-          [(ngModel)]="isProfissional"
-          name="isProfissional"
-          class="profissional-toggle"
-        ></ion-toggle>
-      </ion-item>
+
+      <div class="profissional-info">
+        <span class="profissional-title">Sou Profissional</span>
+        <ion-toggle slot="end" [(ngModel)]="isProfissional" name="isProfissional"
+          class="profissional-toggle" style="padding-left: 10px;"></ion-toggle>
+      </div>
+
 
       <!-- Submit button -->
       <div class="submit-container">
-        <ion-button
-          type="submit"
-          expand="block"
-          class="submit-btn"
-        >
+        <ion-button type="submit" expand="block" class="submit-btn">
           Cadastrar
         </ion-button>
       </div>
 
       <!-- Login link -->
-      <div class="login-link">
-        <span class="login-text">Já tem conta?</span>
+      <div class="login-link ion-text-center">
         <ion-button fill="clear" routerLink="/login" class="login-btn">
-          Entrar
+          Já tem conta? Entrar
         </ion-button>
       </div>
 
