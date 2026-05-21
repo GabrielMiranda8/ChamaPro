@@ -1,0 +1,75 @@
+<ion-content [fullscreen]="true" class="cadastro-content">
+  <div class="cadastro-wrapper">
+
+    <!-- Header -->
+    <div class="cadastro-header ion-text-center">
+      <div class="logo-container">
+        <img src="https://api.builder.io/api/v1/image/assets/TEMP/944de1fdba3fd4b63f21ffe1f709737088096b16?width=180"
+          alt="Logo" class="logo-img" />
+      </div>
+      <h1 class="cadastro-title">Alterar Dados</h1>
+    </div>
+
+    <!-- Back button -->
+    <!-- CORRIGIDO: era routerLink="/login" -->
+    <div class="back-button-container" style="padding-left: 15px;">
+      <ion-button fill="clear" class="back-btn" routerLink="/menu">
+        <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+        Voltar
+      </ion-button>
+    </div>
+
+    <!-- Form -->
+    <form (ngSubmit)="onSubmit()" novalidate class="cadastro-form" style="padding: 30px;">
+
+      <!-- Nova Senha -->
+      <!-- CORRIGIDO: bind era [(ngModel)]="senha", agora aponta para novaSenha -->
+      <div class="field-group">
+        <ion-label class="field-label">Nova Senha</ion-label>
+        <ion-input class="input" [type]="showSenha() ? 'text' : 'password'" placeholder="••••••••"
+          [(ngModel)]="novaSenha" name="novaSenha" required>
+          <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleSenha()">
+            <ion-icon slot="icon-only" [name]="showSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </ion-button>
+        </ion-input>
+        <span class="field-error" *ngIf="submitted && errors['novaSenha']">{{ errors['novaSenha'] }}</span>
+      </div>
+
+      <!-- Confirmar Nova Senha -->
+      <div class="field-group">
+        <ion-label class="field-label">Confirmar nova senha</ion-label>
+        <ion-input class="input" [type]="showConfirmarNovaSenha() ? 'text' : 'password'" placeholder="••••••••"
+          [(ngModel)]="confirmarNovaSenha" name="confirmarNovaSenha" required>
+          <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleConfirmarNovaSenha()">
+            <ion-icon slot="icon-only"
+              [name]="showConfirmarNovaSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </ion-button>
+        </ion-input>
+        <span class="field-error" *ngIf="submitted && errors['confirmarNovaSenha']">{{ errors['confirmarNovaSenha'] }}</span>
+      </div>
+
+      <!-- CEP -->
+      <div class="field-group">
+        <ion-label class="field-label">Novo CEP</ion-label>
+        <ion-input class="input" type="text" placeholder="35920-000" [value]="cep" (ionInput)="onCepInput($event)"
+          name="cep" maxlength="9" inputmode="numeric" required></ion-input>
+        <span class="field-error" *ngIf="submitted && errors['cep']">{{ errors['cep'] }}</span>
+      </div>
+
+      <!-- Sou Profissional -->
+      <div class="profissional-info">
+        <span class="profissional-title">Sou Profissional</span>
+        <ion-toggle slot="end" [(ngModel)]="isProfissional" name="isProfissional"
+          class="profissional-toggle" style="padding-left: 10px;"></ion-toggle>
+      </div>
+
+      <!-- Submit -->
+      <div class="submit-container">
+        <ion-button type="submit" expand="block" class="submit-btn">
+          Salvar Alterações
+        </ion-button>
+      </div>
+
+    </form>
+  </div>
+</ion-content>
