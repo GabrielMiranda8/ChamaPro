@@ -1,0 +1,87 @@
+<ion-content [fullscreen]="true" class="login-content">
+
+  <div class="login-bg">
+    <div class="bg-circle bg-circle--1"></div>
+    <div class="bg-circle bg-circle--2"></div>
+  </div>
+
+  <div class="login-wrapper">
+
+    <!-- Logo -->
+    <div class="login-header ion-text-center">
+      <div class="logo-ring">
+        <img
+          src="https://api.builder.io/api/v1/image/assets/TEMP/fa401b4e2c54c67d0a8f1d96b4bf6db63abc8541?width=180"
+          alt="ChamaPro Logo"
+          class="logo-img"
+        />
+      </div>
+      <h1 class="brand-name">ChamaPro</h1>
+      <p class="brand-sub">Serviços acessíveis para todos</p>
+    </div>
+
+    <!-- Card de login -->
+    <div class="login-card">
+
+      <form [formGroup]="formGroup" (ngSubmit)="autenticar()">
+
+        <!-- E-mail -->
+        <div class="field-group">
+          <div class="field-label-row">
+            <ion-icon name="mail-outline" class="field-icon"></ion-icon>
+            <ion-label class="field-label">E-mail</ion-label>
+          </div>
+          <ion-input
+            class="input"
+            type="email"
+            formControlName="email"
+            placeholder="seu@email.com">
+          </ion-input>
+        </div>
+
+        <!-- Senha -->
+        <div class="field-group">
+          <div class="field-label-row">
+            <ion-icon name="lock-closed-outline" class="field-icon"></ion-icon>
+            <ion-label class="field-label">Senha</ion-label>
+          </div>
+          <ion-input
+            class="input"
+            type="password"
+            formControlName="senha"
+            placeholder="••••••••">
+          </ion-input>
+        </div>
+
+        <!-- Botão -->
+        <div class="submit-container">
+          <ion-button
+            type="submit"
+            expand="block"
+            class="submit-btn"
+            [disabled]="!formGroup.valid">
+            <ion-icon slot="start" name="log-in-outline"></ion-icon>
+            Entrar
+          </ion-button>
+        </div>
+
+      </form>
+
+      <!-- Divisor -->
+      <div class="divider">
+        <span class="divider-line"></span>
+        <span class="divider-text">ou</span>
+        <span class="divider-line"></span>
+      </div>
+
+      <!-- Link de cadastro -->
+      <div class="ion-text-center">
+        <ion-button fill="clear" class="signup-btn" (click)="cadastro()">
+          Não tem conta? <strong>&nbsp;Cadastre-se</strong>
+        </ion-button>
+      </div>
+
+    </div>
+
+  </div>
+</ion-content>

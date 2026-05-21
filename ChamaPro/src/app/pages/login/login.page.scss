@@ -1,0 +1,172 @@
+.login-content {
+  --background: #121212;
+  position: relative;
+  overflow: hidden;
+}
+
+// ── Background decorativo ────────────────────────────────
+.login-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.18;
+
+  &--1 {
+    width: 320px;
+    height: 320px;
+    background: #ff9900;
+    top: -80px;
+    right: -80px;
+  }
+
+  &--2 {
+    width: 260px;
+    height: 260px;
+    background: #d67c1a;
+    bottom: -60px;
+    left: -60px;
+  }
+}
+
+// ── Wrapper ──────────────────────────────────────────────
+.login-wrapper {
+  position: relative;
+  z-index: 1;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+// ── Header / Logo ────────────────────────────────────────
+.login-header {
+  margin-bottom: 36px;
+
+  .logo-ring {
+    display: inline-flex;
+    padding: 6px;
+    border-radius: 28px;
+    background: linear-gradient(135deg, #ffffff, #ff9c32);
+    margin-bottom: 16px;
+
+    .logo-img {
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  .brand-name {
+    font-size: 30px;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 6px;
+    letter-spacing: -0.5px;
+  }
+
+  .brand-sub {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+  }
+}
+
+// ── Card ─────────────────────────────────────────────────
+.login-card {
+  background: #1a1a1a;
+  border-radius: 24px;
+  padding: 28px 24px;
+  border: 1px solid #2a2a2a;
+}
+
+// ── Campos ───────────────────────────────────────────────
+.field-group {
+  margin-bottom: 18px;
+}
+
+.field-label-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+
+  .field-icon {
+    font-size: 15px;
+    color: #555;
+  }
+
+  .field-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+}
+
+.input {
+  background: #242424;
+  border-radius: 14px;
+  color: #fff;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+  border: 1px solid #303030;
+  font-size: 15px;
+}
+
+// ── Botão principal ──────────────────────────────────────
+.submit-container {
+  margin-top: 24px;
+
+  .submit-btn {
+    --background: #1a4fd6;
+    --background-activated: #1540b0;
+    --border-radius: 14px;
+    --color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    height: 52px;
+    letter-spacing: 0.2px;
+  }
+}
+
+// ── Divisor ───────────────────────────────────────────────
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0 8px;
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: #2a2a2a;
+  }
+
+  .divider-text {
+    font-size: 12px;
+    color: #555;
+  }
+}
+
+// ── Link de cadastro ─────────────────────────────────────
+.signup-btn {
+  --color: #888;
+  font-size: 14px;
+
+  strong {
+    color: #d67c1a;
+  }
+}
