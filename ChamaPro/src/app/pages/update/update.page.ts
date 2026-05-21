@@ -8,7 +8,6 @@ import { addIcons } from 'ionicons';
 import { arrowBackOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
 
 @Component({
-  // CORRIGIDO: era 'app-cadastro'
   selector: 'app-update',
   templateUrl: './update.page.html',
   styleUrls: ['./update.page.scss'],
