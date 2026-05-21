@@ -1,40 +1,29 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { IonContent, IonItem, IonLabel, IonInput, IonButton, IonIcon, IonNote, IonToggle } from '@ionic/angular/standalone';
+import { IonContent, IonItem, IonLabel, IonInput, IonButton, IonIcon, IonNote, IonToggle, IonSelect, IonSelectOption, ToastController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, eyeOutline, eyeOffOutline, personOutline, mailOutline, lockClosedOutline, calendarOutline, cardOutline, locationOutline, briefcaseOutline, personAddOutline } from 'ionicons/icons';
-
+import { ActivatedRoute } from '@angular/router';
+import { NavController } from '@ionic/angular';
+import { UsuarioModel } from 'src/app/model/usuario.model';
+import { UsuarioService } from 'src/app/services/usuario.service';
+import { CaracteristicaModel } from 'src/app/model/caracteristica.model';
+import { CaracteristicaService } from 'src/app/services/caracteristica.service';
 @Component({
   selector: 'app-cadastro',
   templateUrl: './cadastro.page.html',
   styleUrls: ['./cadastro.page.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule,
-    IonContent,
-    IonItem,
-    IonLabel,
-    IonInput,
-    IonButton,
-    IonIcon,
-    IonNote,
-    IonToggle,
-  ],
+  imports: [CommonModule, FormsModule, RouterModule, IonContent, IonItem, IonLabel, IonInput, IonButton, IonIcon, IonNote, IonToggle, IonSelect, IonSelectOption, ReactiveFormsModule],
 })
 export class CadastroPage {
-  // Form fields
-  nome = '';
-  email = '';
-  senha = '';
-  confirmarSenha = '';
-  dataNascimento = '';
-  cpf = '';
-  cep = '';
+  todasCaracteristicas: CaracteristicaModel[] = [];
+  usuario: UsuarioModel;
   isProfissional = false;
+  confirmarSenha = "";
+  formGroup: FormGroup;
 
   // UI state
   submitted = false;
@@ -44,9 +33,37 @@ export class CadastroPage {
   showSenha = signal(false);
   showConfirmarSenha = signal(false);
 
-  constructor() {
-    addIcons({arrowBackOutline,personOutline,mailOutline,lockClosedOutline,calendarOutline,cardOutline,locationOutline,briefcaseOutline,personAddOutline,eyeOutline,eyeOffOutline});
+  constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private toastController: ToastController, private navController: NavController, private usuarioService: UsuarioService, private caracteristicaService: CaracteristicaService) {
+    addIcons({ arrowBackOutline, personOutline, mailOutline, lockClosedOutline, calendarOutline, cardOutline, locationOutline, briefcaseOutline, personAddOutline, eyeOutline, eyeOffOutline });
+
+    this.usuario = new UsuarioModel();
+
+    this.formGroup = this.formBuilder.group({
+      nome: ['', Validators.compose([Validators.required])],
+      email: ['', Validators.compose([Validators.required, Validators.email])],
+      senha: ['', Validators.compose([Validators.required, Validators.minLength(6)])],
+      cpf: ['', Validators.compose([Validators.required, Validators.minLength(11)])],
+      dtNasc: ['', Validators.compose([Validators.required])],
+      tipo: ['', Validators.compose([Validators.required])],
+      cep: ['', Validators.compose([Validators.required])],
+      caracteristicas: [[]],
+    });
   }
+
+  ngOnInit() {
+    this.todasCaracteristicas = this.caracteristicaService.listar();
+    let id = this.activatedRoute.snapshot.params['id'];
+    if (!isNaN(id)) {
+      this.usuario = this.usuarioService.buscarPorId(id);
+    }
+    this.formGroup.get('nome')?.setValue(this.usuario.nome);
+    this.formGroup.get('email')?.setValue(this.usuario.email);
+    this.formGroup.get('senha')?.setValue(this.usuario.senha);
+    this.formGroup.get('cpf')?.setValue(this.usuario.cpf);
+    this.formGroup.get('dtNasc')?.setValue(this.usuario.dtNasc);
+    this.formGroup.get('cep')?.setValue(this.usuario.endereco.cep);
+  }
+
 
   toggleSenha(): void {
     this.showSenha.update((v) => !v);
@@ -56,9 +73,83 @@ export class CadastroPage {
     this.showConfirmarSenha.update((v) => !v);
   }
 
-  // ── Masks ────────────────────────────────────────────────────────────────
+  salvar() {
 
-  onDataInput(event: Event): void {
+    this.usuario.nome = this.formGroup.value.nome;
+    this.usuario.email = this.formGroup.value.email;
+    this.usuario.senha = this.formGroup.value.senha;
+    this.usuario.cpf = this.formGroup.value.cpf;
+    this.usuario.dtNasc = this.formGroup.value.dtNasc;
+    this.usuario.endereco.cep = this.formGroup.value.cep;
+    this.usuario.caracteristicas = this.formGroup.value.caracteristicas ?? [];
+    if (this.isProfissional)
+      this.usuario.tipo = "PROFISSIONAL";
+    else
+      this.usuario.tipo = "CLIENTE";
+
+    console.log(this.usuario);
+    this.usuarioService.salvar(this.usuario);
+    this.exibirMensagem("Usuário cadastrado com sucesso");
+    this.navController.navigateBack('/login');
+  }
+
+  async exibirMensagem(texto: string) {
+    const toast = await this.toastController.create({
+      message: texto,
+      duration: 1500
+    });
+    toast.present()
+  }
+
+  private validate(): boolean {
+    this.errors = {};
+
+    if (!this.usuario.nome.trim()) {
+      this.errors['nome'] = 'Nome é obrigatório.';
+    }
+
+    if (!this.usuario.email.trim()) {
+      this.errors['email'] = 'E-mail é obrigatório.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.usuario.email)) {
+      this.errors['email'] = 'E-mail inválido.';
+    }
+
+    if (!this.usuario.senha) {
+      this.errors['senha'] = 'Senha é obrigatória.';
+    } else if (this.usuario.senha.length < 6) {
+      this.errors['senha'] = 'Senha deve ter no mínimo 6 caracteres.';
+    }
+
+    if (!this.confirmarSenha) {
+      this.errors['confirmarSenha'] = 'Confirmação de senha é obrigatória.';
+    } else if (this.confirmarSenha !== this.usuario.senha) {
+      this.errors['confirmarSenha'] = 'As senhas não coincidem.';
+    }
+
+    if (!this.usuario.dtNasc) {
+      this.errors['dataNascimento'] = 'Data obrigatória.';
+    } else if (this.usuario.dtNasc.length < 10) {
+      this.errors['dataNascimento'] = 'Data inválida.';
+    }
+
+    if (!this.usuario.cpf) {
+      this.errors['cpf'] = 'CPF é obrigatório.';
+    } else if (this.usuario.cpf.length < 14) {
+      this.errors['cpf'] = 'CPF inválido.';
+    }
+
+    if (!this.usuario.endereco.cep) {
+      this.errors['cep'] = 'CEP é obrigatório.';
+    } else if (this.usuario.endereco.cep.length < 9) {
+      this.errors['cep'] = 'CEP inválido.';
+    }
+
+    return Object.keys(this.errors).length === 0;
+  }
+
+  // Mascara ta dando errado
+
+  /*onDataInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     let value = input.value.replace(/\D/g, '').slice(0, 8);
 
@@ -68,7 +159,7 @@ export class CadastroPage {
       value = `${value.slice(0, 2)}/${value.slice(2)}`;
     }
 
-    this.dataNascimento = value;
+    this.usuario.dtNasc = value;
   }
 
   onCpfInput(event: Event): void {
@@ -83,7 +174,7 @@ export class CadastroPage {
       value = `${value.slice(0, 3)}.${value.slice(3)}`;
     }
 
-    this.cpf = value;
+    this.usuario.cpf = value;
   }
 
   onCepInput(event: Event): void {
@@ -94,75 +185,10 @@ export class CadastroPage {
       value = `${value.slice(0, 5)}-${value.slice(5)}`;
     }
 
-    this.cep = value;
+    this.usuario.endereco.cep = value;
   }
-
+    */
   // ── Validation ───────────────────────────────────────────────────────────
 
-  private validate(): boolean {
-    this.errors = {};
 
-    if (!this.nome.trim()) {
-      this.errors['nome'] = 'Nome é obrigatório.';
-    }
-
-    if (!this.email.trim()) {
-      this.errors['email'] = 'E-mail é obrigatório.';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) {
-      this.errors['email'] = 'E-mail inválido.';
-    }
-
-    if (!this.senha) {
-      this.errors['senha'] = 'Senha é obrigatória.';
-    } else if (this.senha.length < 6) {
-      this.errors['senha'] = 'Senha deve ter no mínimo 6 caracteres.';
-    }
-
-    if (!this.confirmarSenha) {
-      this.errors['confirmarSenha'] = 'Confirmação de senha é obrigatória.';
-    } else if (this.confirmarSenha !== this.senha) {
-      this.errors['confirmarSenha'] = 'As senhas não coincidem.';
-    }
-
-    if (!this.dataNascimento) {
-      this.errors['dataNascimento'] = 'Data obrigatória.';
-    } else if (this.dataNascimento.length < 10) {
-      this.errors['dataNascimento'] = 'Data inválida.';
-    }
-
-    if (!this.cpf) {
-      this.errors['cpf'] = 'CPF é obrigatório.';
-    } else if (this.cpf.length < 14) {
-      this.errors['cpf'] = 'CPF inválido.';
-    }
-
-    if (!this.cep) {
-      this.errors['cep'] = 'CEP é obrigatório.';
-    } else if (this.cep.length < 9) {
-      this.errors['cep'] = 'CEP inválido.';
-    }
-
-    return Object.keys(this.errors).length === 0;
-  }
-
-  onSubmit(): void {
-    this.submitted = true;
-
-    if (!this.validate()) {
-      return;
-    }
-
-    const payload = {
-      nome: this.nome,
-      email: this.email,
-      senha: this.senha,
-      dataNascimento: this.dataNascimento,
-      cpf: this.cpf,
-      cep: this.cep,
-      isProfissional: this.isProfissional,
-    };
-
-    console.log('Cadastro payload:', payload);
-    // TODO: call your AuthService.register(payload) here
-  }
 }

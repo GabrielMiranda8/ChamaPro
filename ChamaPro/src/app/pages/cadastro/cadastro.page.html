@@ -26,16 +26,15 @@
         Voltar para login
       </ion-button>
 
-      <form (ngSubmit)="onSubmit()" novalidate class="cadastro-form">
-
+      <form [formGroup]="formGroup" (ngSubmit)="salvar()" novalidate class="cadastro-form">
         <!-- Nome -->
         <div class="field-group">
           <div class="field-label-row">
             <ion-icon name="person-outline" class="field-icon"></ion-icon>
             <ion-label class="field-label">Nome completo</ion-label>
           </div>
-          <ion-input class="input" type="text" placeholder="João da Silva"
-            name="nome" [(ngModel)]="nome" required></ion-input>
+          <ion-input class="input" type="text" placeholder="João da Silva" name="nome" formControlName="nome"
+            required></ion-input>
         </div>
 
         <!-- E-mail -->
@@ -44,8 +43,8 @@
             <ion-icon name="mail-outline" class="field-icon"></ion-icon>
             <ion-label class="field-label">E-mail</ion-label>
           </div>
-          <ion-input class="input" type="email" placeholder="seu@email.com"
-            [(ngModel)]="email" name="email" required></ion-input>
+          <ion-input class="input" type="email" placeholder="seu@email.com" formControlName="email" name="email"
+            required></ion-input>
         </div>
 
         <div class="field-row">
@@ -54,8 +53,8 @@
               <ion-icon name="lock-closed-outline" class="field-icon"></ion-icon>
               <ion-label class="field-label">Senha</ion-label>
             </div>
-            <ion-input class="input" [type]="showSenha() ? 'text' : 'password'"
-              placeholder="••••••••" [(ngModel)]="senha" name="senha" required>
+            <ion-input class="input" [type]="showSenha() ? 'text' : 'password'" placeholder="••••••••"
+              formControlName="senha" name="senha" required>
               <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleSenha()">
                 <ion-icon slot="icon-only" [name]="showSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
               </ion-button>
@@ -67,8 +66,8 @@
               <ion-icon name="lock-closed-outline" class="field-icon"></ion-icon>
               <ion-label class="field-label">Confirmar</ion-label>
             </div>
-            <ion-input class="input" [type]="showConfirmarSenha() ? 'text' : 'password'"
-              placeholder="••••••••" [(ngModel)]="confirmarSenha" name="confirmarSenha" required>
+            <ion-input class="input" [type]="showConfirmarSenha() ? 'text' : 'password'" placeholder="••••••••"
+              formControlName="confirmarSenha" name="confirmarSenha" required>
               <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleConfirmarSenha()">
                 <ion-icon slot="icon-only" [name]="showConfirmarSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
               </ion-button>
@@ -83,8 +82,7 @@
               <ion-icon name="calendar-outline" class="field-icon"></ion-icon>
               <ion-label class="field-label">Nascimento</ion-label>
             </div>
-            <ion-input class="input" type="text" placeholder="dd/mm/aaaa"
-              [value]="dataNascimento" (ionInput)="onDataInput($event)"
+            <ion-input class="input" type="text" placeholder="dd/mm/aaaa" formControlName="dataNasc"
               name="dataNascimento" maxlength="10" inputmode="numeric" required></ion-input>
           </div>
 
@@ -93,9 +91,8 @@
               <ion-icon name="card-outline" class="field-icon"></ion-icon>
               <ion-label class="field-label">CPF</ion-label>
             </div>
-            <ion-input class="input" type="text" placeholder="000.000.000-00"
-              [value]="cpf" (ionInput)="onCpfInput($event)"
-              name="cpf" maxlength="14" inputmode="numeric" required></ion-input>
+            <ion-input class="input" type="text" placeholder="000.000.000-00" formControlName="cpf" name="cpf"
+              maxlength="14" inputmode="numeric" required></ion-input>
           </div>
         </div>
 
@@ -105,9 +102,23 @@
             <ion-icon name="location-outline" class="field-icon"></ion-icon>
             <ion-label class="field-label">CEP</ion-label>
           </div>
-          <ion-input class="input" type="text" placeholder="35920-000"
-            [value]="cep" (ionInput)="onCepInput($event)"
-            name="cep" maxlength="9" inputmode="numeric" required></ion-input>
+          <ion-input class="input" type="text" placeholder="35920-000" formControlName="cep" name="cep" maxlength="9"
+            inputmode="numeric" required></ion-input>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label-row">
+            <ion-icon name="location-outline" class="field-icon"></ion-icon>
+            <ion-label class="field-label">Acessibilidade</ion-label>
+          </div>
+          <ion-select value="" okText="confirmar" cancelText="cancelar" placeholder="Selecione suas caracteristicas" [multiple]="true"
+            formControlName="caracteristicas">
+            @for (carac of todasCaracteristicas; track carac.id){
+            <ion-select-option [value]="carac">
+              {{ carac.nome }}
+            </ion-select-option>
+            }
+          </ion-select>
         </div>
 
         <!-- Sou Profissional -->
@@ -121,8 +132,7 @@
               <span class="profissional-desc">Ofereço serviços na plataforma</span>
             </div>
           </div>
-          <ion-toggle [(ngModel)]="isProfissional" name="isProfissional"
-            class="profissional-toggle"></ion-toggle>
+          <ion-toggle formControlName="isProfissional" name="isProfissional" class="profissional-toggle"></ion-toggle>
         </div>
 
         <!-- Submit -->
