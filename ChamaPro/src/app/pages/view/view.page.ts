@@ -17,6 +17,8 @@ import {
   arrowBackOutline,
   createOutline,
 } from 'ionicons/icons';
+import { UsuarioService } from 'src/app/services/usuario.service';
+import { UsuarioModel } from 'src/app/model/usuario.model';
 
 export interface UserData {
   nome: string;
@@ -36,16 +38,9 @@ export interface UserData {
 })
 export class ViewPage implements OnInit {
   // TODO: substituir pelo retorno real do AuthService/UserService
-  dados: UserData = {
-    nome: '',
-    email: '',
-    dataNascimento: '',
-    cpf: '',
-    cep: '',
-    isProfissional: false,
-  };
+  dados: UsuarioModel;
 
-  constructor() {
+  constructor(private usuarioService: UsuarioService) {
     addIcons({
       personOutline,
       mailOutline,
@@ -56,22 +51,11 @@ export class ViewPage implements OnInit {
       arrowBackOutline,
       createOutline,
     });
+    this.dados = new UsuarioModel();
   }
 
   ngOnInit(): void {
-    this.carregarDados();
+    this.dados = this.usuarioService.getLogin();
   }
 
-  private carregarDados(): void {
-    // TODO: this.dados = await this.userService.getPerfil();
-    // Dados mockados para demonstração
-    this.dados = {
-      nome: 'João da Silva',
-      email: 'joao@email.com',
-      dataNascimento: '15/03/1995',
-      cpf: '123.456.789-00',
-      cep: '35920-000',
-      isProfissional: false,
-    };
-  }
 }

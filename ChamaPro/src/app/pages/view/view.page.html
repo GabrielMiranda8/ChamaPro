@@ -7,13 +7,10 @@
         <div class="avatar">
           <ion-icon name="person-outline"></ion-icon>
         </div>
-        <div class="profissional-badge" *ngIf="dados.isProfissional">
-          <ion-icon name="briefcase-outline"></ion-icon>
-          Profissional
-        </div>
+        
       </div>
-      <h1 class="view-name">{{ dados.nome || '—' }}</h1>
-      <p class="view-email">{{ dados.email || '—' }}</p>
+      <h1 class="view-name">{{ dados.nome }}</h1>
+      <p class="view-email">{{ dados.email  }}</p>
     </div>
 
     <!-- Back button -->
@@ -33,7 +30,7 @@
         </div>
         <div class="info-content">
           <span class="info-label">Nome completo</span>
-          <span class="info-value">{{ dados.nome || '—' }}</span>
+          <span class="info-value">{{ dados.nome }}</span>
         </div>
       </div>
 
@@ -43,7 +40,7 @@
         </div>
         <div class="info-content">
           <span class="info-label">E-mail</span>
-          <span class="info-value">{{ dados.email || '—' }}</span>
+          <span class="info-value">{{ dados.email }}</span>
         </div>
       </div>
 
@@ -53,7 +50,7 @@
         </div>
         <div class="info-content">
           <span class="info-label">Data de nascimento</span>
-          <span class="info-value">{{ dados.dataNascimento || '—' }}</span>
+          <span class="info-value">{{ dados.dtNasc  }}</span>
         </div>
       </div>
 
@@ -63,7 +60,7 @@
         </div>
         <div class="info-content">
           <span class="info-label">CPF</span>
-          <span class="info-value">{{ dados.cpf || '—' }}</span>
+          <span class="info-value">{{ dados.cpf  }}</span>
         </div>
       </div>
 
@@ -73,7 +70,7 @@
         </div>
         <div class="info-content">
           <span class="info-label">CEP</span>
-          <span class="info-value">{{ dados.cep || '—' }}</span>
+          <span class="info-value">{{ dados.endereco.cep  }}</span>
         </div>
       </div>
 
@@ -83,7 +80,7 @@
         </div>
         <div class="info-content">
           <span class="info-label">Tipo de conta</span>
-          <span class="info-value">{{ dados.isProfissional ? 'Profissional' : 'Cliente' }}</span>
+          <span class="info-value">{{ dados.tipo }}</span>
         </div>
       </div>
 
