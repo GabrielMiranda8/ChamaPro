@@ -11,7 +11,6 @@
     </div>
 
     <!-- Back button -->
-    <!-- CORRIGIDO: era routerLink="/login" -->
     <div class="back-button-container" style="padding-left: 15px;">
       <ion-button fill="clear" class="back-btn" routerLink="/menu">
         <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
@@ -23,7 +22,6 @@
     <form (ngSubmit)="onSubmit()" novalidate class="cadastro-form" style="padding: 30px;">
 
       <!-- Nova Senha -->
-      <!-- CORRIGIDO: bind era [(ngModel)]="senha", agora aponta para novaSenha -->
       <div class="field-group">
         <ion-label class="field-label">Nova Senha</ion-label>
         <ion-input class="input" [type]="showSenha() ? 'text' : 'password'" placeholder="••••••••"
