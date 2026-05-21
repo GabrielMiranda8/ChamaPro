@@ -1,0 +1,124 @@
+.menu-content {
+  --background: #121212;
+}
+
+.menu-wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px 40px;
+}
+
+// ── Header ──────────────────────────────────────────────
+.menu-header {
+  padding: 32px 0 28px;
+
+  .logo-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    object-fit: cover;
+  }
+
+  .menu-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 12px 0 4px;
+  }
+
+  .menu-subtitle {
+    font-size: 14px;
+    color: #888;
+    margin: 0;
+  }
+}
+
+// ── Cards ────────────────────────────────────────────────
+.menu-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+}
+
+.menu-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #1e1e1e;
+  border-radius: 16px;
+  padding: 18px 16px;
+  cursor: pointer;
+  border: 1px solid #2a2a2a;
+  transition: background 0.15s ease, transform 0.1s ease;
+
+  &:active {
+    background: #2a2a2a;
+    transform: scale(0.98);
+  }
+
+  &--danger {
+    border-color: rgba(255, 80, 80, 0.25);
+
+    .card-title {
+      color: #ff5252;
+    }
+  }
+}
+
+.card-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 22px;
+    color: #fff;
+  }
+
+  &.card-icon--view  { background: #1a4fd6; }
+  &.card-icon--edit  { background: #d67c1a; }
+  &.card-icon--delete { background: #c0392b; }
+}
+
+.card-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #f0f0f0;
+  }
+
+  .card-desc {
+    font-size: 12px;
+    color: #777;
+    margin-top: 2px;
+  }
+}
+
+.card-arrow {
+  color: #444;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+// ── Logout ───────────────────────────────────────────────
+.logout-container {
+  display: flex;
+  justify-content: center;
+  padding-top: 32px;
+
+  .logout-btn {
+    color: #888;
+    font-size: 14px;
+    --color: #888;
+  }
+}
