@@ -39,7 +39,6 @@ export class LoginPage implements OnInit {
     addIcons({mailOutline,lockClosedOutline,logInOutline,eyeOutline,eyeOffOutline});
 
     this.formGroup = this.formBuilder.group({
-      // CORRIGIDO: validava minLength(11)/maxLength(11) num e-mail (não faz sentido)
       email: ['', Validators.compose([Validators.required, Validators.email])],
       senha: ['', Validators.compose([Validators.required, Validators.minLength(6)])],
     });
@@ -55,7 +54,6 @@ export class LoginPage implements OnInit {
     // TODO: chamar AuthService.login({ email, senha }) aqui
     console.log('Login payload:', { email, senha });
 
-    // Após autenticação bem-sucedida, navegar para o menu
     this.navController.navigateRoot('/menu');
   }
 
