@@ -1,0 +1,64 @@
+<ion-content [fullscreen]="true" class="menu-content">
+  <div class="menu-wrapper">
+
+    <!-- Header -->
+    <div class="menu-header ion-text-center">
+      <div class="logo-container">
+        <img src="https://api.builder.io/api/v1/image/assets/TEMP/fa401b4e2c54c67d0a8f1d96b4bf6db63abc8541?width=180"
+          alt="ChamaPro Logo" class="logo-img" />
+      </div>
+      <h1 class="menu-title" style="color: rgb(253, 122, 0);">ChamaPro</h1>
+      <p class="menu-subtitle">O que deseja fazer?</p>
+    </div>
+
+    <!-- Menu Cards -->
+    <div class="menu-cards">
+
+      <!-- Meus Dados -->
+      <div class="menu-card" (click)="irParaMeusDados()">
+        <div class="card-icon-wrapper card-icon--view">
+          <ion-icon name="person-outline"></ion-icon>
+        </div>
+        <div class="card-text">
+          <span class="card-title" style="color: rgb(253, 122, 0);">Meus Dados</span>
+          <span class="card-desc">Visualize suas informações cadastradas</span>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="card-arrow"></ion-icon>
+      </div>
+
+      <!-- Alterar Dados -->
+      <div class="menu-card" (click)="irParaAlterar()">
+        <div class="card-icon-wrapper card-icon--edit">
+          <ion-icon name="create-outline"></ion-icon>
+        </div>
+        <div class="card-text">
+          <span class="card-title" style="color: rgb(253, 122, 0);">Alterar Dados</span>
+          <span class="card-desc">Atualize sua senha, CEP e perfil</span>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="card-arrow"></ion-icon>
+      </div>
+
+      <!-- Deletar Conta -->
+      <div class="menu-card menu-card--danger" (click)="confirmarDelete()">
+        <div class="card-icon-wrapper card-icon--delete">
+          <ion-icon name="trash-outline"></ion-icon>
+        </div>
+        <div class="card-text">
+          <span class="card-title" style="color: rgb(253, 122, 0);">Deletar Conta</span>
+          <span class="card-desc">Remove permanentemente sua conta</span>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="card-arrow"></ion-icon>
+      </div>
+
+    </div>
+
+    <!-- Logout -->
+    <div class="logout-container">
+      <ion-button fill="clear" class="logout-btn" (click)="sair()">
+        <ion-icon slot="start" name="log-out-outline"></ion-icon>
+        Sair da conta
+      </ion-button>
+    </div>
+
+  </div>
+</ion-content>
