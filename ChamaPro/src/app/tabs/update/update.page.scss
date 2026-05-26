@@ -149,3 +149,16 @@
     height: 52px;
   }
 }
+
+.edit-container {
+  margin-top: 0vh;
+  padding: 16px 0;
+
+  .edit-btn {
+    --background: #ff5e00;
+    --border-radius: 14px;
+    --color: #fff;
+    font-weight: 700;
+    height: 52px;
+  }
+}

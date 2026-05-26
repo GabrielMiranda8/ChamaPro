@@ -1,45 +1,64 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonContent, IonButton, IonIcon, AlertController, ToastController } from '@ionic/angular/standalone';
-import { NavController } from '@ionic/angular';
+import { RouterModule } from '@angular/router';
+import {
+  IonContent,
+  IonButton,
+  IonIcon,
+  NavController,
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
-  personOutline, createOutline, trashOutline,
-  chevronForwardOutline, logOutOutline,
+  personOutline,
+  mailOutline,
+  calendarOutline,
+  cardOutline,
+  locationOutline,
+  briefcaseOutline,
+  arrowBackOutline,
+  createOutline,
 } from 'ionicons/icons';
-import { UsuarioService } from '../../services/usuario.service';
-import { UsuarioModel } from '../../model/usuario.model';
+import { UsuarioService } from 'src/app/services/usuario.service';
+import { UsuarioModel } from 'src/app/model/usuario.model';
+import { AlertController, ToastController } from '@ionic/angular';
+
+export interface UserData {
+  nome: string;
+  email: string;
+  dataNascimento: string;
+  cpf: string;
+  cep: string;
+  isProfissional: boolean;
+}
 
 @Component({
-  selector: 'app-menu',
-  templateUrl: './menu.page.html',
-  styleUrls: ['./menu.page.scss'],
+  selector: 'app-perfil',
+  templateUrl: './perfil.page.html',
+  styleUrls: ['./perfil.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonContent, IonButton, IonIcon],
+  imports: [CommonModule, RouterModule, IonContent, IonButton, IonIcon],
 })
-export class MenuPage implements OnInit {
+export class PerfilPage implements OnInit {
+  // TODO: substituir pelo retorno real do AuthService/UserService
+  dados: UsuarioModel;
 
-  usuarioLogado: UsuarioModel | null = null;
-
-  constructor(
-    private usuarioService: UsuarioService,
-    private navController: NavController,
-    private alertController: AlertController,
-    private toastController: ToastController,
-  ) {
-    addIcons({ personOutline, createOutline, trashOutline, chevronForwardOutline, logOutOutline });
+  constructor(private usuarioService: UsuarioService, private toastController: ToastController, private navController: NavController, private alertController: AlertController) {
+    addIcons({
+      personOutline,
+      mailOutline,
+      calendarOutline,
+      cardOutline,
+      locationOutline,
+      briefcaseOutline,
+      arrowBackOutline,
+      createOutline,
+    });
+    this.dados = new UsuarioModel();
   }
 
   ngOnInit(): void {
-    this.usuarioLogado = this.usuarioService.getLogin();
-    if (!this.usuarioLogado) {
-      this.navController.navigateRoot('/login');
-    }
+    this.dados = this.usuarioService.getLogin();
   }
-
-  irParaMeusDados(): void { this.navController.navigateForward('/view'); }
-  irParaAlterar(): void   { this.navController.navigateForward('/tabs/update'); }
-
   async confirmarDelete(): Promise<void> {
     const alert = await this.alertController.create({
       header: ' Deletar Conta',

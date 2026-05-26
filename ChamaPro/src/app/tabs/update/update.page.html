@@ -12,7 +12,7 @@
 
     <!-- Back button -->
     <div class="back-button-container" style="padding-left: 15px;">
-      <ion-button fill="clear" class="back-btn" routerLink="/menu">
+      <ion-button fill="clear" class="back-btn" routerLink="/tabs/perfil">
         <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
         Voltar
       </ion-button>
@@ -39,11 +39,11 @@
         <ion-input class="input" [type]="showConfirmarNovaSenha() ? 'text' : 'password'" placeholder="••••••••"
           [(ngModel)]="confirmarNovaSenha" name="confirmarNovaSenha" required>
           <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleConfirmarNovaSenha()">
-            <ion-icon slot="icon-only"
-              [name]="showConfirmarNovaSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            <ion-icon slot="icon-only" [name]="showConfirmarNovaSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
           </ion-button>
         </ion-input>
-        <span class="field-error" *ngIf="submitted && errors['confirmarNovaSenha']">{{ errors['confirmarNovaSenha'] }}</span>
+        <span class="field-error" *ngIf="submitted && errors['confirmarNovaSenha']">{{ errors['confirmarNovaSenha']
+          }}</span>
       </div>
 
       <!-- CEP -->
@@ -54,17 +54,18 @@
         <span class="field-error" *ngIf="submitted && errors['cep']">{{ errors['cep'] }}</span>
       </div>
 
-      <!-- Sou Profissional -->
-      <div class="profissional-info">
-        <span class="profissional-title">Sou Profissional</span>
-        <ion-toggle slot="end" [(ngModel)]="isProfissional" name="isProfissional"
-          class="profissional-toggle" style="padding-left: 10px;"></ion-toggle>
-      </div>
-
       <!-- Submit -->
       <div class="submit-container">
         <ion-button type="submit" expand="block" class="submit-btn">
           Salvar Alterações
+        </ion-button>
+      </div>
+
+      <!-- Sou Profissional -->
+      <div class="edit-container">
+        <ion-button expand="block" class="edit-btn" routerLink="/tabs/inicio">
+          <ion-icon slot="start" name="create-outline"></ion-icon>
+          Se tornar Profissional 👩‍🚒
         </ion-button>
       </div>
 

@@ -23,7 +23,40 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/view/view.page').then((m) => m.ViewPage),
   },
   {
-    path: 'update',
-    loadComponent: () => import('./pages/update/update.page').then((m) => m.UpdatePage),
+    path: 'tabs',
+    loadComponent: () => import('./tabs/tabs.page').then(m => m.TabsPage),
+    children: [
+      {
+        path: 'inicio',
+        loadComponent: () => import('./tabs/inicio/inicio.page').then(m => m.InicioPage),
+      },
+      {
+        path: 'busca',
+        loadComponent: () => import('./tabs/busca/busca.page').then(m => m.BuscaPage),
+      },
+      {
+        path: 'pedidos',
+        loadComponent: () => import('./tabs/pedidos/pedidos.page').then(m => m.PedidosPage),
+      },
+      {
+        path: 'perfil',
+        loadComponent: () => import('./tabs/perfil/perfil.page').then(m => m.PerfilPage),
+      },
+      {
+        path: 'update',
+        loadComponent: () => import('./tabs/update/update.page').then((m) => m.UpdatePage),
+      },
+      {
+        path: '',
+        redirectTo: 'inicio',
+        pathMatch: 'full',
+      },
+    ],
   },
+
+  {
+    path: '**',
+    redirectTo: 'login',
+  },
+
 ];
