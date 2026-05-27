@@ -53,10 +53,16 @@ export const routes: Routes = [
       },
     ],
   },
-
+  {
+    path: 'add-servico/:id',
+    loadComponent: () => import('./pages/add-servico/add-servico.page').then(m => m.AddServicoPage)
+  },
+  
   {
     path: '**',
     redirectTo: 'login',
   },
+
+
 
 ];

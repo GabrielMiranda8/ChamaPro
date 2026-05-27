@@ -136,7 +136,13 @@ export class CadastroPage implements OnInit {
     usuario.caracteristicas = v.caracteristicas ?? [];
     usuario.tipo = v.isProfissional ? 'PROFISSIONAL' : 'CLIENTE';
 
-    this.usuarioService.salvar(usuario);
+    const usuarioSalvo = await this.usuarioService.salvar(usuario);
+
+    if (usuarioSalvo.tipo === 'PROFISSIONAL') {
+      this.navController.navigateForward(`/add-servico/${usuarioSalvo.id}`);
+      return; 
+    }
+
     await this.exibirMensagem('Conta criada com sucesso!');
     this.navController.navigateRoot('/login');
   }
