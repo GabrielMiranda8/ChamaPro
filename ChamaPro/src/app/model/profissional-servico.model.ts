@@ -3,8 +3,8 @@ import { ServicoModel } from "./servico.model";
 
 export class ProfissionalServicoModel {
     id: string;
-    servico!: ServicoModel;
-    profissional!: ProfissionalModel;
+    idServico: string;
+    idProfissional: string;
     preco: number;
     tempoCarreira: Date;
 
@@ -12,5 +12,7 @@ export class ProfissionalServicoModel {
         this.id = "";
         this.preco = 0;
         this.tempoCarreira = new Date;
+        this.idServico = "";
+        this.idProfissional = "";
     }
 }

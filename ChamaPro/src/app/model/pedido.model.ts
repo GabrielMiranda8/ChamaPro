@@ -9,14 +9,17 @@ export class PedidoModel {
     preco: number;
     status: string;
     endereco!: EnderecoModel;
-    profissional!: ProfissionalModel;
-    servico!: ServicoModel;
-    cliente!: ClienteModel;
+    idProfissional: string;
+    idServico: string;
+    idCliente: string;
 
     constructor(){
         this.id = "";
         this.data = new Date();
         this.preco = 0;
         this.status = "";
+        this.idProfissional = "";
+        this.idServico = "";
+        this.idCliente = "";
     }
 }

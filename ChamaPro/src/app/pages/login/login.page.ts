@@ -47,14 +47,14 @@ export class LoginPage implements OnInit {
     this.formGroup.get('senha')?.setValue(this.usuario.senha);
     console.log(this.usuario.email);
   
-    let carac1 = new CaracteristicaModel();
+    /*let carac1 = new CaracteristicaModel();
     carac1.nome = "Deficiência Auditiva"
     carac1.descricao = "Dificuldade para escutar"
     let carac2 = new CaracteristicaModel();
     carac2.nome = "Deficiência Cognitiva"
     carac2.descricao = "Dificuldade para compreender e relacionar com outros"
     this.caracteristicaService.salvar(carac1);
-    this.caracteristicaService.salvar(carac2);
+    this.caracteristicaService.salvar(carac2); */
     
   }
 
