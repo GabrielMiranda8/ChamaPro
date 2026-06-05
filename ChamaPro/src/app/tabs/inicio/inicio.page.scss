@@ -1,0 +1,236 @@
+.inicio-content {
+  --background: #f5f5f5;
+}
+
+.home-header {
+  background: #ff6b00;
+  padding: 50px 24px 30px;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+.header-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.welcome {
+  margin: 0;
+  color: white;
+  font-size: 14px;
+}
+
+.header-info h2 {
+  margin: 4px 0 0;
+  color: white;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: white;
+  font-size: 13px;
+}
+
+.search-container {
+  margin-top: 24px;
+  background: white;
+  height: 56px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  gap: 10px;
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 22px;
+    color: #7b8190;
+  }
+
+  span {
+    color: #7b8190;
+  }
+}
+
+.section {
+  padding: 24px 20px 0;
+
+  h3 {
+    margin-bottom: 16px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #222;
+  }
+}
+
+.categories {
+  display: flex;
+  gap: 12px;
+}
+
+.category-card {
+  flex: 1;
+  background: white;
+  border-radius: 18px;
+  padding: 18px 10px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,.04);
+
+  span {
+    display: block;
+    margin-top: 12px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+.category-icon {
+  width: 48px;
+  height: 48px;
+  background: #fff3eb;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+
+  ion-icon {
+    color: #ff6b00;
+    font-size: 22px;
+  }
+}
+
+.libras-card {
+  margin: 20px;
+  background: #fff1e8;
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.libras-icon {
+  width: 48px;
+  height: 48px;
+  background: #4e8cff;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    color: white;
+    font-size: 22px;
+  }
+}
+
+.libras-card h4 {
+  margin: 0;
+  color: #b75b16;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.libras-card p {
+  margin: 4px 0 0;
+  color: #7c7c7c;
+  font-size: 13px;
+}
+
+.professional-card {
+  background: white;
+  border-radius: 20px;
+  padding: 16px;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.professional-left {
+  display: flex;
+  gap: 12px;
+}
+
+.avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #fff1e8;
+  color: #ff6b00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.professional-info h4 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.professional-info p {
+  margin: 2px 0;
+  color: #7a7a7a;
+  font-size: 14px;
+}
+
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.libras-badge {
+  width: 22px;
+  height: 22px;
+  background: #7c4dff;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    color: white;
+    font-size: 14px;
+  }
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #666;
+  font-size: 13px;
+
+  ion-icon {
+    color: #ffb300;
+  }
+}
+
+.professional-right {
+  text-align: right;
+}
+
+.price {
+  display: block;
+  color: #ff6b00;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.verified {
+  display: inline-block;
+  margin-top: 6px;
+  background: #ffb347;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+}
