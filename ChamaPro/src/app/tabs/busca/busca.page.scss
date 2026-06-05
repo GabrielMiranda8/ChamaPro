@@ -1,0 +1,214 @@
+.busca-content {
+  --background: #f5f5f5;
+}
+
+.page-container {
+  padding: 24px 20px 100px;
+}
+
+h2 {
+  font-size: 30px;
+  font-weight: 700;
+  color: #1e1e1e;
+  margin-bottom: 24px;
+}
+
+.search-box {
+  height: 56px;
+  background: white;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.04);
+
+  ion-icon {
+    color: #7b8190;
+    font-size: 22px;
+  }
+
+  input {
+    flex: 1;
+    margin-left: 12px;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 15px;
+  }
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  margin-bottom: 20px;
+
+  button {
+    border: none;
+    border-radius: 999px;
+    padding: 10px 18px;
+    background: #ececec;
+    color: #666;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  .active {
+    background: #ff6b00;
+    color: white;
+  }
+}
+
+.results-count {
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.professional-card {
+  background: white;
+  border-radius: 20px;
+  padding: 16px;
+  margin-bottom: 14px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0 2px 10px rgba(0,0,0,.04);
+}
+
+.professional-left {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+}
+
+.avatar {
+  width: 54px;
+  height: 54px;
+  min-width: 54px;
+
+  background: #fff1e8;
+  color: #ff6b00;
+
+  border-radius: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: bold;
+}
+
+.professional-info {
+  flex: 1;
+}
+
+.name-row {
+    color: #1e1e1e;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  h4 {
+    margin: 0;
+    font-size: 18px;
+     font-weight: 550;
+  }
+}
+
+.service-name {
+  margin: 3px 0;
+  color: #ff6b00;
+  font-weight: 400;
+}
+
+.service-description {
+  margin: 0;
+  color: #777;
+  font-size: 13px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  margin-top: 8px;
+
+  ion-icon {
+    color: #ffc107;
+  }
+}
+
+.professional-right {
+  text-align: right;
+
+  small {
+    display: block;
+    color: #777;
+    margin-top: 4px;
+  }
+}
+
+.price {
+  display: block;
+  color: #ff6b00;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.verified {
+  display: inline-block;
+  margin-top: 8px;
+
+  background: #ffb347;
+  color: white;
+
+  padding: 4px 10px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+}
+
+.libras-badge {
+  width: 22px;
+  height: 22px;
+
+  background: #6c4cff;
+
+  border-radius: 6px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    color: white;
+    font-size: 14px;
+  }
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+
+  ion-icon {
+    color: #ffc107;
+  }
+}
+
+.rating-value {
+    color: #777;
+  font-weight: 600;
+}
+
+.rating-count {
+  color: #777;
+  font-size: 13px;
+}

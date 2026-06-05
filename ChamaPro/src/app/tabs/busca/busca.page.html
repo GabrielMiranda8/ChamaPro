@@ -1,13 +1,78 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>busca</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="busca-content">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">busca</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="page-container">
+    <h2>Buscar Serviços</h2>
+    <div class="search-box">
+      <ion-icon name="search-outline"></ion-icon>
+      <input type="text" placeholder="Buscar profissional ou serviço..." [(ngModel)]="textoBusca"
+        (input)="filtrarResultados()" />
+    </div>
+
+    <div class="filters">
+      <button [class.active]="filtroSelecionado === 'todos'" (click)="selecionarFiltro('todos')">
+        Todos
+      </button>
+
+      <button [class.active]="filtroSelecionado === 'libras'" (click)="selecionarFiltro('libras')">
+        Libras
+      </button>
+
+      <button [class.active]="filtroSelecionado === 'verificado'" (click)="selecionarFiltro('verificado')">
+        Verificado
+      </button>
+
+      <button [class.active]="filtroSelecionado === 'avaliacao'" (click)="selecionarFiltro('avaliacao')">
+        Melhor avaliados
+      </button>
+
+    </div>
+
+    <p class="results-count">
+      {{ resultadosFiltrados.length }} resultados encontrados
+    </p>
+
+    <div class="professional-card" *ngFor="let item of resultadosFiltrados" (click)="abrirProfissional(item)">
+      <div class="professional-left">
+        <div class="avatar">
+          {{ obterIniciais(item.profissional.nome) }}
+        </div>
+        <div class="professional-info">
+          <div class="name-row">
+            <h4>{{ item.profissional.nome || 'Usuário'}}</h4>
+            <div *ngIf="possuiCaracteristica(item.profissional, 'LIBRAS')" class="libras-badge">
+              <ion-icon name="hand-left-outline"></ion-icon>
+            </div>
+          </div>
+          <p class="service-name">
+            {{ item.servico.nome }}
+          </p>
+
+          <p class="service-description">
+            {{ item.servico.descricao }}
+          </p>
+
+          <div class="rating">
+            <ion-icon name="star"></ion-icon>
+            <span class="rating-value">
+              {{ item.profissional.nota || 5.0 }}
+            </span>
+            <span class="rating-count">
+              (12)
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="professional-right">
+        <span class="price">
+          R$ {{ item.ps.preco }}
+        </span>]
+
+        <span *ngIf="possuiCaracteristica(item.profissional, 'VERIFICADO')" class="verified">
+          Verificado
+        </span>
+
+      </div>
+    </div>
+  </div>
 </ion-content>
