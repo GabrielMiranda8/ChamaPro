@@ -62,22 +62,24 @@ export class PerfilPage implements OnInit {
     await alert.present();
   }
 
-  private async deletarConta(): Promise<void> {
-    const logado = this.usuarioService.getLogin();
-    if (!logado) return;
-
-    const sucesso = this.usuarioService.excluir(logado.id);
-
-    const toast = await this.toastController.create({
-      message: sucesso ? 'Conta deletada com sucesso.' : 'Erro ao deletar conta.',
-      duration: 2500,
-      color: sucesso ? 'danger' : 'warning',
-      position: 'bottom',
+  async deletarConta(): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Excluir',
+      message: 'Deseja excluir sua conta? Essa ação é permanente',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Excluir',
+          handler: () => {
+            const logado = this.usuarioService.getLogin();
+            if (!logado) return;
+            this.usuarioService.excluir(logado.id);
+            this.navController.navigateRoot('/login');
+          },
+        },
+      ],
     });
-    await toast.present();
-
-    // excluir() já limpa o localStorage 'login' se era o logado
-    this.navController.navigateRoot('/login');
+    await alert.present();
   }
 
   async sair(): Promise<void> {

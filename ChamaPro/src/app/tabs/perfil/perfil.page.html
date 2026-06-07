@@ -147,11 +147,17 @@
 
   <!-- LOGOUT -->
   <div class="logout-container">
+    <ion-button fill="clear" class="logout-btn" (click)="deletarConta()">
+      <ion-icon slot="start" name="log-out-outline"></ion-icon>
+      Excluir conta
+    </ion-button>
+  </div>
+  <div class="logout-container">
     <ion-button fill="clear" class="logout-btn" (click)="sair()">
       <ion-icon slot="start" name="log-out-outline"></ion-icon>
       Sair da conta
     </ion-button>
   </div>
-  
+
 
 </ion-content>

@@ -56,7 +56,7 @@ export class UsuarioService {
     return true;
   }
 
-  // ── NOVO: atualiza campos do usuário logado e sincroniza a sessão ────────
+  
   atualizarLogado(campos: Partial<UsuarioModel>): UsuarioModel | null {
     const logado = this.getLogin();
     if (!logado.id) return null; // nenhum usuário logado
@@ -66,7 +66,6 @@ export class UsuarioService {
     return atualizado;
   }
 
-  // ── NOVO: remove usuário pelo id e limpa sessão se for o logado ──────────
   excluir(id: string): boolean {
     let usuarios: UsuarioModel[] = JSON.parse(localStorage.getItem('usuarios') || '[]');
     const tamanhoAntes = usuarios.length;
