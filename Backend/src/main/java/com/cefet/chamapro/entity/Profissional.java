@@ -1,5 +1,5 @@
 package com.cefet.chamapro.entity;
 
-public class Profissional {
-
+public class Profissional extends Cliente{
+    
 }
