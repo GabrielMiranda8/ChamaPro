@@ -1,12 +1,14 @@
 package com.cefet.chamapro.dto;
 
+import java.util.Date;
+
 public record UsuarioResponseDTO(
-        Long id,
+        String id,
         String nome,
         String email,
         String cpf,
-        String dtNasc,
-        String dtConta,
+        Date dtNasc,
+        Date dtConta,
         Number nota,
         String tipo
 ) {}

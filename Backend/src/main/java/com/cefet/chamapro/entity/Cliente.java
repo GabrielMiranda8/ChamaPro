@@ -11,7 +11,7 @@ import lombok.Setter;
 @Table(name = "tb_cliente")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+//@NoArgsConstructor
+//@AllArgsConstructor
 public class Cliente extends Usuario {
 }

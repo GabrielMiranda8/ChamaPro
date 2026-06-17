@@ -4,7 +4,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
+
+import java.util.Date;
+
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +26,7 @@ import lombok.Setter;
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @Column(nullable = false, length = 200, unique = true)
     private String nome;
@@ -36,10 +41,10 @@ public class Usuario {
     private String cpf;
 
     @Column(nullable = false, length = 200)
-    private String dtNasc;
+    private Date dtNasc;
 
     @Column(nullable = false, length = 200)
-    private String dtConta;
+    private Date dtConta;
 
     @Column(nullable = false)
     private Number nota;

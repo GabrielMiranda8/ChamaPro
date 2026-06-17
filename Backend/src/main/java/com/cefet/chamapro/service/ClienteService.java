@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -24,7 +25,7 @@ public class ClienteService {
         cliente.setSenha(dto.senha());
         cliente.setCpf(dto.cpf());
         cliente.setDtNasc(dto.dtNasc());
-        cliente.setDtConta(LocalDate.now().toString());
+        cliente.setDtConta(new Date());
         cliente.setNota(dto.nota());
         cliente.setTipo("CLIENTE");
 

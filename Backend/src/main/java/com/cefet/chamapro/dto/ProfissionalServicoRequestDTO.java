@@ -15,7 +15,6 @@ public class ProfissionalServicoRequestDTO {
     @NotNull(message = "O campo idServico é obrigatório")
     private String idServico;
 
-
     @NotNull(message = "O campo preço é obrigatório")
     private Number preco;
 }

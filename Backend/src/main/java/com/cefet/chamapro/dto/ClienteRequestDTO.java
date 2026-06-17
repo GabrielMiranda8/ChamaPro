@@ -1,5 +1,7 @@
 package com.cefet.chamapro.dto;
 
+import java.util.Date;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -18,7 +20,7 @@ public record ClienteRequestDTO(
         String cpf,
 
         @NotBlank(message = "Data de nascimento é obrigatória")
-        String dtNasc,
+        Date dtNasc,
 
         Number nota
 ) {}

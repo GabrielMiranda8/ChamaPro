@@ -23,7 +23,7 @@ import lombok.Setter;
 public class ProfissionalServico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @Column(nullable = false, length = 200, unique = true)
     private String idServico;

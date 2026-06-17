@@ -2,7 +2,6 @@ package com.cefet.chamapro.dto;
 
 import java.util.Date;
 
-import com.cefet.chamapro.entity.Endereco;
 import com.cefet.chamapro.entity.Profissional;
 
 import lombok.Getter;
