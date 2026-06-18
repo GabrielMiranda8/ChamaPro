@@ -8,7 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+
 import java.util.Date;
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class UsuarioService {
         return toResponseDTO(salvo);
     }
 
-    public UsuarioResponseDTO buscarPorId(Long id) {
+    public UsuarioResponseDTO buscarPorId(String id) {
         Usuario usuario = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
         return toResponseDTO(usuario);
@@ -52,7 +52,7 @@ public class UsuarioService {
                 .toList();
     }
 
-    public UsuarioResponseDTO atualizar(Long id, UsuarioRequestDTO dto) {
+    public UsuarioResponseDTO atualizar(String id, UsuarioRequestDTO dto) {
         Usuario usuario = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
@@ -68,7 +68,7 @@ public class UsuarioService {
         return toResponseDTO(atualizado);
     }
 
-    public void deletar(Long id) {
+    public void deletar(String id) {
         if (!repository.existsById(id)) {
             throw new EntityNotFoundException("Usuário não encontrado");
         }
@@ -80,11 +80,9 @@ public class UsuarioService {
                 usuario.getId(),
                 usuario.getNome(),
                 usuario.getEmail(),
-                usuario.getCpf(),
                 usuario.getDtNasc(),
                 usuario.getDtConta(),
-                usuario.getNota(),
-                usuario.getTipo()
+                usuario.getNota()
         );
     }
 }

@@ -4,9 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.cefet.chamapro.entity.Servico;
 
-public interface ServicoRepository extends JpaRepository<Servico, Long>{
+public interface ServicoRepository extends JpaRepository<Servico, String>{
 	
 	boolean existsByNome(String nome);
 	
-	boolean existsByNomeAndIdNot(String nome, Long id);	
+	boolean existsByNomeAndIdNot(String nome, String id);	
 }

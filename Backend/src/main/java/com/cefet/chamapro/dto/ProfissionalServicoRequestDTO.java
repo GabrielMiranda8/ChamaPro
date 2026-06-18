@@ -1,6 +1,8 @@
 package com.cefet.chamapro.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import java.math.BigDecimal;
+import java.util.Date;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,5 +18,8 @@ public class ProfissionalServicoRequestDTO {
     private String idServico;
 
     @NotNull(message = "O campo preço é obrigatório")
-    private Number preco;
+    private BigDecimal preco;
+
+    @NotNull(message = "O campo tempo de Carreira é obrigatório")
+    private Date tempoCarreira;
 }

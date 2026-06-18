@@ -4,9 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.cefet.chamapro.entity.Profissional;
 
-public interface ProfissionalRepository extends JpaRepository<Profissional, Long>{
+public interface ProfissionalRepository extends JpaRepository<Profissional, String>{
 	
 	boolean existsByNome(String nome);
 	
-	boolean existsByNomeAndIdNot(String nome, Long id);	
+	boolean existsByNomeAndIdNot(String nome, String id);	
 }

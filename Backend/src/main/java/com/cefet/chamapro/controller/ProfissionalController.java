@@ -40,7 +40,7 @@ public class ProfissionalController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar profissional por ID")
-    public ResponseEntity<ProfissionalResponseDTO> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<ProfissionalResponseDTO> buscarPorId(@PathVariable String id) {
     	ProfissionalResponseDTO profissionalResponseDTO = profissionalService.buscarPorId(id);
         return ResponseEntity.ok(profissionalResponseDTO);
     }
@@ -54,7 +54,7 @@ public class ProfissionalController {
     
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar profissional")
-    public ResponseEntity<ProfissionalResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody ProfissionalRequestDTO profissionalRequestDTO) {
+    public ResponseEntity<ProfissionalResponseDTO> atualizar(@PathVariable String id, @Valid @RequestBody ProfissionalRequestDTO profissionalRequestDTO) {
 
     	ProfissionalResponseDTO profissionalResponseDTO = profissionalService.atualizar(id, profissionalRequestDTO);
 
@@ -63,7 +63,7 @@ public class ProfissionalController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Excluir profissional")
-    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+    public ResponseEntity<Void> excluir(@PathVariable String id) {
         profissionalService.excluir(id);
         return ResponseEntity.noContent().build();
     }

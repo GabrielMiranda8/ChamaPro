@@ -13,7 +13,7 @@ import com.cefet.chamapro.exception.BusinessException;
 import com.cefet.chamapro.exception.ResourceNotFoundException;
 import com.cefet.chamapro.repository.ProfissionalRepository;
 
-
+@Service
 public class ProfissionalService {
     @Autowired
     private ProfissionalRepository profissionalRepository;
@@ -27,7 +27,7 @@ public class ProfissionalService {
     }
 
     @Transactional(readOnly = true)
-    public ProfissionalResponseDTO buscarPorId(Long id) {
+    public ProfissionalResponseDTO buscarPorId(String id) {
     	Profissional profissional = profissionalRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Profissional não encontrado. Id: " + id));
 
@@ -49,7 +49,7 @@ public class ProfissionalService {
     }
     
     @Transactional
-    public ProfissionalResponseDTO atualizar(Long id, ProfissionalRequestDTO dto) {
+    public ProfissionalResponseDTO atualizar(String id, ProfissionalRequestDTO dto) {
 
     	Profissional profissional = profissionalRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Profissional não encontrado. Id: " + id));
@@ -64,7 +64,7 @@ public class ProfissionalService {
     }    
 
     @Transactional
-    public void excluir(Long id) {
+    public void excluir(String id) {
         if (!profissionalRepository.existsById(id)) {
             throw new ResourceNotFoundException("Profissional não encontrado com ID: " + id);
         }

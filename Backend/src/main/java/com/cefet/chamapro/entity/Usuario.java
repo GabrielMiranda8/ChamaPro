@@ -25,7 +25,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Usuario {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(nullable = false, length = 200, unique = true)
@@ -47,7 +47,7 @@ public class Usuario {
     private Date dtConta;
 
     @Column(nullable = false)
-    private Number nota;
+    private Double nota;
 
     @Column(nullable = false, length = 200)
     private String tipo;

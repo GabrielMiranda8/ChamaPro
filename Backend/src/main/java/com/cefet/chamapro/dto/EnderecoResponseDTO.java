@@ -14,11 +14,11 @@ public class EnderecoResponseDTO {
 	private String cep;
     private String bairro;
     private String rua;
-    private Number numero;
+    private Integer numero;
     private String complemento; 
     
     public EnderecoResponseDTO(Endereco endereco) {
-    	this.cep = endereco.getId();
+    	this.cep = endereco.getCep();
         this.rua = endereco.getRua();
         this.bairro = endereco.getBairro();
         this.numero = endereco.getNumero();

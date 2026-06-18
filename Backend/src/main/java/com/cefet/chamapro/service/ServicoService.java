@@ -14,6 +14,7 @@ import com.cefet.chamapro.exception.ResourceNotFoundException;
 import com.cefet.chamapro.repository.ServicoRepository;
 
 
+@Service
 public class ServicoService {
     @Autowired
     private ServicoRepository servicoRepository;
@@ -27,7 +28,7 @@ public class ServicoService {
     }
 
     @Transactional(readOnly = true)
-    public ServicoResponseDTO buscarPorId(Long id) {
+    public ServicoResponseDTO buscarPorId(String id) {
     	Servico servico = servicoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Servico não encontrado. Id: " + id));
 
@@ -49,7 +50,7 @@ public class ServicoService {
     }
     
     @Transactional
-    public ServicoResponseDTO atualizar(Long id, ServicoRequestDTO dto) {
+    public ServicoResponseDTO atualizar(String id, ServicoRequestDTO dto) {
 
     	Servico servico = servicoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Servico não encontrado. Id: " + id));
@@ -64,7 +65,7 @@ public class ServicoService {
     }    
 
     @Transactional
-    public void excluir(Long id) {
+    public void excluir(String id) {
         if (!servicoRepository.existsById(id)) {
             throw new ResourceNotFoundException("Servico não encontrado com ID: " + id);
         }

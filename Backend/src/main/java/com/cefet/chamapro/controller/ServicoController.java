@@ -40,7 +40,7 @@ public class ServicoController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar servico por ID")
-    public ResponseEntity<ServicoResponseDTO> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<ServicoResponseDTO> buscarPorId(@PathVariable String id) {
     	ServicoResponseDTO servicoResponseDTO = servicoService.buscarPorId(id);
         return ResponseEntity.ok(servicoResponseDTO);
     }
@@ -54,7 +54,7 @@ public class ServicoController {
     
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar servico")
-    public ResponseEntity<ServicoResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody ServicoRequestDTO servicoRequestDTO) {
+    public ResponseEntity<ServicoResponseDTO> atualizar(@PathVariable String id, @Valid @RequestBody ServicoRequestDTO servicoRequestDTO) {
 
     	ServicoResponseDTO servicoResponseDTO = servicoService.atualizar(id, servicoRequestDTO);
 
@@ -63,7 +63,7 @@ public class ServicoController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Excluir servico")
-    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+    public ResponseEntity<Void> excluir(@PathVariable String id) {
         servicoService.excluir(id);
         return ResponseEntity.noContent().build();
     }

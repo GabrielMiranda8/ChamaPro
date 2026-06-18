@@ -22,32 +22,31 @@ import lombok.Setter;
 public class Endereco {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(nullable = false, length = 9, unique = true)
+    @Column(nullable = false, length = 9)
     private String cep;
 
-    @Column(nullable = false, length = 100, unique = true)
+    @Column(nullable = false, length = 100)
     private String rua;
 
-    @Column(nullable = false, length = 100, unique = true)
+    @Column(nullable = false, length = 100)
     private String bairro;
 
-    @Column(nullable = false, length = 100, unique = true)
+    @Column(nullable = false, length = 100)
     private String cidade;
 
-    @Column(nullable = false, length = 5, unique = true)
-    private Number numero;
+    @Column(nullable = false)
+    private Integer numero;
 
-    @Column(nullable = false, length = 1, unique = true)
-    private String complemento;
+    @Column(length = 100)
+    private String complemento; 
 
-    @Column(nullable = false, length = 200, unique = true)
+    @Column(length = 200)
     private String referencia;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
-
 }

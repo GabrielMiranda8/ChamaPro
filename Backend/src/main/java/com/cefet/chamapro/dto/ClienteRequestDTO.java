@@ -22,5 +22,5 @@ public record ClienteRequestDTO(
         @NotBlank(message = "Data de nascimento é obrigatória")
         Date dtNasc,
 
-        Number nota
+        Double nota
 ) {}
