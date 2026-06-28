@@ -69,18 +69,18 @@ export class BuscaPage implements OnInit {
   carregarResultados(): void {
     const profissionalServicos = this.profissionalServicoService.listar();
 
-    this.resultados = profissionalServicos
-      .map((ps) => {
-        const profissional = this.usuarioService.buscarPorId(ps.idProfissional);
-        const servico = this.servicoService.buscarPorId(ps.idServico);
-        return { ps, profissional, servico };
-      })
-      // Filtra combinações incompletas (profissional ou serviço não encontrado)
-      .filter((item) => item.profissional.id && item.servico.id);
+    this.usuarioService.listar().subscribe((usuarios) => {
+      this.resultados = profissionalServicos
+        .map((ps) => {
+          // busca na lista que já chegou, sem novo Observable
+          const profissional = usuarios.find(u => u.id === ps.idProfissional) ?? new UsuarioModel();
+          const servico = this.servicoService.buscarPorId(ps.idServico);
+          return { ps, profissional, servico };
+        })
+        .filter((item) => item.profissional.id && item.servico.id);
 
-    this.resultadosFiltrados = [...this.resultados];
-    console.log("Resultados: ", this.resultados);
-    console.log("Resultados Filtrados: ", this.resultadosFiltrados)
+      this.resultadosFiltrados = [...this.resultados];
+    });
   }
 
   // ─── Filtros ────────────────────────────────────────────────────────────────
@@ -133,7 +133,7 @@ export class BuscaPage implements OnInit {
         profissional: item.profissional,
         profissionalServico: item.ps,
         servico: item.servico,
-        cliente: this.usuarioService.getLogin(),
+        cliente: this.usuarioService.getUsuarioLogado(),
       },
       breakpoints: [0, 1],
       initialBreakpoint: 1,

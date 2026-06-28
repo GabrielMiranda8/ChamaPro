@@ -4,9 +4,10 @@ import java.util.Date;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record UsuarioRequestDTO(
-        @NotBlank(message = "O campo usuarioId é obrigatório")
+        //@NotBlank(message = "O campo usuarioId é obrigatório")
         String usuarioId,
 
         @NotBlank(message = "Nome é obrigatório")
@@ -22,7 +23,7 @@ public record UsuarioRequestDTO(
         @NotBlank(message = "CPF é obrigatório")
         String cpf,
 
-        @NotBlank(message = "Data de nascimento é obrigatória")
+        @NotNull(message = "Data de nascimento é obrigatória")
         Date dtNasc,
 
         Double nota,

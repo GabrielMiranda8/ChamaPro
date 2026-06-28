@@ -7,6 +7,8 @@ import { personOutline, mailOutline, calendarOutline, cardOutline, locationOutli
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { AlertController, ToastController } from '@ionic/angular';
+import { TokenModel } from 'src/app/model/token.model';
+import { TokenService } from 'src/app/services/token.service';
 
 export interface UserData {
   nome: string;
@@ -27,8 +29,9 @@ export interface UserData {
 export class PerfilPage implements OnInit {
   // TODO: substituir pelo retorno real do AuthService/UserService
   dados: UsuarioModel;
+  token!: TokenModel;
 
-  constructor(private usuarioService: UsuarioService, private toastController: ToastController, private navController: NavController, private alertController: AlertController) {
+  constructor(private usuarioService: UsuarioService, private toastController: ToastController, private navController: NavController, private alertController: AlertController, private tokenService: TokenService) {
     addIcons({
       personOutline,
       mailOutline,
@@ -43,7 +46,12 @@ export class PerfilPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dados = this.usuarioService.getLogin();
+    this.token = this.tokenService.extrair();
+    this.usuarioService.buscarPorId(this.token.id).subscribe({
+      next: (usuario) => {
+        this.dados = usuario;
+      }
+    })
   }
   async confirmarDelete(): Promise<void> {
     const alert = await this.alertController.create({
@@ -71,7 +79,7 @@ export class PerfilPage implements OnInit {
         {
           text: 'Excluir',
           handler: () => {
-            const logado = this.usuarioService.getLogin();
+            const logado = this.dados;
             if (!logado) return;
             this.usuarioService.excluir(logado.id);
             this.navController.navigateRoot('/login');
@@ -91,7 +99,7 @@ export class PerfilPage implements OnInit {
         {
           text: 'Sair',
           handler: () => {
-            this.usuarioService.excluirLogin();
+            this.usuarioService.logout();
             this.navController.navigateRoot('/login');
           },
         },

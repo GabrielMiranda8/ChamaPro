@@ -7,6 +7,8 @@ import { personOutline, mailOutline, calendarOutline, cardOutline, locationOutli
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { AlertController, ToastController } from '@ionic/angular';
+import { TokenModel } from 'src/app/model/token.model';
+import { TokenService } from 'src/app/services/token.service';
 
 @Component({
   selector: 'app-dados',
@@ -17,8 +19,9 @@ import { AlertController, ToastController } from '@ionic/angular';
 })
 export class DadosPage implements OnInit {
   dados: UsuarioModel;
+  token!: TokenModel;
 
-  constructor(private usuarioService: UsuarioService, private toastController: ToastController, private navController: NavController, private alertController: AlertController) {
+  constructor(private usuarioService: UsuarioService, private toastController: ToastController, private navController: NavController, private alertController: AlertController, private tokenService: TokenService) {
     addIcons({
       personOutline,
       mailOutline,
@@ -33,7 +36,12 @@ export class DadosPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dados = this.usuarioService.getLogin();
+    this.token = this.tokenService.extrair();
+    this.usuarioService.buscarPorId(this.token.id).subscribe({
+      next: (usuario) => {
+        this.dados = usuario;
+      }
+    })
   }
 
 }

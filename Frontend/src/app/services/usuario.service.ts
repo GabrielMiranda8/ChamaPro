@@ -1,62 +1,20 @@
 import { Injectable } from '@angular/core';
 import { UsuarioModel } from '../model/usuario.model';
+import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsuarioService {
+  private readonly API_URL = `${environment.apiUrl}/usuarios`;
+  private readonly AUTH_URL = `${environment.apiUrl}/auth`;
 
-  salvar(usuario: UsuarioModel): UsuarioModel {
-    let usuarios: UsuarioModel[] = JSON.parse(localStorage.getItem('usuarios') || '[]');
-    if (usuario.id === '') {
-      usuario.id = crypto.randomUUID();
-      usuarios.push(usuario);
-    } else {
-      const posicao = usuarios.findIndex((temp) => temp.id === usuario.id);
-      if (posicao >= 0) usuarios[posicao] = usuario;
-    }
-    localStorage.setItem('usuarios', JSON.stringify(usuarios));
-    return usuario;
-  }
 
-  autenticar(email: string, senha: string): boolean {
-    const usuarios: UsuarioModel[] = JSON.parse(localStorage.getItem('usuarios') || '[]');
-    const usuario = usuarios.find((temp) => temp.email === email);
-    if (!usuario) return false;
-    return senha === usuario.senha;
-  }
+  /* LOCAL STORAGE --- LOCAL STORAGE
 
-  // Assinatura original mantida — login.page.ts não precisa mudar
-  logar(usuario: UsuarioModel) {
-    const usuarios: UsuarioModel[] = JSON.parse(localStorage.getItem('usuarios') || '[]');
-    const aux = usuarios.find((temp) => temp.email === usuario.email);
-    if (aux && usuario.senha === aux.senha)
-      localStorage.setItem('login', JSON.stringify(aux));
-  }
-
-  listar(): UsuarioModel[] {
-    return JSON.parse(localStorage.getItem('usuarios') || '[]');
-  }
-
-  buscarPorId(id: string): UsuarioModel {
-    const usuarios: UsuarioModel[] = JSON.parse(localStorage.getItem('usuarios') || '[]');
-    let usuario = new UsuarioModel();
-    usuario = usuarios.find((temp) => temp.id === id) ?? usuario;
-    return usuario;
-  }
-
-  getLogin(): UsuarioModel {
-    const raw = localStorage.getItem('login');
-    if (!raw) return new UsuarioModel();
-    return JSON.parse(raw) as UsuarioModel;
-  }
-
-  excluirLogin(): boolean {
-    localStorage.removeItem('login');
-    return true;
-  }
-
-  
   atualizarLogado(campos: Partial<UsuarioModel>): UsuarioModel | null {
     const logado = this.getLogin();
     if (!logado.id) return null; // nenhum usuário logado
@@ -65,15 +23,57 @@ export class UsuarioService {
     localStorage.setItem('login', JSON.stringify(atualizado));
     return atualizado;
   }
+  */
 
-  excluir(id: string): boolean {
-    let usuarios: UsuarioModel[] = JSON.parse(localStorage.getItem('usuarios') || '[]');
-    const tamanhoAntes = usuarios.length;
-    usuarios = usuarios.filter((temp) => temp.id !== id);
-    if (usuarios.length === tamanhoAntes) return false;
-    localStorage.setItem('usuarios', JSON.stringify(usuarios));
-    const logado = this.getLogin();
-    if (logado.id === id) localStorage.removeItem('login');
-    return true;
+  // API -- API -- API ODILON
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
+
+
+
+  /* NAO IMPLEMENTADO AINDA
+
+  alterarSenha(id: string, senha: string): Observable<string> {
+    return this.http.patch<string>(`${this.API_URL}/${id}/senha`, senha, { headers: this.tokenService.gerarCabecalhoAutenticacao() })
+  check(email: string, senha: string): Observable<boolean> {
+    return this.http.post<boolean>(`${this.API_URL}/check`, { email, senha });
+  }
+
+  
+    }
+  
+
+  */
+  /* Público */
+  login(email: string, senha: string): Observable<string> {
+    return this.http.post<string>(`${this.AUTH_URL}/login`, { email, senha });
+  }
+
+  salvar(usuario: UsuarioModel): Observable<UsuarioModel> {
+    return this.http.post<UsuarioModel>(`${this.API_URL}`, usuario);
+  }
+
+  logout(): void {
+    this.tokenService.excluir();
+  }
+
+  getUsuarioLogado() {
+    return this.tokenService.extrair();
+  }
+
+  
+  /* Privado */
+  buscarPorId(id: string): Observable<UsuarioModel> {
+    return this.http.get<UsuarioModel>(`${this.API_URL}/${id}`, { headers: this.tokenService.gerarCabecalhoAutenticacao() });
+  }
+
+  listar(): Observable<UsuarioModel[]> {
+    return this.http.get<UsuarioModel[]>(this.API_URL, { headers: this.tokenService.gerarCabecalhoAutenticacao() });
+  }
+
+  alterar(usuario: UsuarioModel): Observable<UsuarioModel> {
+    return this.http.put<UsuarioModel>(`${this.API_URL}/${usuario.id}`, usuario, { headers: this.tokenService.gerarCabecalhoAutenticacao() });
+  }
+  excluir(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/${id}`, { headers: this.tokenService.gerarCabecalhoAutenticacao() });
   }
 }

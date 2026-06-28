@@ -29,6 +29,8 @@ import {
 } from 'ionicons/icons';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
+import { TokenModel } from 'src/app/model/token.model';
+import { TokenService } from 'src/app/services/token.service';
 
 export interface UserData {
   nome: string;
@@ -49,8 +51,9 @@ export interface UserData {
 export class ViewPage implements OnInit {
   // TODO: substituir pelo retorno real do AuthService/UserService
   dados: UsuarioModel;
+  token!: TokenModel;
 
-  constructor(private usuarioService: UsuarioService) {
+  constructor(private usuarioService: UsuarioService, private tokenService: TokenService) {
     addIcons({
       personOutline,
       locationOutline,
@@ -70,7 +73,12 @@ export class ViewPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dados = this.usuarioService.getLogin();
+    this.token = this.tokenService.extrair();
+    this.usuarioService.buscarPorId(this.token.id).subscribe({
+      next: (usuario) => {
+        this.dados = usuario;
+      }
+    })
   }
 
   editarPerfil() {

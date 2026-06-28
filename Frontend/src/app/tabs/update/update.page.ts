@@ -12,6 +12,8 @@ import { addIcons } from 'ionicons';
 import { arrowBackOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { UsuarioService } from '../../services/usuario.service';
 import { UsuarioModel } from '../../model/usuario.model';
+import { TokenModel } from 'src/app/model/token.model';
+import { TokenService } from 'src/app/services/token.service';
 
 @Component({
   selector: 'app-update',
@@ -27,6 +29,7 @@ import { UsuarioModel } from '../../model/usuario.model';
 export class UpdatePage implements OnInit {
 
   private usuarioLogado!: UsuarioModel;
+  token!: TokenModel;
 
   novaSenha = '';
   confirmarNovaSenha = '';
@@ -43,20 +46,24 @@ export class UpdatePage implements OnInit {
     private usuarioService: UsuarioService,
     private navController: NavController,
     private toastController: ToastController,
+    private tokenService: TokenService
   ) {
     addIcons({ arrowBackOutline, eyeOutline, eyeOffOutline });
   }
 
   ngOnInit(): void {
-    const logado = this.usuarioService.getLogin();
-    if (!logado) {
-      this.navController.navigateRoot('/login');
-      return;
-    }
-    this.usuarioLogado = logado;
-    // Pré-preenche com dados atuais do usuário
-    this.cep = logado.endereco?.cep ?? '';
-    this.isProfissional = logado.tipo === 'profissional';
+    this.token = this.tokenService.extrair();
+    this.usuarioService.buscarPorId(this.token.id).subscribe({
+      next: (usuario) => {
+        this.usuarioLogado = usuario;
+        this.cep = usuario.endereco?.cep ?? '';
+        this.isProfissional = usuario.tipo === 'profissional';
+        if (!this.usuarioLogado) {
+          return;
+        }
+      }
+    })
+
   }
 
   toggleSenha(): void { this.showSenha.update((v) => !v); }
@@ -92,25 +99,38 @@ export class UpdatePage implements OnInit {
     this.submitted = true;
     if (!this.validate()) return;
 
-    const alteracoes: Partial<UsuarioModel> = {
+    let alteracoes: UsuarioModel = {
       tipo: this.isProfissional ? 'profissional' : 'cliente',
-      endereco: { ...this.usuarioLogado.endereco, cep: this.cep },
+      endereco: { ...this.usuarioLogado.endereco },
+      id: this.token.id,
+      nome: this.usuarioLogado.nome,
+      email: this.usuarioLogado.email,
+      senha: this.usuarioLogado.senha,
+      cpf: this.usuarioLogado.cpf,
+      dtNasc: this.usuarioLogado.dtNasc,
+      dtConta: this.usuarioLogado.dtConta,
+      nota: this.usuarioLogado.nota,
+      caracteristicas: this.usuarioLogado.caracteristicas
     };
 
-    // Só troca a senha se o usuário preencheu os campos
     if (this.novaSenha) alteracoes.senha = this.novaSenha;
 
-    const resultado = this.usuarioService.atualizarLogado(alteracoes);
-
-    if (!resultado) {
-      const toast = await this.toastController.create({
-        message: 'Sessão expirada. Faça login novamente.',
-        duration: 2500, color: 'danger', position: 'bottom',
-      });
-      await toast.present();
-      this.navController.navigateRoot('/login');
-      return;
-    }
+    this.usuarioService.alterar(alteracoes).subscribe({
+      next: async (resultado) => {
+        if (!resultado) {
+          const toast = await this.toastController.create({
+            message: 'Sessão expirada. Faça login novamente.',
+            duration: 2500, color: 'danger', position: 'bottom',
+          });
+          await toast.present();
+          this.navController.navigateRoot('/login');
+          return;
+        }
+      },
+      error: (err) => {
+        console.log("Erro: ", err)
+      }
+    });
 
     const toast = await this.toastController.create({
       message: 'Dados atualizados com sucesso!',

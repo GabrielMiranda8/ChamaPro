@@ -34,7 +34,7 @@ export class CadastroPage implements OnInit {
 
   // Lista de características carregada do service (usada no ion-select)
   todasCaracteristicas: CaracteristicaModel[] = [];
-
+  todosUsuarios: UsuarioModel[] = [];
   // Controla visibilidade das senhas
   showSenha = signal(false);
   showConfirmarSenha = signal(false);
@@ -114,13 +114,17 @@ export class CadastroPage implements OnInit {
 
     // --- Checa duplicatas ---
 
-    const todos = this.usuarioService.listar();
+    this.usuarioService.listar().subscribe({
+      next: (usuarios) => {
+        this.todosUsuarios = usuarios;
+      }
+    });
 
-    if (todos.some(u => u.email === v.email)) {
+    if (this.todosUsuarios.some(u => u.email === v.email)) {
       await this.exibirMensagem("Este e-mail já está cadastrado."); return;
     }
 
-    if (todos.some(u => u.cpf.replace(/[^0-9]/g, '') === v.cpf.replace(/[^0-9]/g, ''))) {
+    if (this.todosUsuarios.some(u => u.cpf.replace(/[^0-9]/g, '') === v.cpf.replace(/[^0-9]/g, ''))) {
       await this.exibirMensagem("Este CPF já está cadastrado."); return;
     }
 
@@ -136,12 +140,14 @@ export class CadastroPage implements OnInit {
     usuario.caracteristicas = v.caracteristicas ?? [];
     usuario.tipo = v.isProfissional ? 'PROFISSIONAL' : 'CLIENTE';
 
-    const usuarioSalvo = await this.usuarioService.salvar(usuario);
-
-    if (usuarioSalvo.tipo === 'PROFISSIONAL') {
-      this.navController.navigateForward(`/add-servico/${usuarioSalvo.id}`);
-      return; 
-    }
+    this.usuarioService.salvar(usuario).subscribe({
+      next: (usuario) => {
+        if (usuario.tipo === 'PROFISSIONAL') {
+          this.navController.navigateForward(`/add-servico/${usuario.id}`);
+          return;
+        }
+      }
+    });
 
     await this.exibirMensagem('Conta criada com sucesso!');
     this.navController.navigateRoot('/login');

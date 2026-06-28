@@ -11,15 +11,34 @@ export class ProfissionalService {
     }
 
   listar(): ProfissionalModel[] {
-    return this.usuarioService.listar().filter(u => u.tipo === 'PROFISSIONAL') as ProfissionalModel[];
+    this.usuarioService.listar().subscribe({
+      next: (profissionais) => {
+        return profissionais.filter(u => u.tipo === 'PROFISSIONAL') as ProfissionalModel[];
+      }
+    });
+    let p!: ProfissionalModel[];
+
+    return p;
   }
 
   buscarPorId(id: string): ProfissionalModel {
-    return this.usuarioService.buscarPorId(id) as ProfissionalModel;
+    this.usuarioService.buscarPorId(id).subscribe({
+      next: (profissional) => {
+        return profissional  as ProfissionalModel;
+      }
+    });
+
+    return new ProfissionalModel();
   }
 
   salvar(profissional: ProfissionalModel): ProfissionalModel {
     profissional.tipo = 'PROFISSIONAL';
-    return this.usuarioService.salvar(profissional) as ProfissionalModel;
+    this.usuarioService.salvar(profissional).subscribe({
+      next: (profissional) => {
+        return profissional  as ProfissionalModel;
+      }
+    });
+    let p!: ProfissionalModel;
+    return p;
   }
 }

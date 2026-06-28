@@ -1,10 +1,10 @@
-package com.cefet.intercards;
+package com.cefet.chamapro;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class IntercardsApplicationTests {
+class ChamaproApplicationTests {
 
 	@Test
 	void contextLoads() {
