@@ -1,10 +1,5 @@
 <ion-content [fullscreen]="true" class="login-content">
 
-  <div class="login-bg">
-    <div class="bg-circle bg-circle--1"></div>
-    <div class="bg-circle bg-circle--2"></div>
-  </div>
-
   <div class="login-wrapper">
 
     <!-- Logo -->
@@ -20,67 +15,64 @@
       <p class="brand-sub">Serviços acessíveis para todos</p>
     </div>
 
-    <!-- Card de login -->
-    <div class="login-card">
+    <!-- Formulário -->
+    <form [formGroup]="formGroup" (ngSubmit)="autenticar()" class="login-form">
 
-      <form [formGroup]="formGroup" (ngSubmit)="autenticar()">
+      <!-- E-mail -->
+      <div class="field-group">
+        <ion-label class="field-label">E-mail</ion-label>
+        <ion-input
+          class="input"
+          type="email"
+          formControlName="email"
+          placeholder="seu@email.com">
+        </ion-input>
+      </div>
 
-        <!-- E-mail -->
-        <div class="field-group">
-          <div class="field-label-row">
-            <ion-icon name="mail-outline" class="field-icon"></ion-icon>
-            <ion-label class="field-label">E-mail</ion-label>
-          </div>
-          <ion-input
-            class="input"
-            type="email"
-            formControlName="email"
-            placeholder="seu@email.com">
-          </ion-input>
-        </div>
-
-        <!-- Senha -->
-        <div class="field-group">
-          <div class="field-label-row">
-            <ion-icon name="lock-closed-outline" class="field-icon"></ion-icon>
-            <ion-label class="field-label">Senha</ion-label>
-          </div>
-          <ion-input
-            class="input"
-            type="password"
-            formControlName="senha"
-            placeholder="••••••••">
-          </ion-input>
-        </div>
-
-        <!-- Botão -->
-        <div class="submit-container">
-          <ion-button
-            type="submit"
-            expand="block"
-            class="submit-btn"
-            >
-            <ion-icon slot="start" name="log-in-outline"></ion-icon>
-            Entrar
+      <!-- Senha -->
+      <div class="field-group">
+        <ion-label class="field-label">Senha</ion-label>
+        <ion-input
+          class="input"
+          [type]="showSenha ? 'text' : 'password'"
+          formControlName="senha"
+          placeholder="••••••••">
+          <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleSenha()">
+            <ion-icon slot="icon-only" [name]="showSenha ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
           </ion-button>
-        </div>
-
-      </form>
-
-      <!-- Divisor -->
-      <div class="divider">
-        <span class="divider-line"></span>
-        <span class="divider-text">ou</span>
-        <span class="divider-line"></span>
+        </ion-input>
       </div>
 
-      <!-- Link de cadastro -->
-      <div class="ion-text-center">
-        <ion-button fill="clear" class="signup-btn" (click)="cadastro()">
-          Não tem conta? <strong>&nbsp;Cadastre-se</strong>
-        </ion-button>
+      <!-- Esqueci senha -->
+      <div class="forgot-row">
+        <ion-button fill="clear" class="forgot-btn">Esqueci minha senha</ion-button>
       </div>
 
+      <!-- Botão entrar -->
+      <ion-button type="submit" expand="block" class="submit-btn">
+        Entrar
+      </ion-button>
+
+    </form>
+
+    <!-- Divisor -->
+    <div class="divider">
+      <span class="divider-line"></span>
+      <span class="divider-text">ou continue com</span>
+      <span class="divider-line"></span>
+    </div>
+
+    <!-- Google -->
+    <ion-button expand="block" fill="outline" class="google-btn">
+      Google
+    </ion-button>
+
+    <!-- Link cadastro -->
+    <div class="ion-text-center signup-row">
+      <span class="signup-text">Não tem conta? </span>
+      <ion-button fill="clear" class="signup-link" (click)="cadastro()">
+        Cadastre-se
+      </ion-button>
     </div>
 
   </div>

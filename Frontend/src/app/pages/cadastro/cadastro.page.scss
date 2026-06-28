@@ -1,42 +1,39 @@
+// ── Variáveis ─────────────────────────────────────────────
+$laranja: #E8632A;
+$laranja-hover: #d45520;
+$texto: #1A1A1A;
+$texto-sec: #666666;
+$borda: #E5E5E5;
+$fundo: #F7F5F2;
+$branco: #ffffff;
+
+// ── Content ───────────────────────────────────────────────
 .cadastro-content {
-  --background: #121212;
-  position: relative;
-  overflow: hidden;
+  --background: #{$fundo};
 }
 
-// ── Background decorativo ────────────────────────────────
-.cadastro-bg {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-// ── Wrapper ──────────────────────────────────────────────
+// ── Wrapper ───────────────────────────────────────────────
 .cadastro-wrapper {
-  position: relative;
-  z-index: 1;
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 36px 20px 48px;
+  padding: 40px 24px 48px;
 }
 
-// ── Header ───────────────────────────────────────────────
+// ── Header ────────────────────────────────────────────────
 .cadastro-header {
-  margin-bottom: 28px;
+  margin-bottom: 8px;
 
   .logo-ring {
     display: inline-flex;
-    padding: 6px;
-    border-radius: 28px;
-    background: linear-gradient(135deg, #ffffff, #ff9c32);
+    border-radius: 20px;
+    overflow: hidden;
     margin-bottom: 14px;
+    box-shadow: 0 4px 16px rgba(232, 99, 42, 0.2);
 
     .logo-img {
       width: 64px;
       height: 64px;
-      border-radius: 18px;
       object-fit: cover;
       display: block;
     }
@@ -45,77 +42,71 @@
   .cadastro-title {
     font-size: 26px;
     font-weight: 800;
-    color: #ffffff;
+    color: $texto;
     margin: 0 0 4px;
-    letter-spacing: -0.5px;
   }
 
   .cadastro-subtitle {
     font-size: 14px;
-    color: #666;
+    color: $texto-sec;
     margin: 0;
   }
 }
 
-.perfil-img {
-  border-radius: 100px;
-}
-
-// ── Card ─────────────────────────────────────────────────
-.cadastro-card {
-  background: #1a1a1a;
-  border-radius: 24px;
-  padding: 8px 20px 28px;
-  border: 1px solid #2a2a2a;
-}
-
-// ── Back button ──────────────────────────────────────────
+// ── Voltar ────────────────────────────────────────────────
 .back-btn {
-  --color: #666;
-  font-size: 13px;
-  margin-bottom: 8px;
+  --color: #{$texto-sec};
+  --padding-start: 0;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  align-self: flex-start;
 }
 
-// ── Campos ───────────────────────────────────────────────
+// ── Formulário ────────────────────────────────────────────
+.cadastro-form {
+  display: flex;
+  flex-direction: column;
+}
+
+// ── Campos ────────────────────────────────────────────────
 .field-group {
   margin-bottom: 16px;
 }
 
-.field-label-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 7px;
-
-  .field-icon {
-    font-size: 14px;
-    color: #555;
-  }
-
-  .field-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: #d8d7d7;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-  }
+.field-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: $texto;
+  margin-bottom: 8px;
 }
 
 .input {
-  background: #242424;
-  border-radius: 14px;
-  color: #fff;
+  background: $branco;
+  border-radius: 12px;
+  border: 1.5px solid $borda;
+  color: $texto;
   --padding-start: 16px;
   --padding-end: 16px;
   --padding-top: 13px;
   --padding-bottom: 13px;
-  border: 1px solid #303030;
   font-size: 15px;
 }
 
+.select-input {
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+}
+
+.input-icon {
+  color: #aaa;
+  font-size: 18px;
+  margin-right: 8px;
+}
+
 .eye-btn {
-  --color: #555;
-  margin-right: 4px;
+  --color: #aaa;
 }
 
 // ── Field row (2 colunas) ────────────────────────────────
@@ -134,11 +125,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #242424;
-  border-radius: 16px;
+  background: $branco;
+  border-radius: 14px;
   padding: 14px 16px;
-  border: 1px solid #303030;
-  margin-bottom: 20px;
+  border: 1.5px solid $borda;
+  margin-bottom: 24px;
 }
 
 .profissional-left {
@@ -148,57 +139,59 @@
 }
 
 .profissional-icon {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 10px;
-  background: rgba(214, 124, 26, 0.15);
+  background: rgba(232, 99, 42, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
 
   ion-icon {
-    font-size: 18px;
-    color: #d67c1a;
+    font-size: 20px;
+    color: $laranja;
   }
 }
 
 .profissional-title {
   display: block;
   font-size: 14px;
-  font-weight: 600;
-  color: #e0e0e0;
+  font-weight: 700;
+  color: $laranja;
 }
 
 .profissional-desc {
   display: block;
-  font-size: 11px;
-  color: #666;
+  font-size: 12px;
+  color: $texto-sec;
   margin-top: 2px;
 }
 
 .profissional-toggle {
-  --track-background-checked: #d67c1a;
+  --track-background-checked: #{$laranja};
 }
 
-// ── Submit ───────────────────────────────────────────────
-.submit-container {
-  .submit-btn {
-    --background: #1a4fd6;
-    --background-activated: #1540b0;
-    --border-radius: 14px;
-    --color: #fff;
-    font-weight: 700;
-    font-size: 16px;
-    height: 52px;
-  }
+// ── Submit ────────────────────────────────────────────────
+.submit-btn {
+  --background: #{$laranja};
+  --background-activated: #{$laranja-hover};
+  --border-radius: 14px;
+  --color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  height: 52px;
 }
 
-// ── Link de login ─────────────────────────────────────────
-.login-link-btn {
-  --color: #777;
+// ── Link login ───────────────────────────────────────────
+.login-text {
   font-size: 14px;
+  color: $texto-sec;
+}
 
-  strong {
-    color: #d67c1a;
-  }
+.login-link {
+  --color: #{$laranja};
+  font-size: 14px;
+  font-weight: 700;
+  --padding-start: 4px;
+  --padding-end: 0;
 }

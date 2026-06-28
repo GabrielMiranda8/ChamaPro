@@ -2,6 +2,8 @@ package com.cefet.chamapro.dto;
 
 import java.util.Date;
 
+import com.cefet.chamapro.entity.Endereco;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -27,6 +29,8 @@ public record UsuarioRequestDTO(
         Date dtNasc,
 
         Double nota,
+
+        Endereco endereco,
 
         @NotBlank(message = "Tipo é obrigatório")
         String tipo

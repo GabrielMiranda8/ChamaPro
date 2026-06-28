@@ -7,8 +7,8 @@ export class UsuarioModel {
     email: string;
     senha: string;
     cpf: string;
-    dtNasc: string;
-    dtConta: string;
+    dtNasc: Date;
+    dtConta: Date;
     nota: number
     tipo: string;
     endereco: EnderecoModel;
@@ -20,8 +20,8 @@ export class UsuarioModel {
         this.email = "";
         this.senha = "";
         this.cpf = "";
-        this.dtNasc = "";
-        this.dtConta = new Date().toISOString();
+        this.dtNasc = new Date();
+        this.dtConta = new Date();
         this.nota = 0;
         this.tipo = "";
         this.endereco = new EnderecoModel();

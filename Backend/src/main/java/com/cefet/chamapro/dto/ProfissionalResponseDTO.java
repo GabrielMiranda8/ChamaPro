@@ -17,7 +17,7 @@ public class ProfissionalResponseDTO {
     private String nome;
     private Date dtNasc;
     private Date dtConta;
-    private Number nota;
+    private Double nota;
     private String tipo;
     
     public ProfissionalResponseDTO(Profissional profissional) {

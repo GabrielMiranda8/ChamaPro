@@ -3,7 +3,10 @@ package com.cefet.chamapro.service;
 import com.cefet.chamapro.dto.ClienteRequestDTO;
 import com.cefet.chamapro.dto.ClienteResponseDTO;
 import com.cefet.chamapro.entity.Cliente;
+import com.cefet.chamapro.entity.Usuario;
 import com.cefet.chamapro.repository.ClienteRepository;
+import com.cefet.chamapro.repository.UsuarioRepository;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,16 +19,21 @@ import java.util.List;
 public class ClienteService {
 
     private final ClienteRepository repository;
+    private final UsuarioRepository usuarioRepository;
 
     public ClienteResponseDTO criar(ClienteRequestDTO dto) {
+        Usuario usuario = usuarioRepository.findById(dto.id())
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+
         Cliente cliente = new Cliente();
-        cliente.setNome(dto.nome());
-        cliente.setEmail(dto.email());
-        cliente.setSenha(dto.senha());
-        cliente.setCpf(dto.cpf());
-        cliente.setDtNasc(dto.dtNasc());
-        cliente.setDtConta(new Date());
-        cliente.setNota(dto.nota());
+        cliente.setId(usuario.getId()); // mesmo ID
+        cliente.setNome(usuario.getNome());
+        cliente.setEmail(usuario.getEmail());
+        cliente.setSenha(usuario.getSenha());
+        cliente.setCpf(usuario.getCpf());
+        cliente.setDtNasc(usuario.getDtNasc());
+        cliente.setDtConta(usuario.getDtConta());
+        cliente.setNota(usuario.getNota());
         cliente.setTipo("CLIENTE");
 
         Cliente salvo = repository.save(cliente);
@@ -48,12 +56,14 @@ public class ClienteService {
         Cliente cliente = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado"));
 
-        cliente.setNome(dto.nome());
-        cliente.setEmail(dto.email());
-        cliente.setSenha(dto.senha());
-        cliente.setCpf(dto.cpf());
-        cliente.setDtNasc(dto.dtNasc());
-        cliente.setNota(dto.nota());
+        /*
+         * cliente.setNome(dto.nome());
+         * cliente.setEmail(dto.email());
+         * cliente.setSenha(dto.senha());
+         * cliente.setCpf(dto.cpf());
+         * cliente.setDtNasc(dto.dtNasc());
+         * cliente.setNota(dto.nota());
+         */
 
         Cliente atualizado = repository.save(cliente);
         return toResponseDTO(atualizado);
@@ -73,7 +83,6 @@ public class ClienteService {
                 cliente.getEmail(),
                 cliente.getDtNasc(),
                 cliente.getDtConta(),
-                cliente.getNota()
-        );
+                cliente.getNota());
     }
 }

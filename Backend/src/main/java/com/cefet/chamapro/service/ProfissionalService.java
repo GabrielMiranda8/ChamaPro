@@ -8,16 +8,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cefet.chamapro.dto.ProfissionalRequestDTO;
 import com.cefet.chamapro.dto.ProfissionalResponseDTO;
+import com.cefet.chamapro.dto.ServicoResponseDTO;
+import com.cefet.chamapro.dto.ProfissionalRequestDTO;
+import com.cefet.chamapro.dto.ProfissionalResponseDTO;
 import com.cefet.chamapro.entity.Profissional;
+import com.cefet.chamapro.entity.Profissional;
+import com.cefet.chamapro.entity.Usuario;
 import com.cefet.chamapro.exception.BusinessException;
 import com.cefet.chamapro.exception.ResourceNotFoundException;
 import com.cefet.chamapro.repository.ProfissionalRepository;
+import com.cefet.chamapro.repository.UsuarioRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ProfissionalService {
     @Autowired
     private ProfissionalRepository profissionalRepository;
-    
+    private UsuarioRepository usuarioRepository;
 
 
     @Transactional(readOnly = true)
@@ -36,14 +44,19 @@ public class ProfissionalService {
 
     @Transactional
     public ProfissionalResponseDTO inserir(ProfissionalRequestDTO dto) {
+        Usuario usuario = usuarioRepository.findById(dto.id())
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
-    	if (profissionalRepository.existsByNome(dto.getNome())){
-            throw new BusinessException("Já existe uma profissional com esse nome.");
-        }
-
-        
-    	Profissional profissional = new Profissional();
-    	profissional.setNome(dto.getNome());
+        Profissional profissional = new Profissional();
+        profissional.setId(usuario.getId()); // mesmo ID
+        profissional.setNome(usuario.getNome());
+        profissional.setEmail(usuario.getEmail());
+        profissional.setSenha(usuario.getSenha());
+        profissional.setCpf(usuario.getCpf());
+        profissional.setDtNasc(usuario.getDtNasc());
+        profissional.setDtConta(usuario.getDtConta());
+        profissional.setNota(usuario.getNota());
+        profissional.setTipo("CLIENTE");
 
         return new ProfissionalResponseDTO(profissionalRepository.save(profissional));
     }
@@ -54,11 +67,13 @@ public class ProfissionalService {
     	Profissional profissional = profissionalRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Profissional não encontrado. Id: " + id));
 
+        /* 
     	if (profissionalRepository.existsByNomeAndIdNot(dto.getNome(), id)) {
             throw new BusinessException("Já existe uma profissional com esse nome.");
         }
     	
     	profissional.setNome(dto.getNome());
+        */
 
         return new ProfissionalResponseDTO(profissionalRepository.save(profissional));
     }    

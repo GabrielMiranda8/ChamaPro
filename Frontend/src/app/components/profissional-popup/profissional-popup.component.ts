@@ -114,9 +114,9 @@ export class ProfissionalPopupComponent implements OnInit {
     return nome.split(' ').slice(0, 2).map(x => x[0]).join('').toUpperCase();
   }
 
-  calcularIdade(dtNasc: string = ''): number {
+  calcularIdade(dtNasc: Date): number {
     if (!dtNasc) return 0;
-    const nascimento = new Date(dtNasc);
+    const nascimento = dtNasc;
     const hoje = new Date();
     let idade = hoje.getFullYear() - nascimento.getFullYear();
     const mesPassou = hoje.getMonth() > nascimento.getMonth() ||
