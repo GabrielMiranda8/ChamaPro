@@ -7,7 +7,11 @@ import com.cefet.chamapro.dto.ProfissionalRequestDTO;
 import com.cefet.chamapro.dto.ProfissionalResponseDTO;
 import com.cefet.chamapro.dto.UsuarioRequestDTO;
 import com.cefet.chamapro.dto.UsuarioResponseDTO;
+import com.cefet.chamapro.entity.Cliente;
+import com.cefet.chamapro.entity.Endereco;
+import com.cefet.chamapro.entity.Profissional;
 import com.cefet.chamapro.entity.Usuario;
+import com.cefet.chamapro.repository.EnderecoRepository;
 import com.cefet.chamapro.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,37 +25,43 @@ import java.util.List;
 public class UsuarioService {
 
     private final UsuarioRepository repository;
-    private final EnderecoService enderecoService;
-    private final ProfissionalService profissionalService;
-    private final ClienteService clienteService;
+    private final EnderecoRepository enderecoRepository;
 
     public UsuarioResponseDTO criar(UsuarioRequestDTO dto) {
-    if (repository.existsByEmail(dto.email())) {
-        throw new IllegalArgumentException("Email já cadastrado");
-    }
-    if (repository.existsByCpf(dto.cpf())) {
-        throw new IllegalArgumentException("CPF já cadastrado");
-    }
+        if (repository.existsByEmail(dto.email())) {
+            throw new IllegalArgumentException("Email já cadastrado");
+        }
+        if (repository.existsByCpf(dto.cpf())) {
+            throw new IllegalArgumentException("CPF já cadastrado");
+        }
 
-    // Decide o tipo e delega
-    if ("PROFISSIONAL".equals(dto.tipo())) {
-        ProfissionalResponseDTO profissional = profissionalService.inserir(new ProfissionalRequestDTO(dto.usuarioId()));
-        EnderecoRequestDTO endereco = new EnderecoRequestDTO();
-        endereco.setCep(dto.endereco().getCep());
-        endereco.setIdUsuario(profissional.getId());
-        enderecoService.inserir(endereco);
-        return new UsuarioResponseDTO(profissional.getId(), profissional.getNome(),
-                                      profissional.getDtNasc(), profissional.getDtConta(), profissional.getNota());
-    } else {
-        ClienteResponseDTO cliente = clienteService.criar(new ClienteRequestDTO(dto.usuarioId()));
-        EnderecoRequestDTO endereco = new EnderecoRequestDTO();
-        endereco.setCep(dto.endereco().getCep());
-        endereco.setIdUsuario(cliente.id());
-        enderecoService.inserir(endereco);
-        return new UsuarioResponseDTO(cliente.id(), cliente.nome(),
-                                      cliente.dtNasc(), cliente.dtConta(), cliente.nota());
+        
+        Usuario usuario = switch (dto.tipo()) {
+            case "PROFISSIONAL" -> new Profissional();
+            case "CLIENTE" -> new Cliente();
+            default -> throw new IllegalArgumentException("Tipo de usuário inválido");
+        };
+
+        usuario.setNome(dto.nome());
+        usuario.setEmail(dto.email());
+        usuario.setSenha(dto.senha());
+        usuario.setCpf(dto.cpf());
+        usuario.setDtNasc(dto.dtNasc());
+        usuario.setDtConta(new Date());
+        usuario.setNota(dto.nota() != null ? dto.nota() : 0.0);
+        usuario.setTipo(dto.tipo());
+
+        Usuario salvo = repository.save(usuario);
+
+        
+        if (dto.endereco() != null) {
+            Endereco endereco = dto.endereco();
+            endereco.setUsuario(salvo);
+            enderecoRepository.save(endereco);
+        }
+
+        return toResponseDTO(salvo);
     }
-}
 
 
     public UsuarioResponseDTO buscarPorId(String id) {
