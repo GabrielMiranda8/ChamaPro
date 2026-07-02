@@ -103,7 +103,14 @@ export class ContratoComponent implements OnInit {
   ngOnInit(): void {
     this.enderecoCliente = this.cliente?.endereco ?? null;
     this.inicializarForm();
-    this.servico = this.servicoService.buscarPorId(this.profissionalServico.idServico);
+     this.servicoService.buscarPorId(this.profissionalServico.idServico).subscribe({
+      next: (servico) =>{
+        this.servico = servico;
+      },
+      error: (err) =>{
+        console.log("Erro ao buscar servico: ", err);
+      }
+     });
   }
 
   // ─── Formulário ────────────────────────────────────────────────────────────

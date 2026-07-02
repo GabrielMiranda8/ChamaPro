@@ -3,7 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { IonContent, IonButton, IonIcon, NavController, } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { personOutline, mailOutline, calendarOutline, cardOutline, locationOutline, briefcaseOutline, arrowBackOutline, createOutline, } from 'ionicons/icons';
+import {
+  personOutline, mailOutline, calendarOutline, cardOutline, locationOutline,
+  briefcaseOutline, arrowBackOutline, createOutline, readerOutline,
+  notificationsOutline, shieldOutline, settingsOutline, chevronForwardOutline,
+  logOutOutline, star,
+} from 'ionicons/icons';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { AlertController, ToastController } from '@ionic/angular';
@@ -27,7 +32,6 @@ export interface UserData {
   imports: [CommonModule, RouterModule, IonContent, IonButton, IonIcon],
 })
 export class PerfilPage implements OnInit {
-  // TODO: substituir pelo retorno real do AuthService/UserService
   dados: UsuarioModel;
   token!: TokenModel;
 
@@ -41,6 +45,13 @@ export class PerfilPage implements OnInit {
       briefcaseOutline,
       arrowBackOutline,
       createOutline,
+      readerOutline,
+      notificationsOutline,
+      shieldOutline,
+      settingsOutline,
+      chevronForwardOutline,
+      logOutOutline,
+      star,
     });
     this.dados = new UsuarioModel();
   }
@@ -50,9 +61,25 @@ export class PerfilPage implements OnInit {
     this.usuarioService.buscarPorId(this.token.id).subscribe({
       next: (usuario) => {
         this.dados = usuario;
+      },
+      error: (err) => {
+        console.log("Erro ao carregar dados de usuário: ", err);
       }
     })
   }
+
+  obterIniciais(nome: string): string {
+    if (!nome) return '?';
+    return nome
+      .trim()
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map(x => x[0])
+      .join('')
+      .toUpperCase();
+  }
+
   async confirmarDelete(): Promise<void> {
     const alert = await this.alertController.create({
       header: ' Deletar Conta',

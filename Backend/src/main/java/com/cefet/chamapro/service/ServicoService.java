@@ -18,8 +18,6 @@ import com.cefet.chamapro.repository.ServicoRepository;
 public class ServicoService {
     @Autowired
     private ServicoRepository servicoRepository;
-    
-
 
     @Transactional(readOnly = true)
     public List<ServicoResponseDTO> listar() {
@@ -57,7 +55,7 @@ public class ServicoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Servico não encontrado. Id: " + id));
 
     	if (servicoRepository.existsByNomeAndIdNot(dto.getNome(), id)) {
-            throw new BusinessException("Já existe uma servico com esse nome.");
+            throw new BusinessException("Já existe um servico com esse nome.");
         }
     	
     	servico.setNome(dto.getNome());

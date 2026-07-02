@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent, IonButton, IonIcon, IonInput, ToastController,
+  IonContent, IonButton, IonIcon, IonInput, IonSpinner, ToastController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -11,13 +11,16 @@ import {
   bodyOutline, micOutline, chatbubbleOutline,
 } from 'ionicons/icons';
 import { NavController } from '@ionic/angular';
-import { ActivatedRoute } from '@angular/router';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
 import { ServicoModel } from 'src/app/model/servico.model';
 import { ServicoService } from 'src/app/services/servico.service';
 import { CaracteristicaModel } from 'src/app/model/caracteristica.model';
 import { CaracteristicaService } from 'src/app/services/caracteristica.service';
 import { ProfissionalServicoModel } from 'src/app/model/profissional-servico.model';
 import { ProfissionalServicoService } from 'src/app/services/profissional-servico.service';
+import { TokenService } from 'src/app/services/token.service';
 
 @Component({
   selector: 'app-add-servico',
@@ -26,12 +29,14 @@ import { ProfissionalServicoService } from 'src/app/services/profissional-servic
   standalone: true,
   imports: [
     CommonModule, FormsModule,
-    IonContent, IonButton, IonIcon, IonInput,
+    IonContent, IonButton, IonIcon, IonInput, IonSpinner,
   ],
 })
 export class AddServicoPage implements OnInit {
 
+  // Agora obtido do token JWT do usuário logado, e não mais de um :id na rota
   usuarioId!: string;
+
   todosServicos: ServicoModel[] = [];
   todasCaracteristicas: CaracteristicaModel[] = [];
 
@@ -39,13 +44,16 @@ export class AddServicoPage implements OnInit {
   caracsSelecionadas: CaracteristicaModel[] = [];
   outraEspecialidade = '';
 
+  carregando = true;
+  salvando = false;
+
   constructor(
     private servicoService: ServicoService,
     private caracteristicaService: CaracteristicaService,
     private profissionalServicoService: ProfissionalServicoService,
     private toastController: ToastController,
     private navController: NavController,
-    private activatedRoute: ActivatedRoute,
+    private tokenService: TokenService,
   ) {
     addIcons({
       briefcaseOutline, addOutline, arrowForwardOutline,
@@ -55,9 +63,42 @@ export class AddServicoPage implements OnInit {
   }
 
   ngOnInit() {
-    this.usuarioId = this.activatedRoute.snapshot.params['id'];
-    this.todosServicos = this.servicoService.listar();
-    this.todasCaracteristicas = this.caracteristicaService.listar();
+    const token = this.tokenService.extrair();
+    this.usuarioId = token.id;
+
+    // Página exclusiva para profissionais logados
+    if (token.tipo !== 'PROFISSIONAL') {
+      this.navController.navigateRoot('/perfil');
+      return;
+    }
+
+    this.carregarDados();
+  }
+
+  private carregarDados() {
+    this.carregando = true;
+
+    forkJoin({
+      servicos: this.servicoService.listar(),
+      caracteristicas: this.caracteristicaService.listar(),
+      
+      meusServicos: this.profissionalServicoService
+        .buscarPorProfissional(this.usuarioId)
+    }).subscribe({
+      next: ({ servicos, caracteristicas, meusServicos }) => {
+        this.todosServicos = servicos;
+        this.todasCaracteristicas = caracteristicas;
+
+        const idsJaSelecionados = new Set(meusServicos.map(ms => ms.idServico));
+        this.servicosSelecionados = this.todosServicos.filter(s => idsJaSelecionados.has(s.id));
+
+        this.carregando = false;
+      },
+      error: () => {
+        this.carregando = false;
+        this.exibirMensagem('Não foi possível carregar os serviços. Tente novamente.');
+      },
+    });
   }
 
   // ── Seleção de serviços ──────────────────────────────────
@@ -119,18 +160,31 @@ export class AddServicoPage implements OnInit {
       return;
     }
 
-    this.servicosSelecionados.forEach(s => {
+    this.salvando = true;
+
+    const chamadas = this.servicosSelecionados.map(s => {
       const ps = new ProfissionalServicoModel();
       ps.idServico = s.id;
       ps.idProfissional = this.usuarioId;
-      this.profissionalServicoService.salvar(ps);
+      return this.profissionalServicoService.salvar(ps);
     });
 
-    this.navController.navigateRoot('/login');
+    forkJoin(chamadas).subscribe({
+      next: async () => {
+        this.salvando = false;
+        await this.exibirMensagem('Serviços salvos com sucesso!');
+        // Usuário já está logado: volta para o perfil, não para o login
+        this.navController.navigateRoot('/perfil');
+      },
+      error: async () => {
+        this.salvando = false;
+        await this.exibirMensagem('Erro ao salvar os serviços. Tente novamente.');
+      },
+    });
   }
 
   pular() {
-    this.navController.navigateRoot('/login');
+    this.navController.navigateRoot('/perfil');
   }
 
   async exibirMensagem(texto: string) {

@@ -1,41 +1,44 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { CaracteristicaModel } from '../model/caracteristica.model';
+import { TokenService } from './token.service';
+
 @Injectable({
   providedIn: 'root',
 })
 export class CaracteristicaService {
-  salvar(caracteristica: CaracteristicaModel): CaracteristicaModel {
-    let caracteristicas = JSON.parse(localStorage.getItem('caracteristicas') || '[]');
-    if (caracteristica.id === "") {
-      let carac = new CaracteristicaModel();
-      carac = caracteristicas.find((temp: CaracteristicaModel) => temp.nome === caracteristica.nome);
-      if (!carac) {
-        caracteristica.id = crypto.randomUUID();
-        caracteristicas.push(caracteristica);
-      }
-    } else {
-      let posicao = caracteristicas.findIndex((temp: CaracteristicaModel) => temp.id === caracteristica.id);
-      caracteristicas[posicao] = caracteristica;
-    }
-    localStorage.setItem('caracteristicas', JSON.stringify(caracteristicas));
-    return caracteristica;
+  private readonly API_URL = `${environment.apiUrl}/caracteristicas`;
+
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
+
+  salvar(caracteristica: CaracteristicaModel): Observable<CaracteristicaModel> {
+    return this.http.post<CaracteristicaModel>(
+      this.API_URL,
+      caracteristica,
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() }
+    );
   }
 
-
-  listar(): CaracteristicaModel[] {
-    let caracteristicas = JSON.parse(localStorage.getItem('caracteristicas') || '[]');
-    return caracteristicas;
+  listar(): Observable<CaracteristicaModel[]> {
+    return this.http.get<CaracteristicaModel[]>(
+      this.API_URL,
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() }
+    );
   }
 
-  buscarPorId(id: string): CaracteristicaModel {
-    let caracteristicas = JSON.parse(localStorage.getItem('caracteristicas') || '[]');
-    let caracteristica = new CaracteristicaModel();
-    caracteristica = caracteristicas.find((temp: CaracteristicaModel) => temp.id === id);
-    return caracteristica;
+  buscarPorId(id: string): Observable<CaracteristicaModel> {
+    return this.http.get<CaracteristicaModel>(
+      `${this.API_URL}/${id}`,
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() }
+    );
   }
 
-  excluir() {
-    // fazer exclusao
-    return true;
+  excluir(id: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.API_URL}/${id}`,
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() }
+    );
   }
 }

@@ -58,7 +58,15 @@ export class CadastroPage implements OnInit {
   }
 
   ngOnInit() {
-    this.todasCaracteristicas = this.caracteristicaService.listar();
+    this.caracteristicaService.listar().subscribe({
+      next:(caracs) =>{
+        this.todasCaracteristicas = caracs;
+      },
+      error: (err) =>{
+        console.log("Erro ao listar caracteristicas: ", err)
+        this.exibirMensagem("Erro ao listar caracteristicas");
+      }
+    });
   }
 
   toggleSenha() { this.showSenha.update(v => !v); }

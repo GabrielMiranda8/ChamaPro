@@ -10,20 +10,20 @@
     <div class="user-info">
 
       <div class="avatar">
-        <span>JP</span>
+        <span>{{ obterIniciais(dados.nome) }}</span>
       </div>
 
       <div class="user-details">
-        <h3>Henrique Lelis</h3>
+        <h3>{{ dados.nome || 'Carregando...' }}</h3>
 
         <div class="location">
-          <ion-icon name="location-outline"></ion-icon>
-          <span>Timóteo, MG</span>
+          <ion-icon name="mail-outline"></ion-icon>
+          <span>{{ dados.email }}</span>
         </div>
 
         <div class="rating">
           <ion-icon name="star"></ion-icon>
-          <span>4.8 • 23 serviços</span>
+          <span>{{ dados.nota || 5.0 }}</span>
         </div>
       </div>
 
@@ -34,18 +34,13 @@
   <div class="stats-container">
 
     <div class="stat-card">
-      <h3>23</h3>
-      <p>Serviços</p>
-    </div>
-
-    <div class="stat-card">
-      <h3>4.8</h3>
+      <h3>{{ dados.nota || '-' }}</h3>
       <p>Avaliação</p>
     </div>
 
     <div class="stat-card">
-      <h3>R$2.1k</h3>
-      <p>Gasto</p>
+      <h3>{{ token.tipo === 'PROFISSIONAL' ? 'Profissional' : 'Cliente' }}</h3>
+      <p>Tipo de conta</p>
     </div>
 
   </div>
@@ -82,6 +77,23 @@
 
       <ion-icon name="chevron-forward-outline"></ion-icon>
     </div>
+
+    <!-- Meus Serviços (apenas profissionais) -->
+    @if (token.tipo === 'PROFISSIONAL') {
+      <div class="menu-item" routerLink="/add-servico">
+        <div class="menu-left">
+
+          <div class="menu-icon">
+            <ion-icon name="briefcase-outline"></ion-icon>
+          </div>
+
+          <span>Meus Serviços</span>
+
+        </div>
+
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </div>
+    }
 
     <!-- Agenda -->
     <div class="menu-item" (click)="gerenciarAgenda()">
@@ -147,17 +159,14 @@
 
   <!-- LOGOUT -->
   <div class="logout-container">
-    <ion-button fill="clear" class="logout-btn" (click)="deletarConta()">
+    <ion-button fill="clear" class="logout-btn" (click)="confirmarDelete()">
       <ion-icon slot="start" name="log-out-outline"></ion-icon>
       Excluir conta
     </ion-button>
-  </div>
-  <div class="logout-container">
     <ion-button fill="clear" class="logout-btn" (click)="sair()">
       <ion-icon slot="start" name="log-out-outline"></ion-icon>
       Sair da conta
     </ion-button>
   </div>
-
 
 </ion-content>

@@ -65,7 +65,7 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'add-servico/:id',
+    path: 'add-servico',
     loadComponent: () => import('./pages/add-servico/add-servico.page').then(m => m.AddServicoPage)
   },
 

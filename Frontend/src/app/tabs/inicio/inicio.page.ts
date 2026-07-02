@@ -13,6 +13,10 @@ import {
   handLeftOutline,
   star
 } from 'ionicons/icons';
+import { TokenModel } from 'src/app/model/token.model';
+import { UsuarioModel } from 'src/app/model/usuario.model';
+import { TokenService } from 'src/app/services/token.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
   selector: 'app-inicio',
@@ -24,8 +28,8 @@ import {
 export class InicioPage implements OnInit {
   profissionais = [
     {
-      nome: 'Ana Silva',
-      iniciais: 'AS',
+      nome: 'Carlo Ancelotti',
+      iniciais: 'CA',
       especialidade: 'Eletricista Residencial',
       nota: 4.9,
       avaliacoes: 127,
@@ -34,7 +38,7 @@ export class InicioPage implements OnInit {
       libras: true
     },
     {
-      nome: 'Carlos Santos',
+      nome: 'Douglas Santos',
       iniciais: 'CS',
       especialidade: 'Eletricista Industrial',
       nota: 4.8,
@@ -44,7 +48,7 @@ export class InicioPage implements OnInit {
       libras: false
     },
     {
-      nome: 'Maria Oliveira',
+      nome: 'Gabriel Magalhães',
       iniciais: 'MO',
       especialidade: 'Eletricista de Segurança',
       nota: 4.7,
@@ -54,7 +58,13 @@ export class InicioPage implements OnInit {
       libras: true
     }
   ];
-  constructor(private router: Router) {
+
+  // Inicializado sincronamente (não com "!") para nunca ficar undefined
+  // durante o primeiro ciclo de renderização, antes da resposta HTTP chegar.
+  dados: UsuarioModel = new UsuarioModel();
+  token!: TokenModel;
+
+  constructor(private router: Router, private tokenService: TokenService, private usuarioService: UsuarioService) {
     addIcons({
       searchOutline,
       locationOutline,
@@ -67,6 +77,15 @@ export class InicioPage implements OnInit {
   }
 
   ngOnInit() {
+    this.token = this.tokenService.extrair();
+    this.usuarioService.buscarPorId(this.token.id).subscribe({
+      next: (usuario) => {
+        this.dados = usuario;
+      },
+      error: (err) => {
+        console.log("Erro ao carregar dados de usuário: ", err);
+      }
+    })
   }
 
   abrirProfissional(profissional: any) {

@@ -6,6 +6,7 @@ import { addIcons } from 'ionicons';
 import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { NavController } from '@ionic/angular';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { TokenService } from 'src/app/services/token.service';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,7 @@ export class LoginPage implements OnInit {
     private toastController: ToastController,
     private navController: NavController,
     private usuarioService: UsuarioService,
+    private tokenService: TokenService
   ) {
     addIcons({ eyeOutline, eyeOffOutline });
 
@@ -52,7 +54,8 @@ export class LoginPage implements OnInit {
     const { email, senha } = this.formGroup.value;
 
     this.usuarioService.login(email, senha).subscribe({
-      next: () => {
+      next: (token: string) => {
+        this.tokenService.salvar(token);
         this.navController.navigateRoot('/tabs/inicio');
       },
       error: () => {

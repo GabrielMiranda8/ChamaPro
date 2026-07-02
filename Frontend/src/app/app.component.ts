@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
-import { SeedService } from './services/seed.service';
 
 @Component({
   selector: 'app-root',
@@ -8,11 +7,11 @@ import { SeedService } from './services/seed.service';
   imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent {
-  constructor(private seedService: SeedService) {
+  constructor() {
 
   }
 
   ngOnInit(){
-    this.seedService.inicializar();
+    
   }
 }

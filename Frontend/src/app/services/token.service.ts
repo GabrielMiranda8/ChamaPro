@@ -29,10 +29,10 @@ export class TokenService {
       const tokenBase64 = authorization.token.split('.')[1];
       const tokenvJson = atob(tokenBase64);
       const token = JSON.parse(tokenvJson);
-      tokenModel.id = token.sub;
+      tokenModel.id = token.id;
       tokenModel.nome = token.nome;
-      tokenModel.email = token.email;
-      tokenModel.tipo = token.role;
+      tokenModel.email = token.sub;
+      tokenModel.tipo = token.tipo;
     } catch (error) {
       console.error('Erro ao extrair token JWT', error);
     }

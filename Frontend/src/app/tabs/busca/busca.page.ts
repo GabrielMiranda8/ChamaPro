@@ -11,6 +11,7 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { searchOutline, handLeftOutline, star } from 'ionicons/icons';
+import { forkJoin } from 'rxjs';
 
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ServicoService } from 'src/app/services/servico.service';
@@ -47,6 +48,7 @@ interface ResultadoBusca {
 export class BuscaPage implements OnInit {
   textoBusca = '';
   filtroSelecionado = 'todos';
+  carregando = true;
 
   resultados: ResultadoBusca[] = [];
   resultadosFiltrados: ResultadoBusca[] = [];
@@ -55,7 +57,7 @@ export class BuscaPage implements OnInit {
     private usuarioService: UsuarioService,
     private servicoService: ServicoService,
     private profissionalServicoService: ProfissionalServicoService,
-    private modalCtrl: ModalController, // ← injetado corretamente
+    private modalCtrl: ModalController,
   ) {
     addIcons({ searchOutline, handLeftOutline, star });
   }
@@ -67,19 +69,35 @@ export class BuscaPage implements OnInit {
   // ─── Carregamento ───────────────────────────────────────────────────────────
 
   carregarResultados(): void {
-    const profissionalServicos = this.profissionalServicoService.listar();
+    this.carregando = true;
 
-    this.usuarioService.listar().subscribe((usuarios) => {
-      this.resultados = profissionalServicos
-        .map((ps) => {
-          // busca na lista que já chegou, sem novo Observable
-          const profissional = usuarios.find(u => u.id === ps.idProfissional) ?? new UsuarioModel();
-          const servico = this.servicoService.buscarPorId(ps.idServico);
-          return { ps, profissional, servico };
-        })
-        .filter((item) => item.profissional.id && item.servico.id);
+    // As três chamadas são disparadas juntas, mas só montamos "resultados"
+    // depois que TODAS tiverem respondido — evita a condição de corrida.
+    forkJoin({
+      profissionalServicos: this.profissionalServicoService.listar(),
+      usuarios: this.usuarioService.listar(),
+      servicos: this.servicoService.listar(),
+    }).subscribe({
+      next: ({ profissionalServicos, usuarios, servicos }) => {
+        // lookup por id em vez de N chamadas HTTP (buscarPorId por item)
+        const servicosPorId = new Map(servicos.map(s => [s.id, s]));
+        const usuariosPorId = new Map(usuarios.map(u => [u.id, u]));
 
-      this.resultadosFiltrados = [...this.resultados];
+        this.resultados = profissionalServicos
+          .map((ps) => {
+            const profissional = usuariosPorId.get(ps.idProfissional) ?? new UsuarioModel();
+            const servico = servicosPorId.get(ps.idServico) ?? new ServicoModel();
+            return { ps, profissional, servico };
+          })
+          .filter((item) => item.profissional.id && item.servico.id);
+
+        this.resultadosFiltrados = [...this.resultados];
+        this.carregando = false;
+      },
+      error: (err) => {
+        console.log('Erro ao carregar resultados de busca: ', err);
+        this.carregando = false;
+      },
     });
   }
 
@@ -117,7 +135,7 @@ export class BuscaPage implements OnInit {
         );
         break;
       case 'avaliacao':
-        lista.sort((a, b) => b.profissional.nota - a.profissional.nota);
+        lista = [...lista].sort((a, b) => b.profissional.nota - a.profissional.nota);
         break;
     }
 
@@ -142,7 +160,6 @@ export class BuscaPage implements OnInit {
 
     await modal.present();
 
-    // Trata o que o popup devolveu ao fechar
     const { data } = await modal.onWillDismiss();
 
     if (data?.sucesso) {
@@ -164,9 +181,9 @@ export class BuscaPage implements OnInit {
   // ─── Helpers ────────────────────────────────────────────────────────────────
 
   possuiCaracteristica(usuario: UsuarioModel, nome: string): boolean {
-    return usuario.caracteristicas.some(
+    return usuario.caracteristicas?.some(
       (c) => c.nome.toUpperCase() === nome.toUpperCase(),
-    );
+    ) ?? false;
   }
 
   obterIniciais(nome: string): string {
