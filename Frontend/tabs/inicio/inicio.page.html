@@ -1,0 +1,136 @@
+<ion-content [fullscreen]="true" class="inicio-content">
+
+  <!-- HEADER -->
+  <div class="home-header">
+
+    <div class="header-info">
+
+      <div>
+        <p class="welcome">Olá, 👋</p>
+        <h2>Henrique Lelis</h2>
+      </div>
+
+      <div class="location">
+        <ion-icon name="location-outline"></ion-icon>
+        <span>Timóteo, MG</span>
+      </div>
+
+    </div>
+
+    <div class="search-container" routerLink="/tabs/busca">
+      <ion-icon name="search-outline"></ion-icon>
+      <span>Buscar serviços...</span>
+    </div>
+
+  </div>
+
+  <!-- CATEGORIAS -->
+  <div class="section">
+
+    <h3>Categorias</h3>
+
+    <div class="categories">
+
+      <div class="category-card" (click)="filtrarCategoria('Iluminação')">
+        <div class="category-icon">
+          <ion-icon name="bulb-outline"></ion-icon>
+        </div>
+        <span>Iluminação</span>
+      </div>
+
+      <div class="category-card" (click)="filtrarCategoria('Industrial')">
+        <div class="category-icon">
+          <ion-icon name="business-outline"></ion-icon>
+        </div>
+        <span>Industrial</span>
+      </div>
+
+      <div class="category-card" (click)="filtrarCategoria('Solar')">
+        <div class="category-icon">
+          <ion-icon name="sunny-outline"></ion-icon>
+        </div>
+        <span>Solar</span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- LIBRAS -->
+  <div class="libras-card" (click)="buscarProfissionaisLibras()">
+
+    <div class="libras-icon">
+      <ion-icon name="hand-left-outline"></ion-icon>
+    </div>
+
+    <div>
+      <h4>Acessibilidade em Libras</h4>
+      <p>Encontre prestadores que se comunicam em Libras</p>
+    </div>
+
+  </div>
+
+  <!-- DESTAQUES -->
+  <div class="section">
+
+    <h3>Destaques</h3>
+
+    <div
+      class="professional-card"
+      *ngFor="let profissional of profissionais"
+      (click)="abrirProfissional(profissional)"
+    >
+
+      <div class="professional-left">
+
+        <div class="avatar">
+          {{ profissional.iniciais }}
+        </div>
+
+        <div class="professional-info">
+
+          <div class="name-row">
+
+            <h4>{{ profissional.nome }}</h4>
+
+            <div
+              class="libras-badge"
+              *ngIf="profissional.libras"
+            >
+              <ion-icon name="hand-left-outline"></ion-icon>
+            </div>
+
+          </div>
+
+          <p>{{ profissional.especialidade }}</p>
+
+          <div class="rating">
+            <ion-icon name="star"></ion-icon>
+            <span>{{ profissional.nota }}</span>
+            <span>({{ profissional.avaliacoes }})</span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="professional-right">
+
+        <span class="price">
+          R$ {{ profissional.valor }}/h
+        </span>
+
+        <span
+          class="verified"
+          *ngIf="profissional.verificado"
+        >
+          Verificado
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</ion-content>

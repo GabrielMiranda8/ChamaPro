@@ -1,0 +1,178 @@
+<ion-content [fullscreen]="true" class="perfil-content">
+
+  <!-- HEADER -->
+  <div class="perfil-header">
+
+    <div class="header-top">
+      <h2>Meu Perfil</h2>
+    </div>
+
+    <div class="user-info">
+
+      <div class="avatar">
+        <span>{{ obterIniciais(dados.nome || token.nome || 'Usuário') }}</span>
+      </div>
+
+      <div class="user-details">
+        <h3>{{ dados.nome || token.nome || 'Usuário' }}</h3>
+
+        <div class="location">
+          <ion-icon name="location-outline"></ion-icon>
+          <span>Timóteo, MG</span>
+        </div>
+
+        <div class="rating">
+          <ion-icon name="star"></ion-icon>
+          <span>{{ dados.nota || 5.0 }} • perfil ativo</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-container">
+
+    <div class="stat-card">
+      <h3>23</h3>
+      <p>Serviços</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>4.8</h3>
+      <p>Avaliação</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>R$2.1k</h3>
+      <p>Gasto</p>
+    </div>
+
+  </div>
+
+  <!-- MENU -->
+  <div class="menu-list">
+
+    <!-- Editar Perfil -->
+    <div class="menu-item" routerLink="/tabs/update">
+      <div class="menu-left">
+
+        <div class="menu-icon">
+          <ion-icon name="person-outline"></ion-icon>
+        </div>
+
+        <span>Editar perfil</span>
+
+      </div>
+
+      <ion-icon name="chevron-forward-outline"></ion-icon>
+    </div>
+
+    <!-- Meus Serviços -->
+    <div class="menu-item" routerLink="/add-servico">
+      <div class="menu-left">
+
+        <div class="menu-icon">
+          <ion-icon name="briefcase-outline"></ion-icon>
+        </div>
+
+        <span>Meus Serviços</span>
+
+      </div>
+
+      <ion-icon name="chevron-forward-outline"></ion-icon>
+    </div>
+
+    <!-- Histórico -->
+    <div class="menu-item" routerLink="/tabs/perfil/dados">
+      <div class="menu-left">
+
+        <div class="menu-icon">
+          <ion-icon name="reader-outline"></ion-icon>
+        </div>
+
+        <span>Histórico de Pedidos</span>
+
+      </div>
+
+      <ion-icon name="chevron-forward-outline"></ion-icon>
+    </div>
+
+    <!-- Agenda -->
+    <div class="menu-item" (click)="gerenciarAgenda()">
+      <div class="menu-left">
+
+        <div class="menu-icon">
+          <ion-icon name="calendar-outline"></ion-icon>
+        </div>
+
+        <span>Gerenciar Agenda</span>
+
+      </div>
+
+      <ion-icon name="chevron-forward-outline"></ion-icon>
+    </div>
+
+    <!-- Notificações -->
+    <div class="menu-item" (click)="abrirNotificacoes()">
+      <div class="menu-left">
+
+        <div class="menu-icon">
+          <ion-icon name="notifications-outline"></ion-icon>
+        </div>
+
+        <span>Notificações</span>
+
+      </div>
+
+      <ion-icon name="chevron-forward-outline"></ion-icon>
+    </div>
+
+    <!-- Segurança -->
+    <div class="menu-item" (click)="abrirSeguranca()">
+      <div class="menu-left">
+
+        <div class="menu-icon">
+          <ion-icon name="shield-outline"></ion-icon>
+        </div>
+
+        <span>Segurança</span>
+
+      </div>
+
+      <ion-icon name="chevron-forward-outline"></ion-icon>
+    </div>
+
+    <!-- Configurações -->
+    <div class="menu-item" (click)="abrirConfiguracoes()">
+      <div class="menu-left">
+
+        <div class="menu-icon">
+          <ion-icon name="settings-outline"></ion-icon>
+        </div>
+
+        <span>Configurações</span>
+
+      </div>
+
+      <ion-icon name="chevron-forward-outline"></ion-icon>
+    </div>
+
+  </div>
+
+  <!-- LOGOUT -->
+  <div class="logout-container">
+    <ion-button fill="clear" class="logout-btn" (click)="deletarConta()">
+      <ion-icon slot="start" name="log-out-outline"></ion-icon>
+      Excluir conta
+    </ion-button>
+  </div>
+  <div class="logout-container">
+    <ion-button fill="clear" class="logout-btn" (click)="sair()">
+      <ion-icon slot="start" name="log-out-outline"></ion-icon>
+      Sair da conta
+    </ion-button>
+  </div>
+
+
+</ion-content>

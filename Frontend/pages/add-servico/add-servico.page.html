@@ -1,0 +1,105 @@
+<ion-content [fullscreen]="true" class="add-servico-content">
+  <div class="page-shell">
+
+    <div class="topbar">
+      <button class="back-button" type="button" (click)="voltar()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+      <div>
+        <h1>Meus Serviços</h1>
+        <p>Configure o que você oferece no ChamaPro</p>
+      </div>
+    </div>
+
+    <section class="orange-card">
+      <div class="orange-icon">
+        <ion-icon name="briefcase-outline"></ion-icon>
+      </div>
+      <div>
+        <h2>Perfil profissional</h2>
+        <p>Adicione serviços, preço e tempo de experiência para aparecer na busca.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-title-row">
+        <h3>Serviços já adicionados</h3>
+        <span>{{ meusServicos.length }}</span>
+      </div>
+
+      <div class="loading" *ngIf="carregando">Carregando...</div>
+
+      <div class="empty-state" *ngIf="!carregando && meusServicos.length === 0">
+        <ion-icon name="briefcase-outline"></ion-icon>
+        <p>Nenhum serviço adicionado ainda.</p>
+      </div>
+
+      <div class="service-list" *ngIf="meusServicos.length > 0">
+        <div class="service-item" *ngFor="let item of meusServicos">
+          <div class="service-main">
+            <div class="service-icon">
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
+            </div>
+            <div>
+              <h4>{{ item.servicoNome }}</h4>
+              <p>R$ {{ item.preco }} • desde {{ item.tempoCarreira | date:'dd/MM/yyyy' }}</p>
+            </div>
+          </div>
+          <button class="trash-btn" type="button" (click)="confirmarExcluir(item)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Adicionar serviço</h3>
+      <p class="hint">Escolha um serviço existente ou cadastre outro.</p>
+
+      <div class="chips-grid">
+        <button
+          *ngFor="let servico of todosServicos"
+          type="button"
+          class="chip"
+          [class.active]="idServicoSelecionado === servico.id"
+          [class.disabled]="jaAdicionado(servico.id)"
+          (click)="!jaAdicionado(servico.id) && selecionarServico(servico.id)">
+          {{ servico.nome }}
+        </button>
+      </div>
+
+      <div class="divider"><span>ou</span></div>
+
+      <label class="field-label">Novo serviço</label>
+      <ion-input class="input" placeholder="Ex: Corte masculino" [(ngModel)]="novoNomeServico" (ionInput)="idServicoSelecionado = ''"></ion-input>
+
+      <label class="field-label">Descrição</label>
+      <ion-textarea class="textarea" placeholder="Descreva brevemente o serviço" [(ngModel)]="novaDescricaoServico"></ion-textarea>
+
+      <div class="two-fields">
+        <div>
+          <label class="field-label">Preço</label>
+          <ion-input class="input" type="number" placeholder="50" [(ngModel)]="preco">
+            <ion-icon slot="start" name="pricetag-outline"></ion-icon>
+          </ion-input>
+        </div>
+        <div>
+          <label class="field-label">Desde</label>
+          <ion-input class="input" type="date" [(ngModel)]="tempoCarreira">
+            <ion-icon slot="start" name="time-outline"></ion-icon>
+          </ion-input>
+        </div>
+      </div>
+
+      <ion-button expand="block" class="primary-btn" (click)="adicionarServico()">
+        <ion-icon slot="start" name="add-outline"></ion-icon>
+        Adicionar ao perfil
+      </ion-button>
+    </section>
+
+    <ion-button expand="block" fill="clear" class="finish-btn" (click)="continuar()">
+      Continuar
+      <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+    </ion-button>
+  </div>
+</ion-content>

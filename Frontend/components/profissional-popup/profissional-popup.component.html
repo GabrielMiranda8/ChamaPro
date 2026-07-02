@@ -1,0 +1,87 @@
+<ion-header class="popup-header">
+  <div class="header-content">
+    <div class="avatar">
+      <span>{{ obterIniciais(profissional?.nome) }}</span>
+    </div>
+    <h2 class="prof-nome">{{ profissional?.nome }}</h2>
+    <p class="prof-especialidade">{{ servico?.nome }}</p>
+    <div class="badges">
+      <span class="badge libras" *ngIf="possuiCaracteristica('LIBRAS')">
+        <ion-icon name="hand-left-outline"></ion-icon> Libras
+      </span>
+      <span class="badge verificado" *ngIf="possuiCaracteristica('VERIFICADO')">
+        <ion-icon name="checkmark-circle-outline"></ion-icon> Verificado
+      </span>
+    </div>
+    <button class="close-btn" (click)="fechar()">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+  </div>
+</ion-header>
+
+<ion-content class="popup-content">
+
+  <!-- STATS GRID -->
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <div class="stat-header">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <span>Idade</span>
+      </div>
+      <strong>{{ calcularIdade(profissional.dtNasc) }} anos</strong>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-header">
+        <ion-icon name="time-outline"></ion-icon>
+        <span>Tempo de serviço</span>
+      </div>
+      <strong>{{ calcularAnos(profissionalServico?.tempoCarreira) }} anos</strong>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-header">
+        <ion-icon name="star-outline"></ion-icon>
+        <span>Avaliação</span>
+      </div>
+      <strong>{{ profissional?.nota || 5.0 }} <ion-icon name="star" class="star-inline"></ion-icon></strong>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-header">
+        <ion-icon name="briefcase-outline"></ion-icon>
+        <span>Serviços prestados</span>
+      </div>
+      <strong>{{ totalServicos }}</strong>
+    </div>
+
+  </div>
+
+  <!-- DISPONIBILIDADE -->
+  <div class="disponibilidade-card">
+    <p class="disp-label">Disponibilidade</p>
+    <p class="disp-valor">{{ disponibilidade }}</p>
+  </div>
+
+  <!-- PREÇO -->
+  <div class="preco-area">
+    <p class="preco-valor">R$ {{ profissionalServico?.preco }}/h</p>
+    <button class="ver-perfil-btn" (click)="verPerfilCompleto()">
+      Ver Perfil Completo
+    </button>
+  </div>
+
+  <!-- AÇÕES -->
+  <div class="action-buttons">
+    <ion-button fill="outline" class="btn-chat" (click)="abrirChat()">
+      <ion-icon slot="start" name="chatbubble-outline"></ion-icon>
+      Chat
+    </ion-button>
+
+    <ion-button class="btn-contratar" (click)="abrirContratar()">
+      Contratar
+    </ion-button>
+  </div>
+
+</ion-content>
