@@ -54,11 +54,11 @@ export class LoginPage implements OnInit {
     const { email, senha } = this.formGroup.value;
 
     this.usuarioService.login(email, senha).subscribe({
-      next: (token: string) => {
-        this.tokenService.salvar(token);
+      next: (token: string) =>{
+         this.tokenService.salvar(token);
         this.navController.navigateRoot('/tabs/inicio');
-      },
-      error: () => {
+      }, 
+      error: (err) =>{
         this.exibirMensagem('Email ou senha inválidos.');
       }
     });

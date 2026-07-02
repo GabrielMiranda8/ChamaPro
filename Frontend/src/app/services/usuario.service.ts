@@ -44,10 +44,13 @@ export class UsuarioService {
 
   */
   /* Público */
-  login(email: string, senha: string): Observable<string> {
-    return this.http.post<string>(`${this.AUTH_URL}/login`, { email, senha });
-  }
-
+  /* Público */
+login(email: string, senha: string): Observable<{ token: string }> {
+  return this.http.post<{ token: string }>(
+    `${this.AUTH_URL}/login`,
+    { email, senha }
+  );
+}
   salvar(usuario: UsuarioModel): Observable<UsuarioModel> {
     return this.http.post<UsuarioModel>(`${this.API_URL}`, usuario);
   }
@@ -58,6 +61,10 @@ export class UsuarioService {
 
   getUsuarioLogado() {
     return this.tokenService.extrair();
+  }
+
+  criarProfissional(id: string): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/profissionais`, { id }, { headers: this.tokenService.gerarCabecalhoAutenticacao() });
   }
 
   

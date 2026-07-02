@@ -32,9 +32,9 @@ import {
 import { PedidoModel } from 'src/app/model/pedido.model';
 import { EnderecoModel } from 'src/app/model/endereco.model';
 import { UsuarioModel } from 'src/app/model/usuario.model';
-import { ProfissionalServicoModel } from 'src/app/model/profissional-servico.model';
 import { ServicoModel } from 'src/app/model/servico.model';
 import { ServicoService } from 'src/app/services/servico.service';
+import { ProfissionalServicoModel } from 'src/app/model/profissional-servico.model';
 
 // Substitua pelos seus serviços reais
 // import { PedidoService } from 'src/app/services/pedido.service';

@@ -1,15 +1,25 @@
 <ion-content [fullscreen]="true" class="add-servico-content">
+  <div class="page-shell">
 
-  <div class="add-servico-wrapper">
+    <div class="topbar">
+      <button class="back-button" type="button" (click)="voltar()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+      <div>
+        <h1>Meus Serviços</h1>
+        <p>Configure o que você oferece no ChamaPro</p>
+      </div>
+    </div>
 
-    <!-- Header -->
-    <div class="header ion-text-center">
-      <div class="header-icon">
+    <section class="orange-card">
+      <div class="orange-icon">
         <ion-icon name="briefcase-outline"></ion-icon>
       </div>
-      <h1 class="header-title">Configure seu Perfil</h1>
-      <p class="header-sub">Selecione suas especialidades e acessibilidades</p>
-    </div>
+      <div>
+        <h2>Perfil profissional</h2>
+        <p>Adicione serviços, preço e tempo de experiência para aparecer na busca.</p>
+      </div>
+    </section>
 
     @if (carregando) {
       <div class="ion-text-center" style="padding: 40px 0;">
@@ -83,5 +93,9 @@
 
     }
 
+    <ion-button expand="block" fill="clear" class="finish-btn" (click)="continuar()">
+      Continuar
+      <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+    </ion-button>
   </div>
 </ion-content>

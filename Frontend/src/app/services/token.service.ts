@@ -8,8 +8,11 @@ import { TokenModel } from '../model/token.model';
 export class TokenService {
   private readonly AUTORIZACAO_USUARIO = 'Authorization';
 
-  salvar(token: string): void {
-    localStorage.setItem(this.AUTORIZACAO_USUARIO, JSON.stringify(token));
+  salvar(resposta: any): void {
+    const token = typeof resposta === 'string' ? resposta : resposta?.token;
+    if (token) {
+      localStorage.setItem(this.AUTORIZACAO_USUARIO, JSON.stringify({ token }));
+    }
   }
 
   excluir(): void {
@@ -17,16 +20,17 @@ export class TokenService {
   }
 
   gerarCabecalhoAutenticacao(): HttpHeaders {
-    const authorization = JSON.parse(localStorage.getItem(this.AUTORIZACAO_USUARIO) || '""');
-    const headers = new HttpHeaders({ Authorization: authorization.token });
-    return headers
+    const salvo = JSON.parse(localStorage.getItem(this.AUTORIZACAO_USUARIO) || '{}');
+    const token = salvo?.token || '';
+    return token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : new HttpHeaders();
   }
 
   extrair(): TokenModel {
-    const authorization = JSON.parse(localStorage.getItem(this.AUTORIZACAO_USUARIO) || '""');
+    const salvo = JSON.parse(localStorage.getItem(this.AUTORIZACAO_USUARIO) || '{}');
     const tokenModel = new TokenModel();
+
     try {
-      const tokenBase64 = authorization.token.split('.')[1];
+      const tokenBase64 = salvo.token.split('.')[1];
       const tokenvJson = atob(tokenBase64);
       const token = JSON.parse(tokenvJson);
       tokenModel.id = token.id;
@@ -36,8 +40,7 @@ export class TokenService {
     } catch (error) {
       console.error('Erro ao extrair token JWT', error);
     }
+
     return tokenModel;
   }
 }
-
-

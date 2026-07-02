@@ -53,11 +53,12 @@ export class UpdatePage implements OnInit {
 
   ngOnInit(): void {
     this.token = this.tokenService.extrair();
+    console.log(this.usuarioLogado);
     this.usuarioService.buscarPorId(this.token.id).subscribe({
       next: (usuario) => {
         this.usuarioLogado = usuario;
         this.cep = usuario.endereco?.cep ?? '';
-        this.isProfissional = usuario.tipo === 'profissional';
+        this.isProfissional = usuario.tipo === 'PROFISSIONAL';
         if (!this.usuarioLogado) {
           return;
         }
@@ -100,7 +101,7 @@ export class UpdatePage implements OnInit {
     if (!this.validate()) return;
 
     let alteracoes: UsuarioModel = {
-      tipo: this.isProfissional ? 'profissional' : 'cliente',
+      tipo: this.isProfissional ? 'PROFISSIONAL' : 'CLIENTE',
       endereco: { ...this.usuarioLogado.endereco },
       id: this.token.id,
       nome: this.usuarioLogado.nome,
@@ -114,7 +115,7 @@ export class UpdatePage implements OnInit {
     };
 
     if (this.novaSenha) alteracoes.senha = this.novaSenha;
-
+  
     this.usuarioService.alterar(alteracoes).subscribe({
       next: async (resultado) => {
         if (!resultado) {
@@ -126,17 +127,22 @@ export class UpdatePage implements OnInit {
           this.navController.navigateRoot('/login');
           return;
         }
+
+        const toast = await this.toastController.create({
+          message: 'Dados atualizados com sucesso!',
+          duration: 2000, color: 'success', position: 'bottom',
+        });
+        await toast.present();
+        this.navController.navigateBack('/tabs/perfil');
       },
-      error: (err) => {
-        console.log("Erro: ", err)
+      error: async (err) => {
+        console.log('Erro: ', err);
+        const toast = await this.toastController.create({
+          message: 'Erro ao atualizar dados. Tente novamente.',
+          duration: 2500, color: 'danger', position: 'bottom',
+        });
+        await toast.present();
       }
     });
-
-    const toast = await this.toastController.create({
-      message: 'Dados atualizados com sucesso!',
-      duration: 2000, color: 'success', position: 'bottom',
-    });
-    await toast.present();
-    this.navController.navigateBack('/menu');
   }
 }

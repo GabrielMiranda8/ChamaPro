@@ -117,8 +117,14 @@ export class CadastroPage implements OnInit {
 
     this.usuarioService.salvar(usuario).subscribe({
       next: async (usuarioSalvo) => {
-        if (usuarioSalvo.tipo === 'PROFISSIONAL') {
-          this.navController.navigateForward(`/add-servico/${usuarioSalvo.id}`);
+        if (v.isProfissional) {
+          this.usuarioService.criarProfissional(usuarioSalvo.id).subscribe({
+            next: () => this.navController.navigateForward(`/add-servico/${usuarioSalvo.id}`),
+            error: async () => {
+              await this.exibirMensagem('Conta criada, porém não foi possível ativar perfil profissional.');
+              this.navController.navigateForward(`/add-servico/${usuarioSalvo.id}`);
+            }
+          });
           return;
         }
         await this.exibirMensagem('Conta criada com sucesso!');

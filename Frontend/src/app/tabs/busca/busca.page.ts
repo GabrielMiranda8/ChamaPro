@@ -15,13 +15,12 @@ import { forkJoin } from 'rxjs';
 
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ServicoService } from 'src/app/services/servico.service';
-import { ProfissionalServicoService } from 'src/app/services/profissional-servico.service';
+import {  ProfissionalServicoService } from 'src/app/services/profissional-servico.service';
 
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { ProfissionalServicoModel } from 'src/app/model/profissional-servico.model';
 import { ServicoModel } from 'src/app/model/servico.model';
 
-import { ContratoComponent } from 'src/app/components/contrato/contrato.component';
 import { ProfissionalPopupComponent } from 'src/app/components/profissional-popup/profissional-popup.component';
 
 interface ResultadoBusca {
@@ -69,34 +68,25 @@ export class BuscaPage implements OnInit {
   // ─── Carregamento ───────────────────────────────────────────────────────────
 
   carregarResultados(): void {
-    this.carregando = true;
-
-    // As três chamadas são disparadas juntas, mas só montamos "resultados"
-    // depois que TODAS tiverem respondido — evita a condição de corrida.
     forkJoin({
       profissionalServicos: this.profissionalServicoService.listar(),
       usuarios: this.usuarioService.listar(),
       servicos: this.servicoService.listar(),
     }).subscribe({
       next: ({ profissionalServicos, usuarios, servicos }) => {
-        // lookup por id em vez de N chamadas HTTP (buscarPorId por item)
-        const servicosPorId = new Map(servicos.map(s => [s.id, s]));
-        const usuariosPorId = new Map(usuarios.map(u => [u.id, u]));
-
         this.resultados = profissionalServicos
           .map((ps) => {
-            const profissional = usuariosPorId.get(ps.idProfissional) ?? new UsuarioModel();
-            const servico = servicosPorId.get(ps.idServico) ?? new ServicoModel();
+            const profissional = usuarios.find(u => u.id === ps.idProfissional) ?? new UsuarioModel();
+            const servico = servicos.find(s => s.id === ps.idServico) ?? new ServicoModel();
             return { ps, profissional, servico };
           })
           .filter((item) => item.profissional.id && item.servico.id);
 
         this.resultadosFiltrados = [...this.resultados];
-        this.carregando = false;
       },
-      error: (err) => {
-        console.log('Erro ao carregar resultados de busca: ', err);
-        this.carregando = false;
+      error: () => {
+        this.resultados = [];
+        this.resultadosFiltrados = [];
       },
     });
   }

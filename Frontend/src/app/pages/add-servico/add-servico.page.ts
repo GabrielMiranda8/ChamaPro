@@ -81,9 +81,10 @@ export class AddServicoPage implements OnInit {
     forkJoin({
       servicos: this.servicoService.listar(),
       caracteristicas: this.caracteristicaService.listar(),
-      
+      // já cadastrados antes, para permitir editar em vez de duplicar
       meusServicos: this.profissionalServicoService
         .buscarPorProfissional(this.usuarioId)
+        .pipe(catchError(() => of([] as ProfissionalServicoModel[]))),
     }).subscribe({
       next: ({ servicos, caracteristicas, meusServicos }) => {
         this.todosServicos = servicos;
