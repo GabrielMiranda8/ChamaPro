@@ -22,7 +22,7 @@ import {
 
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { ServicoModel } from 'src/app/model/servico.model';
-import { ProfissionalServicoResponse } from 'src/app/services/profissional-servico.service';
+import { ProfissionalServicoModel } from 'src/app/model/profissional-servico.model';
 
 import { ContratoComponent } from 'src/app/components/contrato/contrato.component';
 @Component({
@@ -34,7 +34,7 @@ import { ContratoComponent } from 'src/app/components/contrato/contrato.componen
 export class ProfissionalPopupComponent implements OnInit {
 
   @Input() profissional!: UsuarioModel;
-  @Input() profissionalServico!: ProfissionalServicoResponse;
+  @Input() profissionalServico!: ProfissionalServicoModel;
   @Input() servico!: ServicoModel;
   @Input() cliente!: UsuarioModel;
 

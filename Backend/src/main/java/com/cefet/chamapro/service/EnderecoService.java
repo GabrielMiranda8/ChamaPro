@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cefet.chamapro.controller.UsuarioController;
 import com.cefet.chamapro.dto.EnderecoRequestDTO;
 import com.cefet.chamapro.dto.EnderecoResponseDTO;
 import com.cefet.chamapro.entity.Endereco;

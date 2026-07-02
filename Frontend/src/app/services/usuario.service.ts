@@ -45,8 +45,8 @@ export class UsuarioService {
   */
   /* Público */
   /* Público */
-login(email: string, senha: string): Observable<{ token: string }> {
-  return this.http.post<{ token: string }>(
+login(email: string, senha: string): Observable<string> {
+  return this.http.post<string>(
     `${this.AUTH_URL}/login`,
     { email, senha }
   );

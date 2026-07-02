@@ -184,7 +184,7 @@ export class AddServicoPage implements OnInit {
     });
   }
 
-  pular() {
+  voltar() {
     this.navController.navigateRoot('/perfil');
   }
 
