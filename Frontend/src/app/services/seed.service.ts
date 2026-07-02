@@ -30,18 +30,20 @@ export class SeedService {
   }
 
   private seedServicos(): void {
-    if (this.servicoService.listar().length > 0) return;
+    this.servicoService.listar().subscribe((servicos) => {
+      if (servicos.length > 0) return;
 
-    const defaults = [
-      { id: '', nome: 'Elétrica Residencial',    descricao: 'Elétrica para casas' },
-      { id: '', nome: 'Quadro Elétrico',  descricao: 'Manutenção e Confeccção de Quadros Elétricos' },
-      { id: '', nome: 'Energia Solar',     descricao: 'Instalação e Manutenção de painéis solares' },
-      { id: '', nome: 'Elétrica Comercial/Industrial',     descricao: 'Elétrica para ambientes extensos como Indústrias e Prédios' },
-      { id: '', nome: 'Elétrica de Segurança',     descricao: 'Especializado em Segurança como cercas, câmeras e etc' },
-      { id: '', nome: 'Iluminação',     descricao: 'Iluminação e derivados' },
-      { id: '', nome: 'Infraestrutura',     descricao: 'Elétrica focada em cabeamentos' },
-    ];
+      const defaults = [
+        { id: '', nome: 'Elétrica Residencial', descricao: 'Elétrica para casas' },
+        { id: '', nome: 'Quadro Elétrico', descricao: 'Manutenção e Confecção de quadros elétricos' },
+        { id: '', nome: 'Energia Solar', descricao: 'Instalação e manutenção de painéis solares' },
+        { id: '', nome: 'Elétrica Comercial/Industrial', descricao: 'Elétrica para indústrias, lojas e prédios' },
+        { id: '', nome: 'Elétrica de Segurança', descricao: 'Cercas, câmeras e sistemas de segurança' },
+        { id: '', nome: 'Iluminação', descricao: 'Instalação e manutenção de iluminação' },
+        { id: '', nome: 'Infraestrutura', descricao: 'Cabeamento e infraestrutura elétrica' },
+      ];
 
-    defaults.forEach(s => this.servicoService.salvar(s));
+      defaults.forEach(s => this.servicoService.salvar(s).subscribe());
+    });
   }
 }

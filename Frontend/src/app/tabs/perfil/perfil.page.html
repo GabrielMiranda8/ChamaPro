@@ -10,11 +10,11 @@
     <div class="user-info">
 
       <div class="avatar">
-        <span>JP</span>
+        <span>{{ obterIniciais(dados.nome || token.nome || 'Usuário') }}</span>
       </div>
 
       <div class="user-details">
-        <h3>Henrique Lelis</h3>
+        <h3>{{ dados.nome || token.nome || 'Usuário' }}</h3>
 
         <div class="location">
           <ion-icon name="location-outline"></ion-icon>
@@ -23,7 +23,7 @@
 
         <div class="rating">
           <ion-icon name="star"></ion-icon>
-          <span>4.8 • 23 serviços</span>
+          <span>{{ dados.nota || 5.0 }} • perfil ativo</span>
         </div>
       </div>
 
@@ -62,6 +62,21 @@
         </div>
 
         <span>Editar perfil</span>
+
+      </div>
+
+      <ion-icon name="chevron-forward-outline"></ion-icon>
+    </div>
+
+    <!-- Meus Serviços -->
+    <div class="menu-item" routerLink="/add-servico">
+      <div class="menu-left">
+
+        <div class="menu-icon">
+          <ion-icon name="briefcase-outline"></ion-icon>
+        </div>
+
+        <span>Meus Serviços</span>
 
       </div>
 

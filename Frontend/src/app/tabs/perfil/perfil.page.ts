@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { IonContent, IonButton, IonIcon, NavController, } from '@ionic/angular/standalone';
+import { IonContent, IonButton, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { personOutline, mailOutline, calendarOutline, cardOutline, locationOutline, briefcaseOutline, arrowBackOutline, createOutline, } from 'ionicons/icons';
+import { personOutline, mailOutline, calendarOutline, cardOutline, locationOutline, briefcaseOutline, arrowBackOutline, createOutline, chevronForwardOutline, readerOutline, notificationsOutline, shieldOutline, settingsOutline, logOutOutline, star, } from 'ionicons/icons';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, ToastController, NavController } from '@ionic/angular';
 import { TokenModel } from 'src/app/model/token.model';
 import { TokenService } from 'src/app/services/token.service';
 
@@ -41,8 +41,25 @@ export class PerfilPage implements OnInit {
       briefcaseOutline,
       arrowBackOutline,
       createOutline,
+      chevronForwardOutline,
+      readerOutline,
+      notificationsOutline,
+      shieldOutline,
+      settingsOutline,
+      logOutOutline,
+      star,
     });
     this.dados = new UsuarioModel();
+  }
+
+  obterIniciais(nome: string): string {
+    return nome
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((parte) => parte[0])
+      .join('')
+      .toUpperCase();
   }
 
   ngOnInit(): void {

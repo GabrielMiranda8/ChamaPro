@@ -14,17 +14,17 @@ import { searchOutline, handLeftOutline, star } from 'ionicons/icons';
 
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ServicoService } from 'src/app/services/servico.service';
-import { ProfissionalServicoService } from 'src/app/services/profissional-servico.service';
+import { ProfissionalServicoResponse, ProfissionalServicoService } from 'src/app/services/profissional-servico.service';
 
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { ProfissionalServicoModel } from 'src/app/model/profissional-servico.model';
 import { ServicoModel } from 'src/app/model/servico.model';
 
-import { ContratoComponent } from 'src/app/components/contrato/contrato.component';
 import { ProfissionalPopupComponent } from 'src/app/components/profissional-popup/profissional-popup.component';
+import { forkJoin } from 'rxjs';
 
 interface ResultadoBusca {
-  ps: ProfissionalServicoModel;
+  ps: ProfissionalServicoResponse;
   profissional: UsuarioModel;
   servico: ServicoModel;
 }
@@ -67,19 +67,26 @@ export class BuscaPage implements OnInit {
   // ─── Carregamento ───────────────────────────────────────────────────────────
 
   carregarResultados(): void {
-    const profissionalServicos = this.profissionalServicoService.listar();
+    forkJoin({
+      profissionalServicos: this.profissionalServicoService.listar(),
+      usuarios: this.usuarioService.listar(),
+      servicos: this.servicoService.listar(),
+    }).subscribe({
+      next: ({ profissionalServicos, usuarios, servicos }) => {
+        this.resultados = profissionalServicos
+          .map((ps) => {
+            const profissional = usuarios.find(u => u.id === ps.profissionalId) ?? new UsuarioModel();
+            const servico = servicos.find(s => s.id === ps.servicoId) ?? new ServicoModel();
+            return { ps, profissional, servico };
+          })
+          .filter((item) => item.profissional.id && item.servico.id);
 
-    this.usuarioService.listar().subscribe((usuarios) => {
-      this.resultados = profissionalServicos
-        .map((ps) => {
-          // busca na lista que já chegou, sem novo Observable
-          const profissional = usuarios.find(u => u.id === ps.idProfissional) ?? new UsuarioModel();
-          const servico = this.servicoService.buscarPorId(ps.idServico);
-          return { ps, profissional, servico };
-        })
-        .filter((item) => item.profissional.id && item.servico.id);
-
-      this.resultadosFiltrados = [...this.resultados];
+        this.resultadosFiltrados = [...this.resultados];
+      },
+      error: () => {
+        this.resultados = [];
+        this.resultadosFiltrados = [];
+      },
     });
   }
 
