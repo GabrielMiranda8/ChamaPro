@@ -69,7 +69,7 @@ export class BuscaPage implements OnInit {
 
   carregarResultados(): void {
     this.carregando = true;
-
+  
     forkJoin({
       profissionalServicos: this.profissionalServicoService.listar(),
       usuarios: this.usuarioService.listar(),
@@ -77,15 +77,18 @@ export class BuscaPage implements OnInit {
     }).subscribe({
       next: ({ profissionalServicos, usuarios, servicos }) => {
         console.log('profissionalServicos recebidos:', profissionalServicos);
-
+  
+        const usuarioLogado = this.usuarioService.getUsuarioLogado();
+  
         this.resultados = profissionalServicos
           .map((ps) => {
             const profissional = usuarios.find(u => u.id === ps.idProfissional) ?? new UsuarioModel();
             const servico = servicos.find(s => s.id === ps.idServico) ?? new ServicoModel();
             return { ps, profissional, servico };
           })
-          .filter((item) => item.profissional.id && item.servico.id);
-
+          .filter((item) => item.profissional.id && item.servico.id)
+          .filter((item) => item.profissional.id !== usuarioLogado?.id); // ← exclui o próprio usuário logado
+  
         this.resultadosFiltrados = [...this.resultados];
         this.carregando = false;
       },
@@ -97,7 +100,6 @@ export class BuscaPage implements OnInit {
       },
     });
   }
-
   // ─── Filtros ────────────────────────────────────────────────────────────────
 
   selecionarFiltro(filtro: string): void {
