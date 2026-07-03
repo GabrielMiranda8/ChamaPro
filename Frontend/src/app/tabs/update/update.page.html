@@ -25,7 +25,7 @@
       <div class="field-group">
         <ion-label class="field-label">Nova Senha</ion-label>
         <ion-input class="input" [type]="showSenha() ? 'text' : 'password'" placeholder="••••••••"
-          [(ngModel)]="novaSenha" name="novaSenha" required>
+          [(ngModel)]="novaSenha" name="novaSenha" >
           <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleSenha()">
             <ion-icon slot="icon-only" [name]="showSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
           </ion-button>
@@ -37,7 +37,7 @@
       <div class="field-group">
         <ion-label class="field-label">Confirmar nova senha</ion-label>
         <ion-input class="input" [type]="showConfirmarNovaSenha() ? 'text' : 'password'" placeholder="••••••••"
-          [(ngModel)]="confirmarNovaSenha" name="confirmarNovaSenha" required>
+          [(ngModel)]="confirmarNovaSenha" name="confirmarNovaSenha">
           <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleConfirmarNovaSenha()">
             <ion-icon slot="icon-only" [name]="showConfirmarNovaSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
           </ion-button>
