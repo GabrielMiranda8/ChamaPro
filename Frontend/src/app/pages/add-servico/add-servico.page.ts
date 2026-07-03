@@ -6,7 +6,7 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
-  briefcaseOutline, addOutline, arrowForwardOutline,
+  briefcaseOutline, arrowForwardOutline, chevronBackOutline,
   handLeftOutline, eyeOutline, earOutline, accessibilityOutline,
   bodyOutline, micOutline, chatbubbleOutline,
 } from 'ionicons/icons';
@@ -16,8 +16,8 @@ import { catchError } from 'rxjs/operators';
 
 import { ServicoModel } from 'src/app/model/servico.model';
 import { ServicoService } from 'src/app/services/servico.service';
-import { CaracteristicaModel } from 'src/app/model/caracteristica.model';
-import { CaracteristicaService } from 'src/app/services/caracteristica.service';
+// import { CaracteristicaModel } from 'src/app/model/caracteristica.model';
+// import { CaracteristicaService } from 'src/app/services/caracteristica.service';
 import { ProfissionalServicoModel } from 'src/app/model/profissional-servico.model';
 import { ProfissionalServicoService } from 'src/app/services/profissional-servico.service';
 import { TokenService } from 'src/app/services/token.service';
@@ -38,25 +38,28 @@ export class AddServicoPage implements OnInit {
   usuarioId!: string;
 
   todosServicos: ServicoModel[] = [];
-  todasCaracteristicas: CaracteristicaModel[] = [];
+  // todasCaracteristicas: CaracteristicaModel[] = []; // TODO: ainda não implementado no backend
 
   servicosSelecionados: ServicoModel[] = [];
-  caracsSelecionadas: CaracteristicaModel[] = [];
-  outraEspecialidade = '';
+  // caracsSelecionadas: CaracteristicaModel[] = []; // TODO: ainda não implementado no backend
+
+  // Exigidos pelo backend (ProfissionalServico.preco / tempoCarreira, nullable = false)
+  preco: number | null = null;
+  tempoCarreira = ''; // formato yyyy-mm-dd (input type="date")
 
   carregando = true;
   salvando = false;
 
   constructor(
     private servicoService: ServicoService,
-    private caracteristicaService: CaracteristicaService,
+    // private caracteristicaService: CaracteristicaService, // TODO: ainda não implementado no backend
     private profissionalServicoService: ProfissionalServicoService,
     private toastController: ToastController,
     private navController: NavController,
     private tokenService: TokenService,
   ) {
     addIcons({
-      briefcaseOutline, addOutline, arrowForwardOutline,
+      briefcaseOutline, arrowForwardOutline, chevronBackOutline,
       handLeftOutline, eyeOutline, earOutline, accessibilityOutline,
       bodyOutline, micOutline, chatbubbleOutline,
     });
@@ -68,7 +71,7 @@ export class AddServicoPage implements OnInit {
 
     // Página exclusiva para profissionais logados
     if (token.tipo !== 'PROFISSIONAL') {
-      this.navController.navigateRoot('/perfil');
+      this.navController.navigateRoot('/tabs/perfil');
       return;
     }
 
@@ -80,15 +83,15 @@ export class AddServicoPage implements OnInit {
 
     forkJoin({
       servicos: this.servicoService.listar(),
-      caracteristicas: this.caracteristicaService.listar(),
+      // caracteristicas: this.caracteristicaService.listar(), // TODO: ainda não implementado no backend
       // já cadastrados antes, para permitir editar em vez de duplicar
       meusServicos: this.profissionalServicoService
         .buscarPorProfissional(this.usuarioId)
         .pipe(catchError(() => of([] as ProfissionalServicoModel[]))),
     }).subscribe({
-      next: ({ servicos, caracteristicas, meusServicos }) => {
+      next: ({ servicos, meusServicos }) => {
         this.todosServicos = servicos;
-        this.todasCaracteristicas = caracteristicas;
+        // this.todasCaracteristicas = caracteristicas; // TODO: ainda não implementado no backend
 
         const idsJaSelecionados = new Set(meusServicos.map(ms => ms.idServico));
         this.servicosSelecionados = this.todosServicos.filter(s => idsJaSelecionados.has(s.id));
@@ -116,28 +119,23 @@ export class AddServicoPage implements OnInit {
     }
   }
 
-  adicionarOutra() {
-    const nome = this.outraEspecialidade.trim();
-    if (!nome) return;
-    const novoServico = new ServicoModel();
-    novoServico.nome = nome;
-    this.servicosSelecionados.push(novoServico);
-    this.outraEspecialidade = '';
-  }
+  // Removido: adicionarOutra() permitia texto livre, o que gerava serviços sem
+  // id real no catálogo (idServico vazio quebrava o POST pro backend). Agora o
+  // usuário só pode selecionar entre os serviços já cadastrados no sistema.
 
-  // ── Seleção de características ───────────────────────────
+  // ── Seleção de características (TODO: ainda não implementado no backend) ──
 
-  isCaracSelecionada(carac: CaracteristicaModel): boolean {
-    return this.caracsSelecionadas.some(c => c.id === carac.id);
-  }
+  // isCaracSelecionada(carac: CaracteristicaModel): boolean {
+  //   return this.caracsSelecionadas.some(c => c.id === carac.id);
+  // }
 
-  toggleCarac(carac: CaracteristicaModel) {
-    if (this.isCaracSelecionada(carac)) {
-      this.caracsSelecionadas = this.caracsSelecionadas.filter(c => c.id !== carac.id);
-    } else {
-      this.caracsSelecionadas.push(carac);
-    }
-  }
+  // toggleCarac(carac: CaracteristicaModel) {
+  //   if (this.isCaracSelecionada(carac)) {
+  //     this.caracsSelecionadas = this.caracsSelecionadas.filter(c => c.id !== carac.id);
+  //   } else {
+  //     this.caracsSelecionadas.push(carac);
+  //   }
+  // }
 
   iconePorCaracteristica(nome: string): string {
     const mapa: Record<string, string> = {
@@ -161,12 +159,24 @@ export class AddServicoPage implements OnInit {
       return;
     }
 
+    if (this.preco === null || this.preco <= 0) {
+      await this.exibirMensagem('Informe o preço por hora.');
+      return;
+    }
+
+    if (!this.tempoCarreira) {
+      await this.exibirMensagem('Informe desde quando você atua na área.');
+      return;
+    }
+
     this.salvando = true;
 
     const chamadas = this.servicosSelecionados.map(s => {
       const ps = new ProfissionalServicoModel();
       ps.idServico = s.id;
       ps.idProfissional = this.usuarioId;
+      ps.preco = this.preco!;
+      ps.tempoCarreira = new Date(this.tempoCarreira); // input devolve string yyyy-mm-dd; model espera Date
       return this.profissionalServicoService.salvar(ps);
     });
 
@@ -175,7 +185,7 @@ export class AddServicoPage implements OnInit {
         this.salvando = false;
         await this.exibirMensagem('Serviços salvos com sucesso!');
         // Usuário já está logado: volta para o perfil, não para o login
-        this.navController.navigateRoot('/perfil');
+        this.navController.navigateRoot('/tabs/perfil');
       },
       error: async () => {
         this.salvando = false;
@@ -185,7 +195,7 @@ export class AddServicoPage implements OnInit {
   }
 
   voltar() {
-    this.navController.navigateRoot('/perfil');
+    this.navController.navigateRoot('/tabs/perfil');
   }
 
   async exibirMensagem(texto: string) {

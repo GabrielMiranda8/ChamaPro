@@ -18,6 +18,7 @@ import {
   eyeOutline,
   eyeOffOutline,
   createOutline,
+  personOutline,
 } from 'ionicons/icons';
 
 import { UsuarioService } from '../../services/usuario.service';
@@ -69,6 +70,7 @@ export class UpdatePage implements OnInit {
       createOutline,
       eyeOutline,
       eyeOffOutline,
+      personOutline,
     });
   }
 
@@ -118,8 +120,8 @@ export class UpdatePage implements OnInit {
     this.errors = {};
 
     if (this.novaSenha || this.confirmarNovaSenha) {
-      if (this.novaSenha.length < 6) {
-        this.errors['novaSenha'] = 'Senha deve ter no mínimo 6 caracteres.';
+      if (this.novaSenha.length < 3) {
+        this.errors['novaSenha'] = 'Senha deve ter no mínimo 3 caracteres.';
       }
 
       if (this.confirmarNovaSenha !== this.novaSenha) {

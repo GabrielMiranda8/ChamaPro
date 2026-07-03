@@ -1,19 +1,20 @@
-// Reutiliza a mesma identidade visual do cadastro
-// Fundo escuro com círculos decorativos azul/laranja
+// ── Variáveis (mesma paleta usada em add-servico / perfil) ──
+$laranja: #E8632A;
+$laranja-hover: #d45520;
+$laranja-light: rgba(232, 99, 42, 0.1);
+$texto: #1A1A1A;
+$texto-sec: #666666;
+$borda: #E5E5E5;
+$fundo: #F7F5F2;
+$branco: #ffffff;
 
+// ── Content ───────────────────────────────────────────────
 .cadastro-content {
-  --background: #121212;
-  position: relative;
-  overflow: hidden;
+  --background: #{$fundo};
 }
 
-// ── Background decorativo ────────────────────────────────
-
-
-// ── Wrapper ──────────────────────────────────────────────
+// ── Wrapper ───────────────────────────────────────────────
 .cadastro-wrapper {
-  position: relative;
-  z-index: 1;
   min-height: 100%;
   display: flex;
   flex-direction: column;
@@ -22,18 +23,19 @@
 
 // ── Header ───────────────────────────────────────────────
 .cadastro-header {
-  margin-bottom: 28px;
+  margin-bottom: 20px;
 
-  .logo-ring {
+  .logo-container {
     display: inline-flex;
     padding: 6px;
-    border-radius: 28px;
-    background: linear-gradient(135deg, #ffffff, #ff9c32);
-    margin-bottom: 14px;
+    border-radius: 24px;
+    background: $laranja;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 16px rgba(232, 99, 42, 0.35);
 
     .logo-img {
-      width: 64px;
-      height: 64px;
+      width: 60px;
+      height: 60px;
       border-radius: 18px;
       object-fit: cover;
       display: block;
@@ -41,16 +43,16 @@
   }
 
   .cadastro-title {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 800;
-    color: #ffffff;
+    color: $texto;
     margin: 0 0 4px;
     letter-spacing: -0.5px;
   }
 
   .cadastro-subtitle {
     font-size: 14px;
-    color: #666;
+    color: $texto-sec;
     margin: 0;
   }
 }
@@ -61,15 +63,16 @@
 }
 
 .back-btn {
-  --color: #666;
+  --color: #{$texto-sec};
   font-size: 13px;
 }
 
 // ── Formulário ───────────────────────────────────────────
 .cadastro-form {
-  background: #1a1a1a;
+  background: $branco;
   border-radius: 24px;
-  border: 1px solid #2a2a2a;
+  border: 1px solid $borda;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.04);
   // padding já vem do style="padding: 30px;" no HTML
 }
 
@@ -82,26 +85,30 @@
   display: block;
   font-size: 12px;
   font-weight: 600;
-  color: #888;
+  color: $texto-sec;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   margin-bottom: 7px;
 }
 
 .input {
-  background: #242424;
+  background: $fundo;
   border-radius: 14px;
-  color: #fff;
+  color: $texto;
   --padding-start: 16px;
   --padding-end: 16px;
   --padding-top: 13px;
   --padding-bottom: 13px;
-  border: 1px solid #303030;
+  border: 1.5px solid $borda;
   font-size: 15px;
+
+  &:focus-within {
+    border-color: $laranja;
+  }
 }
 
 .eye-btn {
-  --color: #555;
+  --color: #999;
   margin-right: 4px;
 }
 
@@ -109,39 +116,38 @@
 .field-error {
   display: block;
   font-size: 12px;
-  color: #ff5252;
+  color: #e64545;
   margin-top: 5px;
   padding-left: 4px;
 }
 
 // ── Toggle profissional ──────────────────────────────────
-// (classe profissional-info — diferente do cadastro que usa profissional-row)
 .profissional-info {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #242424;
+  background: $fundo;
   border-radius: 16px;
   padding: 14px 16px;
-  border: 1px solid #303030;
+  border: 1px solid $borda;
   margin-bottom: 20px;
 
   .profissional-title {
     font-size: 14px;
     font-weight: 600;
-    color: #e0e0e0;
+    color: $texto;
   }
 }
 
 .profissional-toggle {
-  --track-background-checked: #d67c1a;
+  --track-background-checked: #{$laranja};
 }
 
 // ── Submit ───────────────────────────────────────────────
 .submit-container {
   .submit-btn {
-    --background: #1a4fd6;
-    --background-activated: #1540b0;
+    --background: #{$laranja};
+    --background-activated: #{$laranja-hover};
     --border-radius: 14px;
     --color: #fff;
     font-weight: 700;
@@ -151,13 +157,18 @@
 }
 
 .edit-container {
-  margin-top: 0vh;
-  padding: 16px 0;
+  margin-top: 0;
+  padding: 16px 0 0;
 
   .edit-btn {
-    --background: #ff5e00;
+    --background: #{$branco};
+    --background-activated: #{$fundo};
+    --color: #{$laranja};
+    --border-color: #{$laranja};
+    --border-width: 1.5px;
+    --border-style: solid;
     --border-radius: 14px;
-    --color: #fff;
+    --box-shadow: none;
     font-weight: 700;
     height: 52px;
   }

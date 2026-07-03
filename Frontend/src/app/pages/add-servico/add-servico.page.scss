@@ -9,50 +9,106 @@ $fundo: #F7F5F2;
 $branco: #ffffff;
 
 // ── Content ───────────────────────────────────────────────
+// Define --color explicitamente para não herdar o tema escuro
+// do sistema/navegador (era a causa do texto branco).
 .add-servico-content {
   --background: #{$fundo};
+  --color: #{$texto};
+  color-scheme: light;
 }
 
 // ── Wrapper ───────────────────────────────────────────────
-.add-servico-wrapper {
+.page-shell {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 48px 24px 40px;
+  padding: 24px 20px 40px;
+  color: $texto;
 }
 
-// ── Header ────────────────────────────────────────────────
-.header {
-  margin-bottom: 36px;
+// ── Topbar (título + botão voltar) ─────────────────────────
+.topbar {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
 
-  .header-icon {
-    width: 72px;
-    height: 72px;
-    border-radius: 20px;
-    background: $laranja;
+  h1 {
+    font-size: 22px;
+    font-weight: 800;
+    color: $texto;
+    margin: 4px 0 4px;
+  }
+
+  p {
+    font-size: 13px;
+    color: $texto-sec;
+    margin: 0;
+  }
+}
+
+.back-button {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1.5px solid $borda;
+  background: $branco;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  padding: 0;
+
+  ion-icon {
+    font-size: 20px;
+    color: $texto;
+  }
+
+  &:active {
+    background: $fundo;
+  }
+}
+
+// ── Card laranja (perfil profissional) ──────────────────────
+.orange-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: $laranja;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 28px;
+  box-shadow: 0 4px 16px rgba(232, 99, 42, 0.25);
+
+  .orange-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 16px;
-    box-shadow: 0 4px 16px rgba(232, 99, 42, 0.35);
+    flex-shrink: 0;
 
     ion-icon {
-      font-size: 32px;
+      font-size: 20px;
       color: $branco;
     }
   }
 
-  .header-title {
-    font-size: 24px;
-    font-weight: 800;
-    color: $texto;
-    margin: 0 0 6px;
+  h2 {
+    font-size: 15px;
+    font-weight: 700;
+    color: $branco;
+    margin: 0 0 4px;
   }
 
-  .header-sub {
-    font-size: 14px;
-    color: $texto-sec;
+  p {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.9);
     margin: 0;
+    line-height: 1.4;
   }
 }
 
@@ -120,51 +176,45 @@ $branco: #ffffff;
   }
 }
 
-// ── Outra especialidade ───────────────────────────────────
-.outra-row {
+.empty-hint {
+  font-size: 13px;
+  color: $texto-sec;
+  margin: 0;
+}
+
+// ── Preço / tempo de experiência ───────────────────────────
+.field-row {
   display: flex;
-  gap: 10px;
-  align-items: center;
+  gap: 12px;
+}
 
-  .outra-input {
-    flex: 1;
-    background: $branco;
-    border-radius: 12px;
-    border: 1.5px solid $borda;
-    --padding-start: 16px;
-    --padding-end: 16px;
-    --padding-top: 12px;
-    --padding-bottom: 12px;
-    font-size: 14px;
-    color: $texto;
-  }
+.field-group {
+  flex: 1;
+  min-width: 0;
+}
 
-  .add-btn {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    border: 1.5px solid $borda;
-    background: $branco;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    flex-shrink: 0;
+.field-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: $texto-sec;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 7px;
+}
 
-    ion-icon {
-      font-size: 22px;
-      color: $texto;
-    }
-
-    &:active {
-      background: $laranja-light;
-      border-color: $laranja;
-
-      ion-icon {
-        color: $laranja;
-      }
-    }
-  }
+.field-input {
+  background: $branco;
+  border-radius: 12px;
+  border: 1.5px solid $borda;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  --color: #{$texto};
+  --placeholder-color: #{$texto-sec};
+  font-size: 14px;
+  color: $texto;
 }
 
 // ── Ações ─────────────────────────────────────────────────

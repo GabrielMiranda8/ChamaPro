@@ -43,20 +43,38 @@
           }
         </div>
 
-        <!-- Outra especialidade -->
-        <div class="outra-row">
-          <ion-input
-            class="outra-input"
-            placeholder="Outra especialidade..."
-            [(ngModel)]="outraEspecialidade">
-          </ion-input>
-          <button type="button" class="add-btn" (click)="adicionarOutra()">
-            <ion-icon name="add-outline"></ion-icon>
-          </button>
+        @if (todosServicos.length === 0) {
+          <p class="empty-hint">Nenhum serviço cadastrado no sistema ainda.</p>
+        }
+      </div>
+
+      <!-- Preço e tempo de experiência (exigidos pelo backend) -->
+      <div class="section">
+        <h2 class="section-title">Preço e experiência</h2>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Preço por hora (R$)</label>
+            <ion-input
+              class="field-input"
+              type="number"
+              placeholder="80"
+              [(ngModel)]="preco">
+            </ion-input>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Atuando desde</label>
+            <ion-input
+              class="field-input"
+              type="date"
+              [(ngModel)]="tempoCarreira">
+            </ion-input>
+          </div>
         </div>
       </div>
 
-      <!-- Acessibilidades 
+      <!-- Acessibilidades
        <div class="section">
         <h2 class="section-title">Acessibilidades que você oferece</h2>
 
@@ -74,7 +92,7 @@
         </div>
       </div>
       -->
-      
+
 
       <!-- Ações -->
       <div class="actions">
