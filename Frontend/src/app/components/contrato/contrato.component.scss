@@ -396,3 +396,12 @@ $radius-lg:      16px;
     color: #fff;
   }
 }
+
+.valor-fixo {
+  font-size: 1rem;
+  color: #333;
+  margin: 8px 0;
+  strong {
+    color: #2a7;
+  }
+}

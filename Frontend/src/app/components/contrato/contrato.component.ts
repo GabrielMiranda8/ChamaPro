@@ -117,12 +117,6 @@ export class ContratoComponent implements OnInit {
 
   private inicializarForm(): void {
     this.pedidoForm = this.formBuilder.group({
-      preco: [
-        this.profissionalServico?.preco
-          ? `R$ ${this.profissionalServico.preco}`
-          : '',
-        [Validators.required],
-      ],
       usarEnderecoCliente: [true],
       outroEndereco: this.formBuilder.group({
         cep: [''],
@@ -173,20 +167,6 @@ export class ContratoComponent implements OnInit {
   }
 
   // ─── Máscaras ──────────────────────────────────────────────────────────────
-
-  mascaraPreco(event: CustomEvent): void {
-    const input = event.target as HTMLInputElement;
-    let valor = input.value.replace(/\D/g, '');
-
-    if (!valor) {
-      this.pedidoForm.get('preco')?.setValue('', { emitEvent: false });
-      return;
-    }
-
-    const numero = parseInt(valor, 10);
-    const formatado = `R$ ${numero.toLocaleString('pt-BR')}`;
-    this.pedidoForm.get('preco')?.setValue(formatado, { emitEvent: false });
-  }
 
   mascaraCep(event: CustomEvent): void {
     const input = event.target as HTMLInputElement;
@@ -256,7 +236,7 @@ export class ContratoComponent implements OnInit {
     pedido.idProfissional = this.profissional.id;
     pedido.idCliente = this.cliente.id;
     pedido.idServico = this.profissionalServico.idServico;
-    pedido.preco = this.extrairValorNumerico(val.preco);
+    pedido.preco = this.profissionalServico.preco;
     pedido.status = 'pendente';
 
     // Combina data + hora
@@ -293,11 +273,6 @@ export class ContratoComponent implements OnInit {
 
   fechar(): void {
     this.modalController.dismiss({ sucesso: false });
-  }
-
-  negociarChat(): void {
-    // Navegar para tela de chat com o profissional
-    this.modalController.dismiss({ abrirChat: true, profissional: this.profissional });
   }
 
   // ─── Utils ─────────────────────────────────────────────────────────────────

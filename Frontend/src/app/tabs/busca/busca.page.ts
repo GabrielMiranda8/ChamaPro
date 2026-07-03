@@ -15,7 +15,7 @@ import { forkJoin } from 'rxjs';
 
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ServicoService } from 'src/app/services/servico.service';
-import {  ProfissionalServicoService } from 'src/app/services/profissional-servico.service';
+import { ProfissionalServicoService } from 'src/app/services/profissional-servico.service';
 
 import { UsuarioModel } from 'src/app/model/usuario.model';
 import { ProfissionalServicoModel } from 'src/app/model/profissional-servico.model';
@@ -68,12 +68,16 @@ export class BuscaPage implements OnInit {
   // ─── Carregamento ───────────────────────────────────────────────────────────
 
   carregarResultados(): void {
+    this.carregando = true;
+
     forkJoin({
       profissionalServicos: this.profissionalServicoService.listar(),
       usuarios: this.usuarioService.listar(),
       servicos: this.servicoService.listar(),
     }).subscribe({
       next: ({ profissionalServicos, usuarios, servicos }) => {
+        console.log('profissionalServicos recebidos:', profissionalServicos);
+
         this.resultados = profissionalServicos
           .map((ps) => {
             const profissional = usuarios.find(u => u.id === ps.idProfissional) ?? new UsuarioModel();
@@ -83,10 +87,13 @@ export class BuscaPage implements OnInit {
           .filter((item) => item.profissional.id && item.servico.id);
 
         this.resultadosFiltrados = [...this.resultados];
+        this.carregando = false;
       },
-      error: () => {
+      error: (err) => {
+        console.log('Erro ao carregar resultados de busca:', err);
         this.resultados = [];
         this.resultadosFiltrados = [];
+        this.carregando = false;
       },
     });
   }
@@ -154,17 +161,14 @@ export class BuscaPage implements OnInit {
 
     if (data?.sucesso) {
       console.log('Pedido criado:', data.pedido);
-      // Ex: navegar para aba de pedidos
     }
 
     if (data?.abrirChat) {
       console.log('Abrir chat com:', item.profissional);
-      // Ex: this.router.navigate(['/tabs/chat', item.profissional.id]);
     }
 
     if (data?.verPerfil) {
       console.log('Ver perfil:', data.idProfissional);
-      // Ex: this.router.navigate(['/tabs/profissional', data.idProfissional]);
     }
   }
 

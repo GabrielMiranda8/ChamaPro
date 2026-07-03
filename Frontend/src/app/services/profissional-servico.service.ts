@@ -14,9 +14,16 @@ export class ProfissionalServicoService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  // Backend devolve tempoCarreira como string ("2020-01-15" ou ISO) — convertemos pra Date aqui.
+  // Backend devolve servicoId/profissionalId (nomes diferentes do nosso model),
+  // além de já vir com servicoNome/profissionalNome prontos — aproveitamos aqui.
   private converterData(ps: any): ProfissionalServicoModel {
-    return { ...ps, tempoCarreira: ps.tempoCarreira ? new Date(ps.tempoCarreira) : new Date() };
+    return {
+      ...ps,
+      idServico: ps.servicoId,
+      idProfissional: ps.profissionalId,
+      nomeServico: ps.servicoNome,
+      tempoCarreira: ps.tempoCarreira ? new Date(ps.tempoCarreira) : new Date(),
+    };
   }
 
   // Antes de enviar, convertemos Date -> string (yyyy-MM-dd), formato que o Jackson espera.

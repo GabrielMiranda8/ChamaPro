@@ -23,23 +23,10 @@
         <span>Preço</span>
       </div>
 
-      <p class="valor-sugerido">Valor sugerido: <strong>R$ {{ profissionalServico?.preco | number:'1.0-0' }}/h</strong></p>
-
-      <div class="input-wrapper" [class.invalid]="isInvalid('preco')">
-        <ion-input
-          formControlName="preco"
-          type="text"
-          placeholder="Sua proposta (ex: R$ 120)"
-          inputmode="numeric"
-          (ionInput)="mascaraPreco($event)"
-        ></ion-input>
-      </div>
-      <p class="error-msg" *ngIf="isInvalid('preco')">Informe um valor para a proposta.</p>
-
-      <button type="button" class="negociar-btn" (click)="negociarChat()">
-        <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
-        Negociar pelo chat
-      </button>
+      <p class="valor-fixo">
+        Preço definido pelo profissional:
+        <strong>R$ {{ profissionalServico?.preco | number:'1.0-0' }}/h</strong>
+      </p>
     </div>
 
     <!-- ENDEREÇO -->
@@ -52,18 +39,16 @@
       <div class="endereco-options">
 
         <!-- Endereço cadastrado -->
-        <label
-          class="endereco-card"
-          [class.selected]="pedidoForm.get('usarEnderecoCliente')?.value === true"
-          (click)="selecionarEndereco(true)"
-        >
+        <label class="endereco-card" [class.selected]="pedidoForm.get('usarEnderecoCliente')?.value === true"
+          (click)="selecionarEndereco(true)">
           <div class="radio-circle" [class.checked]="pedidoForm.get('usarEnderecoCliente')?.value === true">
             <div class="radio-inner"></div>
           </div>
           <div class="endereco-text">
             <strong>Endereço cadastrado</strong>
             <span class="endereco-detalhe" *ngIf="enderecoCliente">
-              {{ enderecoCliente.rua }}, {{ enderecoCliente.numero }} – {{ enderecoCliente.cidade }}, {{ enderecoCliente.bairro }}
+              {{ enderecoCliente.rua }}, {{ enderecoCliente.numero }} – {{ enderecoCliente.cidade }}, {{
+              enderecoCliente.bairro }}
             </span>
             <span class="endereco-detalhe sem-endereco" *ngIf="!enderecoCliente">
               Nenhum endereço cadastrado
@@ -72,11 +57,8 @@
         </label>
 
         <!-- Outro endereço -->
-        <label
-          class="endereco-card"
-          [class.selected]="pedidoForm.get('usarEnderecoCliente')?.value === false"
-          (click)="selecionarEndereco(false)"
-        >
+        <label class="endereco-card" [class.selected]="pedidoForm.get('usarEnderecoCliente')?.value === false"
+          (click)="selecionarEndereco(false)">
           <div class="radio-circle" [class.checked]="pedidoForm.get('usarEnderecoCliente')?.value === false">
             <div class="radio-inner"></div>
           </div>
@@ -88,19 +70,13 @@
       </div>
 
       <!-- Formulário de outro endereço -->
-      <div class="outro-endereco-form" *ngIf="pedidoForm.get('usarEnderecoCliente')?.value === false" formGroupName="outroEndereco">
+      <div class="outro-endereco-form" *ngIf="pedidoForm.get('usarEnderecoCliente')?.value === false"
+        formGroupName="outroEndereco">
 
         <div class="input-row">
           <div class="input-wrapper flex-1" [class.invalid]="isInvalidNested('outroEndereco', 'cep')">
-            <ion-input
-              formControlName="cep"
-              type="text"
-              placeholder="CEP"
-              inputmode="numeric"
-              maxlength="9"
-              (ionInput)="mascaraCep($event)"
-              (ionBlur)="buscarCep()"
-            ></ion-input>
+            <ion-input formControlName="cep" type="text" placeholder="CEP" inputmode="numeric" maxlength="9"
+              (ionInput)="mascaraCep($event)" (ionBlur)="buscarCep()"></ion-input>
           </div>
         </div>
         <p class="error-msg" *ngIf="isInvalidNested('outroEndereco', 'cep')">CEP obrigatório.</p>
@@ -146,21 +122,11 @@
       <div class="input-row">
         <div class="input-wrapper flex-1" [class.invalid]="isInvalid('data')">
           <ion-icon name="calendar-outline" class="input-icon-left"></ion-icon>
-          <ion-input
-            formControlName="data"
-            type="date"
-            placeholder="Selecionar data"
-            [min]="dataMinima"
-          ></ion-input>
+          <ion-input formControlName="data" type="date" placeholder="Selecionar data" [min]="dataMinima"></ion-input>
         </div>
 
         <div class="input-wrapper hora-input" [class.invalid]="isInvalid('hora')">
-          <ion-select
-            formControlName="hora"
-            placeholder="Hora"
-            interface="action-sheet"
-            cancelText="Cancelar"
-          >
+          <ion-select formControlName="hora" placeholder="Hora" interface="action-sheet" cancelText="Cancelar">
             <ion-select-option *ngFor="let h of horasDisponiveis" [value]="h">{{ h }}</ion-select-option>
           </ion-select>
         </div>
@@ -177,32 +143,20 @@
       </div>
 
       <div class="urgencia-grid">
-        <button
-          type="button"
-          class="urgencia-card"
-          [class.selected]="pedidoForm.get('urgencia')?.value === 'baixa'"
-          (click)="selecionarUrgencia('baixa')"
-        >
+        <button type="button" class="urgencia-card" [class.selected]="pedidoForm.get('urgencia')?.value === 'baixa'"
+          (click)="selecionarUrgencia('baixa')">
           <strong>Baixa</strong>
           <span>Sem pressa, agendar normalmente</span>
         </button>
 
-        <button
-          type="button"
-          class="urgencia-card"
-          [class.selected]="pedidoForm.get('urgencia')?.value === 'media'"
-          (click)="selecionarUrgencia('media')"
-        >
+        <button type="button" class="urgencia-card" [class.selected]="pedidoForm.get('urgencia')?.value === 'media'"
+          (click)="selecionarUrgencia('media')">
           <strong>Média</strong>
           <span>Preciso nos próximos dias</span>
         </button>
 
-        <button
-          type="button"
-          class="urgencia-card"
-          [class.selected]="pedidoForm.get('urgencia')?.value === 'alta'"
-          (click)="selecionarUrgencia('alta')"
-        >
+        <button type="button" class="urgencia-card" [class.selected]="pedidoForm.get('urgencia')?.value === 'alta'"
+          (click)="selecionarUrgencia('alta')">
           <strong>Alta</strong>
           <span>Urgente, preciso o quanto antes</span>
         </button>
@@ -213,31 +167,18 @@
     <div class="section">
       <p class="descricao-label">Descrição do serviço (opcional)</p>
       <div class="input-wrapper textarea-wrapper">
-        <ion-textarea
-          formControlName="descricao"
-          placeholder="Descreva o que precisa ser feito..."
-          rows="4"
-          auto-grow="false"
-        ></ion-textarea>
+        <ion-textarea formControlName="descricao" placeholder="Descreva o que precisa ser feito..." rows="4"
+          auto-grow="false"></ion-textarea>
       </div>
     </div>
 
     <!-- AÇÕES -->
     <div class="action-buttons">
-      <ion-button
-        fill="outline"
-        class="btn-cancelar"
-        (click)="fechar()"
-        type="button"
-      >
+      <ion-button fill="outline" class="btn-cancelar" (click)="fechar()" type="button">
         Cancelar
       </ion-button>
 
-      <ion-button
-        class="btn-enviar"
-        type="submit"
-        [disabled]="carregando"
-      >
+      <ion-button class="btn-enviar" type="submit" [disabled]="carregando">
         <ion-spinner *ngIf="carregando" name="crescent" slot="start"></ion-spinner>
         {{ carregando ? 'Enviando...' : 'Enviar pedido' }}
       </ion-button>

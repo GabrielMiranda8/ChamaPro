@@ -114,9 +114,12 @@ export class ProfissionalPopupComponent implements OnInit {
     return nome.split(' ').slice(0, 2).map(x => x[0]).join('').toUpperCase();
   }
 
-  calcularIdade(dtNasc: Date): number {
+  calcularIdade(dtNasc: Date | string | undefined): number {
     if (!dtNasc) return 0;
-    const nascimento = dtNasc;
+    // dtNasc chega do backend como string JSON, mesmo tipado como Date no model —
+    // new Date(...) aqui converte nos dois casos (string ou Date já existente).
+    const nascimento = new Date(dtNasc);
+    if (isNaN(nascimento.getTime())) return 0; // data inválida/malformada
     const hoje = new Date();
     let idade = hoje.getFullYear() - nascimento.getFullYear();
     const mesPassou = hoje.getMonth() > nascimento.getMonth() ||
