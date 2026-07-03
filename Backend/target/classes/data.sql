@@ -27,8 +27,8 @@ INSERT IGNORE INTO tb_usuario (id, nome, email, senha, cpf, dt_nasc, dt_conta, n
 -- Profissionais (também são Usuario + Cliente, por causa da hierarquia JOINED)
 INSERT IGNORE INTO tb_usuario (id, nome, email, senha, cpf, dt_nasc, dt_conta, nota, tipo) VALUES
 ('c3333333-0000-0000-0000-000000000001', 'Carlos Eduardo Martins da Costa', 'carlos@email.com', '123456', '444.444.444-44', '1988-02-17', '2026-01-05 08:00:00', 4.8, 'PROFISSIONAL'),
-('c3333333-0000-0000-0000-000000000002', 'Kayo Raylander PisandoFofo',   'kayo@email.com', '123456', '555.555.555-55', '1992-06-30', '2026-01-20 10:15:00', 4.9, 'PROFISSIONAL'),
-('c3333333-0000-0000-0000-000000000003', 'Caio Breder AcolhiMed',  'rafael.oliveira@email.com', '123456', '666.666.666-66', '1985-09-09', '2026-02-02 14:00:00', 4.7, 'PROFISSIONAL');
+('c3333333-0000-0000-0000-000000000002', 'Kayo Raylander',   'kayo@email.com', '123456', '555.555.555-55', '1992-06-30', '2026-01-20 10:15:00', 4.9, 'PROFISSIONAL'),
+('c3333333-0000-0000-0000-000000000003', 'Caio Breder',  'rafael.oliveira@email.com', '123456', '666.666.666-66', '1985-09-09', '2026-02-02 14:00:00', 4.7, 'PROFISSIONAL');
 
 
 -- ── Cliente (tb_cliente) — id igual ao de tb_usuario, para TODOS os 6 ──
