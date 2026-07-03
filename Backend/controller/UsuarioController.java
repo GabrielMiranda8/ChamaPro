@@ -10,9 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/usuarios")
+@CrossOrigin(originPatterns = {"http://localhost:*", "http://127.0.0.1:*"}, allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH, RequestMethod.DELETE, RequestMethod.OPTIONS})
 @RequiredArgsConstructor
 public class UsuarioController {
 
@@ -37,6 +39,18 @@ public class UsuarioController {
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioResponseDTO> atualizar(@PathVariable String id, @RequestBody @Valid UsuarioRequestDTO dto) {
         return ResponseEntity.ok(service.atualizar(id, dto));
+    }
+
+    @PatchMapping("/{id}/senha")
+    public ResponseEntity<String> alterarSenha(@PathVariable String id, @RequestBody Map<String, String> body) {
+        service.alterarSenha(id, body.get("senha"));
+        return ResponseEntity.ok("Senha alterada com sucesso");
+    }
+
+    @PatchMapping("/{id}/cep")
+    public ResponseEntity<String> alterarCep(@PathVariable String id, @RequestBody Map<String, String> body) {
+        service.alterarCep(id, body.get("cep"));
+        return ResponseEntity.ok("CEP alterado com sucesso");
     }
 
     @DeleteMapping("/{id}")

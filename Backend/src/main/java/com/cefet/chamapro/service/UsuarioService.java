@@ -99,6 +99,11 @@ public class UsuarioService {
         repository.deleteById(id);
     }
 
+    private Usuario buscarUsuarioPorId(String id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+    }
+
     private UsuarioResponseDTO toResponseDTO(Usuario usuario) {
         return new UsuarioResponseDTO(
                 usuario.getId(),
@@ -106,5 +111,26 @@ public class UsuarioService {
                 usuario.getDtNasc(),
                 usuario.getDtConta(),
                 usuario.getNota());
+    }
+
+    public void alterarSenha(String id, String senha) {
+        if (senha == null || senha.isBlank()) {
+            throw new IllegalArgumentException("Senha é obrigatória");
+        }
+        Usuario usuario = buscarUsuarioPorId(id);
+        usuario.setSenha(senha);
+        repository.save(usuario);
+    }
+
+    public void alterarCep(String id, String cep) {
+        if (cep == null || cep.isBlank()) {
+            throw new IllegalArgumentException("CEP é obrigatório");
+        }
+        List<Endereco> enderecos = enderecoRepository.findByUsuarioId(id);
+        if (enderecos.isEmpty()) {
+            throw new EntityNotFoundException("Endereço do usuário não encontrado");
+        }
+        enderecos.forEach(endereco -> endereco.setCep(cep));
+        enderecoRepository.saveAll(enderecos);
     }
 }

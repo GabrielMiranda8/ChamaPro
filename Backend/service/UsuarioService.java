@@ -3,7 +3,9 @@ package com.cefet.chamapro.service;
 import com.cefet.chamapro.dto.UsuarioRequestDTO;
 import com.cefet.chamapro.dto.UsuarioResponseDTO;
 import com.cefet.chamapro.entity.Usuario;
+import com.cefet.chamapro.entity.Endereco;
 import com.cefet.chamapro.repository.UsuarioRepository;
+import com.cefet.chamapro.repository.EnderecoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.List;
 public class UsuarioService {
 
     private final UsuarioRepository repository;
+    private final EnderecoRepository enderecoRepository;
 
     public UsuarioResponseDTO criar(UsuarioRequestDTO dto) {
         if (repository.existsByEmail(dto.email())) {
@@ -73,6 +76,32 @@ public class UsuarioService {
             throw new EntityNotFoundException("Usuário não encontrado");
         }
         repository.deleteById(id);
+    }
+
+    private Usuario buscarUsuarioPorId(String id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+    }
+
+    public void alterarSenha(String id, String senha) {
+        if (senha == null || senha.isBlank()) {
+            throw new IllegalArgumentException("Senha é obrigatória");
+        }
+        Usuario usuario = buscarUsuarioPorId(id);
+        usuario.setSenha(senha);
+        repository.save(usuario);
+    }
+
+    public void alterarCep(String id, String cep) {
+        if (cep == null || cep.isBlank()) {
+            throw new IllegalArgumentException("CEP é obrigatório");
+        }
+        List<Endereco> enderecos = enderecoRepository.findByUsuarioId(id);
+        if (enderecos.isEmpty()) {
+            throw new EntityNotFoundException("Endereço do usuário não encontrado");
+        }
+        enderecos.forEach(endereco -> endereco.setCep(cep));
+        enderecoRepository.saveAll(enderecos);
     }
 
     private UsuarioResponseDTO toResponseDTO(Usuario usuario) {
