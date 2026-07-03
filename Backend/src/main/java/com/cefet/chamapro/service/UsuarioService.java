@@ -14,6 +14,7 @@ import com.cefet.chamapro.entity.Usuario;
 import com.cefet.chamapro.repository.EnderecoRepository;
 import com.cefet.chamapro.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class UsuarioService {
     private final UsuarioRepository repository;
     private final EnderecoRepository enderecoRepository;
 
+    @Transactional
     public UsuarioResponseDTO criar(UsuarioRequestDTO dto) {
         if (repository.existsByEmail(dto.email())) {
             throw new IllegalArgumentException("Email já cadastrado");
@@ -35,7 +37,6 @@ public class UsuarioService {
             throw new IllegalArgumentException("CPF já cadastrado");
         }
 
-        
         Usuario usuario = switch (dto.tipo()) {
             case "PROFISSIONAL" -> new Profissional();
             case "CLIENTE" -> new Cliente();
@@ -53,16 +54,22 @@ public class UsuarioService {
 
         Usuario salvo = repository.save(usuario);
 
-        
         if (dto.endereco() != null) {
-            Endereco endereco = dto.endereco();
+            EnderecoRequestDTO enderecoDto = dto.endereco();
+            Endereco endereco = new Endereco();
+            endereco.setCep(enderecoDto.getCep());
+            endereco.setRua(enderecoDto.getRua());
+            endereco.setBairro(enderecoDto.getBairro());
+            endereco.setCidade(enderecoDto.getCidade());
+            endereco.setNumero(enderecoDto.getNumero());
+            endereco.setComplemento(enderecoDto.getComplemento());
+            endereco.setReferencia(enderecoDto.getReferencia());
             endereco.setUsuario(salvo);
             enderecoRepository.save(endereco);
         }
 
         return toResponseDTO(salvo);
     }
-
 
     public UsuarioResponseDTO buscarPorId(String id) {
         Usuario usuario = repository.findById(id)

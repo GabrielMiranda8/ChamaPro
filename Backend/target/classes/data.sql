@@ -65,3 +65,8 @@ INSERT IGNORE INTO tb_endereco (id, cep, rua, bairro, cidade, numero, complement
 ('e5555555-0000-0000-0000-000000000004', '35170-100', 'Rua Sete de Setembro', 'São Cristóvão', 'Coronel Fabriciano', 305, 'Casa 2',   'Portão azul',               'c3333333-0000-0000-0000-000000000001'),
 ('e5555555-0000-0000-0000-000000000005', '35180-200', 'Rua José Freire',      'Iguaçu',        'Timóteo',             77, NULL,       NULL,                        'c3333333-0000-0000-0000-000000000002'),
 ('e5555555-0000-0000-0000-000000000006', '35172-300', 'Rua Ouro Preto',       'Cariru',        'Ipatinga',           212, 'Apto 301', 'Prédio verde',              'c3333333-0000-0000-0000-000000000003');
+
+-- ── Caracteristica: características selecionáveis no cadastro ────────
+INSERT IGNORE INTO tb_caracteristica (id, nome, descricao) VALUES
+('f2222222-0000-0000-0000-000000000001', 'Dificuldade para escutar', 'Tem alguma dificuldade para escutar'),
+('f2222222-0000-0000-0000-000000000002', 'Baixa visibilidade', 'Tem alguma dificuldade para enxergar');

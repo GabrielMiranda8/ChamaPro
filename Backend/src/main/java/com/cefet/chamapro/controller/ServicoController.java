@@ -25,7 +25,6 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/servicos")
-@CrossOrigin(origins = {"http://localhost:8100", "http://localhost:4200"})
 @Tag(name = "Servico")
 
 public class ServicoController {

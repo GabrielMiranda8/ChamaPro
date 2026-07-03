@@ -30,7 +30,7 @@ public record UsuarioRequestDTO(
 
         Double nota,
 
-        Endereco endereco,
+        EnderecoRequestDTO endereco,
 
         @NotBlank(message = "Tipo é obrigatório")
         String tipo
