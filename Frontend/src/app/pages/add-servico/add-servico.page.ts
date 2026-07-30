@@ -43,8 +43,13 @@ export class AddServicoPage implements OnInit {
   servicosSelecionados: ServicoModel[] = [];
   // caracsSelecionadas: CaracteristicaModel[] = []; // TODO: ainda não implementado no backend
 
-  // Exigidos pelo backend (ProfissionalServico.preco / tempoCarreira, nullable = false)
-  preco: number | null = null;
+  // Cada serviço selecionado tem seu próprio preço por hora — o mesmo
+  // profissional pode cobrar valores diferentes dependendo do serviço.
+  // Chave: id do serviço, valor: preço digitado (null enquanto vazio).
+  precos: Record<string, number | null> = {};
+
+  // Exigido pelo backend (ProfissionalServico.tempoCarreira, nullable = false).
+  // Esse é único por profissional (não por serviço).
   tempoCarreira = ''; // formato yyyy-mm-dd (input type="date")
 
   carregando = true;
@@ -93,8 +98,18 @@ export class AddServicoPage implements OnInit {
         this.todosServicos = servicos;
         // this.todasCaracteristicas = caracteristicas; // TODO: ainda não implementado no backend
 
-        const idsJaSelecionados = new Set(meusServicos.map(ms => ms.idServico));
-        this.servicosSelecionados = this.todosServicos.filter(s => idsJaSelecionados.has(s.id));
+        // Pré-seleciona os serviços já cadastrados antes e recupera o preço
+        // e o tempo de carreira que o profissional já tinha informado.
+        const precoPorServico = new Map(meusServicos.map(ms => [ms.idServico, ms.preco]));
+        this.servicosSelecionados = this.todosServicos.filter(s => precoPorServico.has(s.id));
+        for (const servico of this.servicosSelecionados) {
+          this.precos[servico.id] = precoPorServico.get(servico.id) ?? null;
+        }
+
+        const primeiroComTempo = meusServicos.find(ms => ms.tempoCarreira);
+        if (primeiroComTempo) {
+          this.tempoCarreira = new Date(primeiroComTempo.tempoCarreira).toISOString().split('T')[0];
+        }
 
         this.carregando = false;
       },
@@ -114,8 +129,10 @@ export class AddServicoPage implements OnInit {
   toggleServico(servico: ServicoModel) {
     if (this.isServicoSelecionado(servico)) {
       this.servicosSelecionados = this.servicosSelecionados.filter(s => s.id !== servico.id);
+      delete this.precos[servico.id];
     } else {
       this.servicosSelecionados.push(servico);
+      this.precos[servico.id] = null;
     }
   }
 
@@ -159,8 +176,11 @@ export class AddServicoPage implements OnInit {
       return;
     }
 
-    if (this.preco === null || this.preco <= 0) {
-      await this.exibirMensagem('Informe o preço por hora.');
+    const servicoSemPreco = this.servicosSelecionados.find(
+      s => this.precos[s.id] === null || this.precos[s.id] === undefined || this.precos[s.id]! <= 0,
+    );
+    if (servicoSemPreco) {
+      await this.exibirMensagem(`Informe o preço por hora de "${servicoSemPreco.nome}".`);
       return;
     }
 
@@ -175,7 +195,7 @@ export class AddServicoPage implements OnInit {
       const ps = new ProfissionalServicoModel();
       ps.idServico = s.id;
       ps.idProfissional = this.usuarioId;
-      ps.preco = this.preco!;
+      ps.preco = this.precos[s.id]!;
       ps.tempoCarreira = new Date(this.tempoCarreira); // input devolve string yyyy-mm-dd; model espera Date
       return this.profissionalServicoService.salvar(ps);
     });

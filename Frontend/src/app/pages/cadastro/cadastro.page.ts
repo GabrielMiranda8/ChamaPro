@@ -2,6 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import {
   IonContent, IonLabel, IonInput, IonButton, IonIcon,
   IonToggle, IonSelect, IonSelectOption, ToastController,
@@ -11,11 +12,15 @@ import {
   arrowBackOutline, eyeOutline, eyeOffOutline,
   calendarOutline, briefcaseOutline,
 } from 'ionicons/icons';
-import { NavController } from '@ionic/angular';
-import { UsuarioModel } from 'src/app/model/usuario.model';
+
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { CaracteristicaModel } from 'src/app/model/caracteristica.model';
 import { CaracteristicaService } from 'src/app/services/caracteristica.service';
+import { UsuarioModel } from 'src/app/model/usuario.model';
+import { CaracteristicaModel } from 'src/app/model/caracteristica.model';
+import { CaracteristicaUsuarioService } from 'src/app/services/caracteristica-usuario.service';
+import { CaracteristicaUsuarioModel } from 'src/app/model/caracteristica-usuario.model';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-cadastro',
@@ -39,6 +44,7 @@ export class CadastroPage implements OnInit {
     private formBuilder: FormBuilder,
     private usuarioService: UsuarioService,
     private caracteristicaService: CaracteristicaService,
+    private caracteristicaUsuarioService: CaracteristicaUsuarioService,
     private toastController: ToastController,
     private navController: NavController,
   ) {
@@ -52,7 +58,8 @@ export class CadastroPage implements OnInit {
       dtNasc: ['', Validators.required],
       cpf: ['', [Validators.required, Validators.minLength(11)]],
       cep: ['', Validators.required],
-      caracteristicas: [[]],
+      caracteristicas: [[]],       // características que o usuário tem
+      caracteristicasLida: [[]],   // características que o profissional sabe atender
       isProfissional: [false],
     });
   }
@@ -71,6 +78,10 @@ export class CadastroPage implements OnInit {
 
   toggleSenha() { this.showSenha.update(v => !v); }
   toggleConfirmarSenha() { this.showConfirmarSenha.update(v => !v); }
+
+  // ─── Cadastro ───────────────────────────────────────────────────────────────
+  // Validação manual (além dos Validators do FormGroup) porque campos como
+  // data, CPF e CEP têm máscara própria e precisam de checagem específica.
 
   async salvar() {
     const v = this.formGroup.value;
@@ -97,7 +108,7 @@ export class CadastroPage implements OnInit {
       await this.exibirMensagem('Informe um CEP válido.'); return;
     }
 
-  
+    // O input usa máscara dd/mm/aaaa, mas o backend espera um Date real.
     const partes = v.dtNasc.split('/');
     const dtNascDate = new Date(
       Number(partes[2]),  // ano
@@ -112,21 +123,30 @@ export class CadastroPage implements OnInit {
     usuario.cpf = v.cpf;
     usuario.dtNasc = dtNascDate;
     usuario.endereco.cep = v.cep;
-    usuario.caracteristicas = v.caracteristicas ?? [];
     usuario.tipo = v.isProfissional ? 'PROFISSIONAL' : 'CLIENTE';
+    // As características não vão dentro do usuário: cada uma vira um
+    // registro próprio (CaracteristicaUsuario) salvo depois, em salvarCaracteristicas().
 
     this.usuarioService.salvar(usuario).subscribe({
       next: async (usuarioSalvo) => {
+        // Se marcou "sou profissional", faz uma segunda chamada para ativar
+        // o perfil profissional e leva direto para cadastrar os serviços.
         if (v.isProfissional) {
           this.usuarioService.criarProfissional(usuarioSalvo.id).subscribe({
-            next: () => this.navController.navigateForward(`/add-servico/${usuarioSalvo.id}`),
+            next: async () => {
+              await this.salvarCaracteristicas(usuarioSalvo.id, v);
+              this.navController.navigateForward(`/add-servico/${usuarioSalvo.id}`);
+            },
             error: async () => {
               await this.exibirMensagem('Conta criada, porém não foi possível ativar perfil profissional.');
+              await this.salvarCaracteristicas(usuarioSalvo.id, v);
               this.navController.navigateForward(`/add-servico/${usuarioSalvo.id}`);
             }
           });
           return;
         }
+
+        await this.salvarCaracteristicas(usuarioSalvo.id, v);
         await this.exibirMensagem('Conta criada com sucesso!');
         this.navController.navigateRoot('/login');
       },
@@ -134,6 +154,42 @@ export class CadastroPage implements OnInit {
         console.log('Erro ao salvar:', err);
         this.exibirMensagem('Erro ao criar conta. Verifique os dados.');
       }
+    });
+  }
+
+  // Junta as duas listas do formulário (o que o usuário "tem" e o que o
+  // profissional "sabe lidar") num único registro por característica, já
+  // que tem/lida moram na mesma linha de CaracteristicaUsuario. Se a mesma
+  // característica aparecer nas duas listas, os dois campos ficam true.
+  private async salvarCaracteristicas(idUsuario: string, v: any): Promise<void> {
+    const tenho: CaracteristicaModel[] = v.caracteristicas ?? [];
+    const seiLidar: CaracteristicaModel[] = v.caracteristicasLida ?? [];
+
+    const porId = new Map<string, { nome: string; tem: boolean; lida: boolean }>();
+    for (const c of tenho) {
+      porId.set(c.id, { nome: c.nome, tem: true, lida: false });
+    }
+    for (const c of seiLidar) {
+      const atual = porId.get(c.id) ?? { nome: c.nome, tem: false, lida: false };
+      atual.lida = true;
+      porId.set(c.id, atual);
+    }
+
+    if (porId.size === 0) return;
+
+    const chamadas = Array.from(porId.entries()).map(([idCaracteristica, dados]) => {
+      const cu = new CaracteristicaUsuarioModel();
+      cu.idUsuario = idUsuario;
+      cu.idCaracteristica = idCaracteristica;
+      cu.tem = dados.tem;
+      cu.lida = dados.lida;
+      return this.caracteristicaUsuarioService.salvar(cu);
+    });
+
+    await new Promise<void>((resolve) => {
+      forkJoin(chamadas).pipe(
+        catchError(() => of(null)), // não trava o cadastro se uma característica falhar
+      ).subscribe(() => resolve());
     });
   }
 
@@ -146,16 +202,20 @@ export class CadastroPage implements OnInit {
     toast.present();
   }
 
-  mascaraData(event: any) {
-    let valor = event.target.value;
+  // ─── Máscaras de input ──────────────────────────────────────────────────────
+  // Cada uma remove tudo que não é dígito e reinsere os separadores enquanto
+  // o usuário digita (dd/mm/aaaa, xxx.xxx.xxx-xx, xxxxx-xxx).
+
+  mascaraData(event: Event) {
+    let valor = (event.target as HTMLInputElement).value;
     valor = valor.replace(/\D/g, '');
     valor = valor.replace(/^(\d{2})(\d)/, '$1/$2');
     valor = valor.replace(/^(\d{2})\/(\d{2})(\d)/, '$1/$2/$3');
     this.formGroup.patchValue({ dtNasc: valor }, { emitEvent: false });
   }
 
-  mascaraCpf(event: any) {
-    let valor = event.target.value;
+  mascaraCpf(event: Event) {
+    let valor = (event.target as HTMLInputElement).value;
     valor = valor.replace(/\D/g, '');
     valor = valor.replace(/^(\d{3})(\d)/, '$1.$2');
     valor = valor.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
@@ -163,13 +223,14 @@ export class CadastroPage implements OnInit {
     this.formGroup.patchValue({ cpf: valor }, { emitEvent: false });
   }
 
-  mascaraCep(event: any) {
-    let valor = event.target.value;
+  mascaraCep(event: Event) {
+    let valor = (event.target as HTMLInputElement).value;
     valor = valor.replace(/\D/g, '');
     valor = valor.replace(/^(\d{5})(\d)/, '$1-$2');
     this.formGroup.patchValue({ cep: valor }, { emitEvent: false });
   }
 
+  // Confere se a data digitada é válida (ex: rejeita 31/02/2024) e não está no futuro.
   validarData(data: string): boolean {
     const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
     if (!regex.test(data)) return false;

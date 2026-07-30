@@ -39,7 +39,7 @@ export class ProfissionalPopupComponent implements OnInit {
   @Input() cliente!: UsuarioModel;
 
   // Valores calculados/fixos exibidos no popup
-  totalServicos = 312;         // Futuramente virá do backend
+  totalServicos = 0;         // Futuramente virá do backend
   disponibilidade = 'Seg a Sex, 8h – 18h'; // Futuramente virá do perfil
 
   constructor(private modalCtrl: ModalController) {

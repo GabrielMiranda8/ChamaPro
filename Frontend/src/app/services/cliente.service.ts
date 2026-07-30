@@ -1,25 +1,48 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { ClienteModel } from '../model/cliente.model';
-import { UsuarioService } from './usuario.service';
+import { TokenService } from './token.service';
 
+// Endpoint próprio /clientes no backend (ClienteController).
+// Cadastro em si é sempre via POST /usuarios; aqui só o id do usuário
+// já criado é enviado, para "ativar" o perfil de cliente (mesma ideia
+// do POST /profissionais em usuario.service.ts).
 @Injectable({
   providedIn: 'root',
 })
 export class ClienteService {
-  constructor(private usuarioService: UsuarioService) {
+  private readonly API_URL = `${environment.apiUrl}/clientes`;
 
-   }
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  listar(): ClienteModel[] {
-    return this.usuarioService.listar().filter(u => u.tipo === 'CLIENTE') as ClienteModel[];
+  listar(): Observable<ClienteModel[]> {
+    return this.http.get<ClienteModel[]>(
+      this.API_URL,
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() },
+    );
   }
 
-  buscarPorId(id: string): ClienteModel {
-    return this.usuarioService.buscarPorId(id) as ClienteModel;
+  buscarPorId(id: string): Observable<ClienteModel> {
+    return this.http.get<ClienteModel>(
+      `${this.API_URL}/${id}`,
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() },
+    );
   }
 
-  salvar(cliente: ClienteModel): ClienteModel {
-    cliente.tipo = 'CLIENTE';
-    return this.usuarioService.salvar(cliente) as ClienteModel;
+  criar(id: string): Observable<ClienteModel> {
+    return this.http.post<ClienteModel>(
+      this.API_URL,
+      { id },
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() },
+    );
+  }
+
+  excluir(id: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.API_URL}/${id}`,
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() },
+    );
   }
 }

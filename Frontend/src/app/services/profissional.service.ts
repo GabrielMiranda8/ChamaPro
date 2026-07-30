@@ -1,44 +1,55 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { ProfissionalModel } from '../model/profissional.model';
-import { UsuarioService } from './usuario.service';
+import { TokenService } from './token.service';
 
+// Endpoint próprio /profissionais no backend (ProfissionalController).
+// O ProfissionalResponseDTO só traz campos não sensíveis (nome, dtNasc,
+// dtConta, nota, tipo) — não o objeto UsuarioModel completo.
 @Injectable({
   providedIn: 'root',
 })
 export class ProfissionalService {
-    constructor(private usuarioService: UsuarioService) {
+  private readonly API_URL = `${environment.apiUrl}/profissionais`;
 
-    }
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  listar(): ProfissionalModel[] {
-    this.usuarioService.listar().subscribe({
-      next: (profissionais) => {
-        return profissionais.filter(u => u.tipo === 'PROFISSIONAL') as ProfissionalModel[];
-      }
-    });
-    let p!: ProfissionalModel[];
-
-    return p;
+  listar(): Observable<ProfissionalModel[]> {
+    return this.http.get<ProfissionalModel[]>(
+      this.API_URL,
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() },
+    );
   }
 
-  buscarPorId(id: string): ProfissionalModel {
-    this.usuarioService.buscarPorId(id).subscribe({
-      next: (profissional) => {
-        return profissional  as ProfissionalModel;
-      }
-    });
-
-    return new ProfissionalModel();
+  buscarPorId(id: string): Observable<ProfissionalModel> {
+    return this.http.get<ProfissionalModel>(
+      `${this.API_URL}/${id}`,
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() },
+    );
   }
 
-  salvar(profissional: ProfissionalModel): ProfissionalModel {
-    profissional.tipo = 'PROFISSIONAL';
-    this.usuarioService.salvar(profissional).subscribe({
-      next: (profissional) => {
-        return profissional  as ProfissionalModel;
-      }
-    });
-    let p!: ProfissionalModel;
-    return p;
+  criar(id: string): Observable<ProfissionalModel> {
+    return this.http.post<ProfissionalModel>(
+      this.API_URL,
+      { id },
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() },
+    );
+  }
+
+  atualizar(id: string): Observable<ProfissionalModel> {
+    return this.http.put<ProfissionalModel>(
+      `${this.API_URL}/${id}`,
+      { id },
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() },
+    );
+  }
+
+  excluir(id: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.API_URL}/${id}`,
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() },
+    );
   }
 }

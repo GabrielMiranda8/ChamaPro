@@ -87,7 +87,7 @@
 
       <!-- Acessibilidade -->
       <div class="field-group">
-        <ion-label class="field-label">Acessibilidade</ion-label>
+        <ion-label class="field-label">Características</ion-label>
         <ion-select
           class="input select-input"
           okText="Confirmar"
@@ -114,6 +114,23 @@
         </div>
         <ion-toggle formControlName="isProfissional" class="profissional-toggle"></ion-toggle>
       </div>
+
+      @if (formGroup.value.isProfissional) {
+        <div class="field-group">
+          <ion-label class="field-label">Sabe atender clientes com quais características?</ion-label>
+          <ion-select
+            class="input select-input"
+            okText="Confirmar"
+            cancelText="Cancelar"
+            placeholder="Selecione as que você sabe atender"
+            [multiple]="true"
+            formControlName="caracteristicasLida">
+            @for (carac of todasCaracteristicas; track carac.id) {
+              <ion-select-option [value]="carac">{{ carac.nome }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+      }
 
       <!-- Submit -->
       <ion-button type="submit" expand="block" class="submit-btn">

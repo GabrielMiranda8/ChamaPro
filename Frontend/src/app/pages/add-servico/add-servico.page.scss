@@ -217,6 +217,24 @@ $branco: #ffffff;
   color: $texto;
 }
 
+// ── Preço por serviço (um valor por hora para cada especialidade) ──
+.service-price-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.service-price-item {
+  background: $branco;
+  border: 1.5px solid $borda;
+  border-radius: 14px;
+  padding: 14px;
+
+  .field-label {
+    margin-bottom: 9px;
+  }
+}
+
 // ── Ações ─────────────────────────────────────────────────
 .actions {
   margin-top: auto;

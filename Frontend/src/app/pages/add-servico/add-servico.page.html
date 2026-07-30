@@ -48,29 +48,40 @@
         }
       </div>
 
-      <!-- Preço e tempo de experiência (exigidos pelo backend) -->
+      <!-- Preço por serviço: cada especialidade escolhida tem seu próprio valor por hora -->
       <div class="section">
-        <h2 class="section-title">Preço e experiência</h2>
+        <h2 class="section-title">Preço por serviço</h2>
 
-        <div class="field-row">
-          <div class="field-group">
-            <label class="field-label">Preço por hora (R$)</label>
-            <ion-input
-              class="field-input"
-              type="number"
-              placeholder="80"
-              [(ngModel)]="preco">
-            </ion-input>
+        @if (servicosSelecionados.length === 0) {
+          <p class="empty-hint">Selecione ao menos uma especialidade acima para definir o preço.</p>
+        } @else {
+          <div class="service-price-list">
+            @for (servico of servicosSelecionados; track servico.id) {
+              <div class="service-price-item">
+                <label class="field-label">{{ servico.nome }} — preço por hora (R$)</label>
+                <ion-input
+                  class="field-input"
+                  type="number"
+                  placeholder="80"
+                  [(ngModel)]="precos[servico.id]">
+                </ion-input>
+              </div>
+            }
           </div>
+        }
+      </div>
 
-          <div class="field-group">
-            <label class="field-label">Atuando desde</label>
-            <ion-input
-              class="field-input"
-              type="date"
-              [(ngModel)]="tempoCarreira">
-            </ion-input>
-          </div>
+      <!-- Tempo de experiência (exigido pelo backend) -->
+      <div class="section">
+        <h2 class="section-title">Experiência</h2>
+
+        <div class="field-group">
+          <label class="field-label">Atuando desde</label>
+          <ion-input
+            class="field-input"
+            type="date"
+            [(ngModel)]="tempoCarreira">
+          </ion-input>
         </div>
       </div>
 
