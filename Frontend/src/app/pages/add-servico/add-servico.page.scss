@@ -235,6 +235,46 @@ $branco: #ffffff;
   }
 }
 
+.service-price-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+
+  .field-label {
+    flex: 1;
+  }
+}
+
+.remove-servico-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: $texto-sec;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  padding: 0;
+
+  ion-icon {
+    font-size: 18px;
+  }
+
+  &:active {
+    background: rgba(232, 99, 42, 0.1);
+    color: $laranja;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
 // ── Ações ─────────────────────────────────────────────────
 .actions {
   margin-top: auto;

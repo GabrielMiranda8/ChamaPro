@@ -8,9 +8,9 @@ import { addIcons } from 'ionicons';
 import {
   briefcaseOutline, arrowForwardOutline, chevronBackOutline,
   handLeftOutline, eyeOutline, earOutline, accessibilityOutline,
-  bodyOutline, micOutline, chatbubbleOutline,
+  bodyOutline, micOutline, chatbubbleOutline, trashOutline,
 } from 'ionicons/icons';
-import { NavController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -48,25 +48,32 @@ export class AddServicoPage implements OnInit {
   // Chave: id do serviço, valor: preço digitado (null enquanto vazio).
   precos: Record<string, number | null> = {};
 
+  // Ids dos serviços que já existem salvos no backend (vieram do
+  // carregarDados). Usado pra saber se "excluir" precisa chamar a API
+  // ou só desmarcar localmente um serviço que ainda nem foi salvo.
+  idsSalvos = new Set<string>();
+
   // Exigido pelo backend (ProfissionalServico.tempoCarreira, nullable = false).
   // Esse é único por profissional (não por serviço).
   tempoCarreira = ''; // formato yyyy-mm-dd (input type="date")
 
   carregando = true;
   salvando = false;
+  excluindo: Record<string, boolean> = {};
 
   constructor(
     private servicoService: ServicoService,
     // private caracteristicaService: CaracteristicaService, // TODO: ainda não implementado no backend
     private profissionalServicoService: ProfissionalServicoService,
     private toastController: ToastController,
+    private alertController: AlertController,
     private navController: NavController,
     private tokenService: TokenService,
   ) {
     addIcons({
       briefcaseOutline, arrowForwardOutline, chevronBackOutline,
       handLeftOutline, eyeOutline, earOutline, accessibilityOutline,
-      bodyOutline, micOutline, chatbubbleOutline,
+      bodyOutline, micOutline, chatbubbleOutline, trashOutline,
     });
   }
 
@@ -102,6 +109,7 @@ export class AddServicoPage implements OnInit {
         // e o tempo de carreira que o profissional já tinha informado.
         const precoPorServico = new Map(meusServicos.map(ms => [ms.idServico, ms.preco]));
         this.servicosSelecionados = this.todosServicos.filter(s => precoPorServico.has(s.id));
+        this.idsSalvos = new Set(precoPorServico.keys());
         for (const servico of this.servicosSelecionados) {
           this.precos[servico.id] = precoPorServico.get(servico.id) ?? null;
         }
@@ -128,12 +136,55 @@ export class AddServicoPage implements OnInit {
 
   toggleServico(servico: ServicoModel) {
     if (this.isServicoSelecionado(servico)) {
+      // Serviço já salvo no backend: desmarcar o chip sozinho deixaria a
+      // tela e o banco dessincronizados (ele voltaria ao recarregar a
+      // página). Por isso passa pelo mesmo fluxo de exclusão com confirmação.
+      if (this.idsSalvos.has(servico.id)) {
+        this.excluirServico(servico);
+        return;
+      }
       this.servicosSelecionados = this.servicosSelecionados.filter(s => s.id !== servico.id);
       delete this.precos[servico.id];
     } else {
       this.servicosSelecionados.push(servico);
       this.precos[servico.id] = null;
     }
+  }
+
+  // ── Exclusão de serviço já salvo ──────────────────────────
+
+  async excluirServico(servico: ServicoModel) {
+    const alert = await this.alertController.create({
+      header: 'Remover serviço',
+      message: `Tem certeza que deseja remover "${servico.nome}" da sua lista de especialidades?`,
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Remover',
+          role: 'destructive',
+          handler: () => this.confirmarExclusao(servico),
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  private confirmarExclusao(servico: ServicoModel) {
+    this.excluindo[servico.id] = true;
+
+    this.profissionalServicoService.excluirPorProfissionalServico(this.usuarioId, servico.id).subscribe({
+      next: () => {
+        this.servicosSelecionados = this.servicosSelecionados.filter(s => s.id !== servico.id);
+        delete this.precos[servico.id];
+        this.idsSalvos.delete(servico.id);
+        delete this.excluindo[servico.id];
+        this.exibirMensagem(`"${servico.nome}" removido com sucesso.`);
+      },
+      error: () => {
+        delete this.excluindo[servico.id];
+        this.exibirMensagem(`Não foi possível remover "${servico.nome}". Tente novamente.`);
+      },
+    });
   }
 
   // Removido: adicionarOutra() permitia texto livre, o que gerava serviços sem

@@ -69,4 +69,11 @@ export class ProfissionalServicoService {
       { headers: this.tokenService.gerarCabecalhoAutenticacao() }
     );
   }
+
+  excluirPorProfissionalServico(idProfissional: string, idServico: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.API_URL}/profissional/${idProfissional}/servico/${idServico}`,
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() }
+    );
+  }
 }

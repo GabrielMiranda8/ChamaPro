@@ -58,7 +58,16 @@
           <div class="service-price-list">
             @for (servico of servicosSelecionados; track servico.id) {
               <div class="service-price-item">
-                <label class="field-label">{{ servico.nome }} — preço por hora (R$)</label>
+                <div class="service-price-header">
+                  <label class="field-label">{{ servico.nome }} — preço por hora (R$)</label>
+                  <button
+                    type="button"
+                    class="remove-servico-btn"
+                    [disabled]="excluindo[servico.id]"
+                    (click)="excluirServico(servico)">
+                    <ion-icon name="trash-outline"></ion-icon>
+                  </button>
+                </div>
                 <ion-input
                   class="field-input"
                   type="number"
