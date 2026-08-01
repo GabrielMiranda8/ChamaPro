@@ -38,7 +38,7 @@ public class CaracteristicaUsuario {
     private Caracteristica caracteristica;
 
     @ManyToOne
-    @JoinColumn(name = "profissional_id", nullable = false)
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     
