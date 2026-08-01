@@ -29,7 +29,12 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOriginPatterns("http://localhost:*", "http://127.0.0.1:*")
+                        .allowedOriginPatterns(
+                                "http://localhost:*",
+                                "http://127.0.0.1:*",
+                                "https://localhost",
+                                "capacitor://localhost",
+                                "ionic://localhost")
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .exposedHeaders("Authorization")
@@ -44,6 +49,9 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedOriginPattern("http://localhost:*");
         config.addAllowedOriginPattern("http://127.0.0.1:*");
+        config.addAllowedOriginPattern("https://localhost");
+        config.addAllowedOriginPattern("capacitor://localhost");
+        config.addAllowedOriginPattern("ionic://localhost");
         config.addAllowedHeader("*");
         config.addAllowedMethod("GET");
         config.addAllowedMethod("POST");
@@ -71,7 +79,12 @@ public class CorsConfig {
                 HttpServletResponse res = (HttpServletResponse) response;
 
                 String origin = req.getHeader("Origin");
-                if (origin != null && (origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:"))) {
+                if (origin != null && (
+                        origin.startsWith("http://localhost:")
+                        || origin.startsWith("http://127.0.0.1:")
+                        || origin.equals("https://localhost")
+                        || origin.equals("capacitor://localhost")
+                        || origin.equals("ionic://localhost"))) {
                     res.setHeader("Access-Control-Allow-Origin", origin);
                     res.setHeader("Vary", "Origin");
                     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
