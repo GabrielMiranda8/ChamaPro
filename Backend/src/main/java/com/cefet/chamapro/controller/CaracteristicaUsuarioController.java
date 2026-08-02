@@ -58,7 +58,7 @@ public class CaracteristicaUsuarioController {
     }
 
     @PostMapping
-    @Operation(summary = "Cadastrar caracteristica de ausuario")
+    @Operation(summary = "Cadastrar caracteristica de usuario")
     public ResponseEntity<CaracteristicaUsuarioResponseDTO> inserir(@Valid @RequestBody CaracteristicaUsuarioRequestDTO cuRequestDTO) {
     	CaracteristicaUsuarioResponseDTO cuResponseDTO = cuService.inserir(cuRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(cuResponseDTO);
