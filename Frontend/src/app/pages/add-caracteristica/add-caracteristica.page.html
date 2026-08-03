@@ -1,4 +1,4 @@
-<ion-content [fullscreen]="true" class="minhas-caracteristicas-content">
+<ion-content [fullscreen]="true" class="add-caracteristica-content">
   <div class="page-shell">
 
     <div class="topbar">
@@ -33,7 +33,7 @@
           <ion-icon name="person-outline"></ion-icon>
           <h2 class="section-title">Você tem estas características?</h2>
         </div>
-        <p class="section-hint">Toque para marcar ou desmarcar.</p>
+        <p class="section-hint">Toque para marcar ou desmarcar. Não esqueça de salvar depois.</p>
 
         <div class="chips-grid">
           @for (carac of todasCaracteristicas; track carac.id) {
@@ -41,7 +41,6 @@
               type="button"
               class="chip"
               [class.chip--ativo]="tem(carac)"
-              [disabled]="processando[carac.id]"
               (click)="toggleTem(carac)">
               {{ carac.nome }}
             </button>
@@ -68,7 +67,6 @@
                 type="button"
                 class="chip chip--lida"
                 [class.chip--ativo]="sabeAtender(carac)"
-                [disabled]="processando[carac.id]"
                 (click)="toggleSabeAtender(carac)">
                 {{ carac.nome }}
               </button>
@@ -76,6 +74,24 @@
           </div>
         </div>
       }
+
+      <!-- Ações -->
+      <div class="actions">
+        <ion-button
+          expand="block"
+          class="continuar-btn"
+          [disabled]="salvando || !temAlteracoesPendentes"
+          (click)="salvar()">
+          @if (salvando) {
+            <ion-spinner name="crescent"></ion-spinner>
+          } @else if (temAlteracoesPendentes) {
+            Salvar alterações
+            <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+          } @else {
+            Tudo salvo
+          }
+        </ion-button>
+      </div>
 
     }
 

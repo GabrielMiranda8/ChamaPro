@@ -68,14 +68,16 @@ export const routes: Routes = [
     path: 'add-servico',
     loadComponent: () => import('./pages/add-servico/add-servico.page').then(m => m.AddServicoPage)
   },
-
   {
-    path: '**',
-    redirectTo: 'login',
-  },  {
     path: 'add-caracteristica',
     loadComponent: () => import('./pages/add-caracteristica/add-caracteristica.page').then( m => m.AddCaracteristicaPage)
   },
+  
+  {
+    path: '**',
+    redirectTo: 'login',
+  },
+  
 
 
 

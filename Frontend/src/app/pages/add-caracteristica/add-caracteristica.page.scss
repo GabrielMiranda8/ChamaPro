@@ -11,7 +11,7 @@ $fundo: #F7F5F2;
 $branco: #ffffff;
 
 // ── Content ───────────────────────────────────────────────
-.minhas-caracteristicas-content {
+.add-caracteristica-content {
   --background: #{$fundo};
   --color: #{$texto};
   color-scheme: light;
@@ -193,5 +193,25 @@ $branco: #ffffff;
     background: $azul-light;
     border-color: $azul;
     color: $azul;
+  }
+}
+
+// ── Ações ─────────────────────────────────────────────────
+.actions {
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+.continuar-btn {
+  --background: #{$laranja};
+  --background-activated: #{$laranja-hover};
+  --border-radius: 14px;
+  --color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  height: 52px;
+
+  &::part(native) {
+    opacity: 1; // mantém o texto "Tudo salvo" legível mesmo com [disabled]
   }
 }
