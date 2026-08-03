@@ -78,6 +78,7 @@
       <ion-icon name="chevron-forward-outline"></ion-icon>
     </div>
 
+    @if (dados.tipo == "PROFISSIONAL"){
     <!-- Meus Serviços -->
     <div class="menu-item" routerLink="/add-servico">
       <div class="menu-left">
@@ -93,6 +94,7 @@
       <ion-icon name="chevron-forward-outline"></ion-icon>
     </div>
 
+    }
     <!-- Histórico -->
     <div class="menu-item">
       <div class="menu-left">
@@ -110,19 +112,19 @@
 
     <!-- Meus Serviços (apenas profissionais) -->
     @if (token.tipo === 'PROFISSIONAL') {
-      <div class="menu-item" routerLink="/add-servico">
-        <div class="menu-left">
+    <div class="menu-item" routerLink="/add-servico">
+      <div class="menu-left">
 
-          <div class="menu-icon">
-            <ion-icon name="briefcase-outline"></ion-icon>
-          </div>
-
-          <span>Meus Serviços</span>
-
+        <div class="menu-icon">
+          <ion-icon name="briefcase-outline"></ion-icon>
         </div>
 
-        <ion-icon name="chevron-forward-outline"></ion-icon>
+        <span>Meus Serviços</span>
+
       </div>
+
+      <ion-icon name="chevron-forward-outline"></ion-icon>
+    </div>
     }
 
     <!-- Agenda -->

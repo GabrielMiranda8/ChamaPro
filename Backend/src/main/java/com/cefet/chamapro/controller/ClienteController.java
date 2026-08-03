@@ -3,6 +3,8 @@ package com.cefet.chamapro.controller;
 import com.cefet.chamapro.dto.ClienteRequestDTO;
 import com.cefet.chamapro.dto.ClienteResponseDTO;
 import com.cefet.chamapro.service.ClienteService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/clientes")
+@Tag(name = "Cliente")
 @RequiredArgsConstructor
 public class ClienteController {
 
