@@ -1,0 +1,83 @@
+<ion-content [fullscreen]="true" class="minhas-caracteristicas-content">
+  <div class="page-shell">
+
+    <div class="topbar">
+      <button class="back-button" type="button" (click)="voltar()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+      <div>
+        <h1>Minhas Características</h1>
+        <p>Conte pra gente quem você é e como pode ajudar</p>
+      </div>
+    </div>
+
+    <section class="orange-card">
+      <div class="orange-icon">
+        <ion-icon name="accessibility-outline"></ion-icon>
+      </div>
+      <div>
+        <h2>Acessibilidade</h2>
+        <p>Isso ajuda o ChamaPro a te mostrar (ou te indicar) as pessoas certas.</p>
+      </div>
+    </section>
+
+    @if (carregando) {
+      <div class="ion-text-center" style="padding: 40px 0;">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+    } @else {
+
+      <!-- "Tem" -->
+      <div class="section">
+        <div class="section-header">
+          <ion-icon name="person-outline"></ion-icon>
+          <h2 class="section-title">Você tem estas características?</h2>
+        </div>
+        <p class="section-hint">Toque para marcar ou desmarcar.</p>
+
+        <div class="chips-grid">
+          @for (carac of todasCaracteristicas; track carac.id) {
+            <button
+              type="button"
+              class="chip"
+              [class.chip--ativo]="tem(carac)"
+              [disabled]="processando[carac.id]"
+              (click)="toggleTem(carac)">
+              {{ carac.nome }}
+            </button>
+          }
+        </div>
+
+        @if (todasCaracteristicas.length === 0) {
+          <p class="empty-hint">Nenhuma característica cadastrada no sistema ainda.</p>
+        }
+      </div>
+
+      <!-- "Sabe atender" (só para profissionais) -->
+      @if (isProfissional) {
+        <div class="section">
+          <div class="section-header">
+            <ion-icon name="eye-outline"></ion-icon>
+            <h2 class="section-title">Você sabe atender clientes com estas características?</h2>
+          </div>
+          <p class="section-hint">Isso ajuda clientes com essas necessidades a te encontrar.</p>
+
+          <div class="chips-grid">
+            @for (carac of todasCaracteristicas; track carac.id) {
+              <button
+                type="button"
+                class="chip chip--lida"
+                [class.chip--ativo]="sabeAtender(carac)"
+                [disabled]="processando[carac.id]"
+                (click)="toggleSabeAtender(carac)">
+                {{ carac.nome }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+    }
+
+  </div>
+</ion-content>

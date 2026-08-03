@@ -1,28 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { AlertController, NavController, ToastController } from '@ionic/angular';
 import { IonContent, IonButton, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   personOutline, mailOutline, calendarOutline, cardOutline, locationOutline,
   briefcaseOutline, arrowBackOutline, createOutline, readerOutline,
   notificationsOutline, shieldOutline, settingsOutline, chevronForwardOutline,
-  logOutOutline, star,
+  logOutOutline, star, accessibilityOutline,
 } from 'ionicons/icons';
-import { UsuarioService } from 'src/app/services/usuario.service';
-import { UsuarioModel } from 'src/app/model/usuario.model';
-import { AlertController, ToastController, NavController } from '@ionic/angular';
-import { TokenModel } from 'src/app/model/token.model';
-import { TokenService } from 'src/app/services/token.service';
 
-export interface UserData {
-  nome: string;
-  email: string;
-  dataNascimento: string;
-  cpf: string;
-  cep: string;
-  isProfissional: boolean;
-}
+import { UsuarioService } from 'src/app/services/usuario.service';
+import { TokenService } from 'src/app/services/token.service';
+import { UsuarioModel } from 'src/app/model/usuario.model';
+import { TokenModel } from 'src/app/model/token.model';
 
 @Component({
   selector: 'app-perfil',
@@ -32,10 +24,16 @@ export interface UserData {
   imports: [CommonModule, RouterModule, IonContent, IonButton, IonIcon],
 })
 export class PerfilPage implements OnInit {
-  dados: UsuarioModel;
+  dados: UsuarioModel = new UsuarioModel();
   token!: TokenModel;
 
-  constructor(private usuarioService: UsuarioService, private toastController: ToastController, private navController: NavController, private alertController: AlertController, private tokenService: TokenService) {
+  constructor(
+    private usuarioService: UsuarioService,
+    private toastController: ToastController,
+    private navController: NavController,
+    private alertController: AlertController,
+    private tokenService: TokenService,
+  ) {
     addIcons({
       personOutline,
       mailOutline,
@@ -52,8 +50,8 @@ export class PerfilPage implements OnInit {
       settingsOutline,
       logOutOutline,
       star,
+      accessibilityOutline,
     });
-    this.dados = new UsuarioModel();
   }
 
   ngOnInit(): void {
@@ -63,9 +61,9 @@ export class PerfilPage implements OnInit {
         this.dados = usuario;
       },
       error: (err) => {
-        console.log("Erro ao carregar dados de usuário: ", err);
-      }
-    })
+        console.log('Erro ao carregar dados de usuário:', err);
+      },
+    });
   }
 
   obterIniciais(nome: string): string {
@@ -75,10 +73,12 @@ export class PerfilPage implements OnInit {
       .split(' ')
       .filter(Boolean)
       .slice(0, 2)
-      .map(x => x[0])
+      .map((x) => x[0])
       .join('')
       .toUpperCase();
   }
+
+  // ─── Ações da conta ─────────────────────────────────────────────────────────
 
   async confirmarDelete(): Promise<void> {
     const alert = await this.alertController.create({
@@ -135,28 +135,29 @@ export class PerfilPage implements OnInit {
     await alert.present();
   }
 
-  editarPerfil() {
+  // ─── Atalhos ainda não implementados ────────────────────────────────────────
+
+  editarPerfil(): void {
     console.log('Editar Perfil');
   }
 
-  historicoPedidos() {
+  historicoPedidos(): void {
     console.log('Histórico');
   }
 
-  gerenciarAgenda() {
+  gerenciarAgenda(): void {
     console.log('Agenda');
   }
 
-  abrirNotificacoes() {
+  abrirNotificacoes(): void {
     console.log('Notificações');
   }
 
-  abrirSeguranca() {
+  abrirSeguranca(): void {
     console.log('Segurança');
   }
 
-  abrirConfiguracoes() {
+  abrirConfiguracoes(): void {
     console.log('Configurações');
   }
-
 }

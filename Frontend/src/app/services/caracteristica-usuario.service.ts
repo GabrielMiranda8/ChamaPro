@@ -67,4 +67,11 @@ export class CaracteristicaUsuarioService {
       { headers: this.tokenService.gerarCabecalhoAutenticacao() },
     );
   }
+
+  excluirPorCaracteristicaUsuario(idCaracteristica: string, idUsuario: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.API_URL}/caracteristica/${idCaracteristica}/usuario/${idUsuario}`,
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() },
+    );
+  }
 }

@@ -1,0 +1,197 @@
+// ── Variáveis ─────────────────────────────────────────────
+$laranja: #E8632A;
+$laranja-hover: #d45520;
+$laranja-light: rgba(232, 99, 42, 0.1);
+$azul: #2A6BE8;
+$azul-light: rgba(42, 107, 232, 0.1);
+$texto: #1A1A1A;
+$texto-sec: #666666;
+$borda: #E5E5E5;
+$fundo: #F7F5F2;
+$branco: #ffffff;
+
+// ── Content ───────────────────────────────────────────────
+.minhas-caracteristicas-content {
+  --background: #{$fundo};
+  --color: #{$texto};
+  color-scheme: light;
+}
+
+// ── Wrapper ───────────────────────────────────────────────
+.page-shell {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 20px 40px;
+  color: $texto;
+}
+
+// ── Topbar ────────────────────────────────────────────────
+.topbar {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+
+  h1 {
+    font-size: 22px;
+    font-weight: 800;
+    color: $texto;
+    margin: 4px 0 4px;
+  }
+
+  p {
+    font-size: 13px;
+    color: $texto-sec;
+    margin: 0;
+  }
+}
+
+.back-button {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1.5px solid $borda;
+  background: $branco;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  padding: 0;
+
+  ion-icon {
+    font-size: 20px;
+    color: $texto;
+  }
+
+  &:active {
+    background: $fundo;
+  }
+}
+
+// ── Card laranja ─────────────────────────────────────────
+.orange-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: $laranja;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 28px;
+  box-shadow: 0 4px 16px rgba(232, 99, 42, 0.25);
+
+  .orange-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    ion-icon {
+      font-size: 20px;
+      color: $branco;
+    }
+  }
+
+  h2 {
+    font-size: 15px;
+    font-weight: 700;
+    color: $branco;
+    margin: 0 0 4px;
+  }
+
+  p {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+// ── Seção ─────────────────────────────────────────────────
+.section {
+  margin-bottom: 32px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+
+  ion-icon {
+    font-size: 18px;
+    color: $texto-sec;
+  }
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: $texto;
+  margin: 0;
+}
+
+.section-hint {
+  font-size: 13px;
+  color: $texto-sec;
+  margin: 0 0 14px;
+}
+
+.empty-hint {
+  font-size: 13px;
+  color: $texto-sec;
+  margin: 0;
+}
+
+// ── Chips ─────────────────────────────────────────────────
+.chips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 100px;
+  border: 1.5px solid $borda;
+  background: $branco;
+  color: $texto;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+    transform: none;
+  }
+
+  // Categoria "tem" fica laranja quando ativa (mesma cor do resto do app)
+  &--ativo {
+    background: $laranja-light;
+    border-color: $laranja;
+    color: $laranja;
+    font-weight: 600;
+  }
+
+  // Categoria "sabe atender" fica azul quando ativa, pra diferenciar
+  // visualmente das características que o próprio usuário tem.
+  &--lida.chip--ativo {
+    background: $azul-light;
+    border-color: $azul;
+    color: $azul;
+  }
+}

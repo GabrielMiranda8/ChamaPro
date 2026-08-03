@@ -72,7 +72,11 @@ export const routes: Routes = [
   {
     path: '**',
     redirectTo: 'login',
+  },  {
+    path: 'add-caracteristica',
+    loadComponent: () => import('./pages/add-caracteristica/add-caracteristica.page').then( m => m.AddCaracteristicaPage)
   },
+
 
 
 

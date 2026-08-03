@@ -84,8 +84,10 @@ public class CaracteristicaUsuarioService {
         cu.setCaracteristica(caracteristica);
         cu.setUsuario(usuario);
         cu.setTem(dto.isTem());
-        cu.setLida(dto.isLida());
-
+        if (usuario.getTipo() == "CLIENTE")
+            cu.setLida(false);
+        else
+            cu.setLida(dto.isLida());
         return new CaracteristicaUsuarioResponseDTO(cuRepository.save(cu));
     }
 
