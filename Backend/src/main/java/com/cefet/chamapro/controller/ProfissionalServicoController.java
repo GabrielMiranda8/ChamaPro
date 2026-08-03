@@ -25,6 +25,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/profissionalservico")
+@Tag(name = "Servicos de Profissionais")
 
 public class ProfissionalServicoController {
 
