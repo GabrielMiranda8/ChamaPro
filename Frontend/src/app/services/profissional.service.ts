@@ -5,9 +5,6 @@ import { environment } from 'src/environments/environment';
 import { ProfissionalModel } from '../model/profissional.model';
 import { TokenService } from './token.service';
 
-// Endpoint próprio /profissionais no backend (ProfissionalController).
-// O ProfissionalResponseDTO só traz campos não sensíveis (nome, dtNasc,
-// dtConta, nota, tipo) — não o objeto UsuarioModel completo.
 @Injectable({
   providedIn: 'root',
 })

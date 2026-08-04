@@ -78,7 +78,7 @@ export class PerfilPage implements OnInit {
       .toUpperCase();
   }
 
-  // ─── Ações da conta ─────────────────────────────────────────────────────────
+  // Acoes da conta
 
   async confirmarDelete(): Promise<void> {
     const alert = await this.alertController.create({
@@ -135,7 +135,7 @@ export class PerfilPage implements OnInit {
     await alert.present();
   }
 
-  // ─── Atalhos ainda não implementados ────────────────────────────────────────
+  // A FAZERR
 
   editarPerfil(): void {
     console.log('Editar Perfil');

@@ -34,18 +34,15 @@ import { TokenService } from 'src/app/services/token.service';
 })
 export class AddServicoPage implements OnInit {
 
-  // Agora obtido do token JWT do usuário logado, e não mais de um :id na rota
+
   usuarioId!: string;
 
   todosServicos: ServicoModel[] = [];
-  // todasCaracteristicas: CaracteristicaModel[] = []; // TODO: ainda não implementado no backend
+  // todasCaracteristicas: CaracteristicaModel[] = []; A FAZER
 
   servicosSelecionados: ServicoModel[] = [];
-  // caracsSelecionadas: CaracteristicaModel[] = []; // TODO: ainda não implementado no backend
+  // caracsSelecionadas: CaracteristicaModel[] = []; A FAZER 
 
-  // Cada serviço selecionado tem seu próprio preço por hora — o mesmo
-  // profissional pode cobrar valores diferentes dependendo do serviço.
-  // Chave: id do serviço, valor: preço digitado (null enquanto vazio).
   precos: Record<string, number | null> = {};
 
   // Ids dos serviços que já existem salvos no backend (vieram do
@@ -53,8 +50,6 @@ export class AddServicoPage implements OnInit {
   // ou só desmarcar localmente um serviço que ainda nem foi salvo.
   idsSalvos = new Set<string>();
 
-  // Exigido pelo backend (ProfissionalServico.tempoCarreira, nullable = false).
-  // Esse é único por profissional (não por serviço).
   tempoCarreira = ''; // formato yyyy-mm-dd (input type="date")
 
   carregando = true;
@@ -63,7 +58,7 @@ export class AddServicoPage implements OnInit {
 
   constructor(
     private servicoService: ServicoService,
-    // private caracteristicaService: CaracteristicaService, // TODO: ainda não implementado no backend
+    // private caracteristicaService: CaracteristicaService, A FAZER
     private profissionalServicoService: ProfissionalServicoService,
     private toastController: ToastController,
     private alertController: AlertController,

@@ -85,7 +85,6 @@ export class MenuPage implements OnInit {
           });
           await toast.present();
 
-          // excluir() já limpa o localStorage 'login' se era o logado
           this.navController.navigateRoot('/login');
         }
       }

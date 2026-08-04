@@ -65,7 +65,7 @@ export class BuscaPage implements OnInit {
     this.carregarResultados();
   }
 
-  // ─── Carregamento ───────────────────────────────────────────────────────────
+  // Loading
 
   carregarResultados(): void {
     this.carregando = true;
@@ -100,7 +100,7 @@ export class BuscaPage implements OnInit {
       },
     });
   }
-  // ─── Filtros ────────────────────────────────────────────────────────────────
+  // Filtros 
 
   selecionarFiltro(filtro: string): void {
     this.filtroSelecionado = filtro;
@@ -141,7 +141,7 @@ export class BuscaPage implements OnInit {
     this.resultadosFiltrados = lista;
   }
 
-  // ─── Popup do profissional (1º passo) ──────────────────────────────────────
+  // Popup do profissional (1 passo) 
 
   async abrirPopupProfissional(item: ResultadoBusca): Promise<void> {
     const modal = await this.modalCtrl.create({

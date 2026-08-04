@@ -59,8 +59,6 @@ export class InicioPage implements OnInit {
     }
   ];
 
-  // Inicializado sincronamente (não com "!") para nunca ficar undefined
-  // durante o primeiro ciclo de renderização, antes da resposta HTTP chegar.
   dados: UsuarioModel = new UsuarioModel();
   token!: TokenModel;
 

@@ -60,6 +60,7 @@ export class LoginPage implements OnInit {
       }, 
       error: (err) =>{
         this.exibirMensagem('Email ou senha inválidos.');
+        console.log("Erro no login", err);
       }
     });
   }

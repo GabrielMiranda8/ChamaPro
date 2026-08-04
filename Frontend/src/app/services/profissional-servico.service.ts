@@ -14,8 +14,8 @@ export class ProfissionalServicoService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  // Backend devolve servicoId/profissionalId (nomes diferentes do nosso model),
-  // além de já vir com servicoNome/profissionalNome prontos — aproveitamos aqui.
+  // backend devolve servicoId/profissionalId (nomes diferentes do model)
+  // alem de ja vir com servicoNome/profissionalNome prontos
   private converterData(ps: any): ProfissionalServicoModel {
     return {
       ...ps,
@@ -26,7 +26,7 @@ export class ProfissionalServicoService {
     };
   }
 
-  // Antes de enviar, convertemos Date -> string (yyyy-MM-dd), formato que o Jackson espera.
+  // ntes de enviar convertemos Date -> string (yyyy-MM-dd)
   private paraEnvio(ps: ProfissionalServicoModel): any {
     const data = ps.tempoCarreira instanceof Date
       ? ps.tempoCarreira.toISOString().split('T')[0]

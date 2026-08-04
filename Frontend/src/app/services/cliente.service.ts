@@ -5,10 +5,6 @@ import { environment } from 'src/environments/environment';
 import { ClienteModel } from '../model/cliente.model';
 import { TokenService } from './token.service';
 
-// Endpoint próprio /clientes no backend (ClienteController).
-// Cadastro em si é sempre via POST /usuarios; aqui só o id do usuário
-// já criado é enviado, para "ativar" o perfil de cliente (mesma ideia
-// do POST /profissionais em usuario.service.ts).
 @Injectable({
   providedIn: 'root',
 })

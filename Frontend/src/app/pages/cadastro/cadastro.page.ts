@@ -19,7 +19,7 @@ import { UsuarioModel } from 'src/app/model/usuario.model';
 import { CaracteristicaModel } from 'src/app/model/caracteristica.model';
 import { CaracteristicaUsuarioService } from 'src/app/services/caracteristica-usuario.service';
 import { CaracteristicaUsuarioModel } from 'src/app/model/caracteristica-usuario.model';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
@@ -58,8 +58,8 @@ export class CadastroPage implements OnInit {
       dtNasc: ['', Validators.required],
       cpf: ['', [Validators.required, Validators.minLength(11)]],
       cep: ['', Validators.required],
-      caracteristicas: [[]],       // características que o usuário tem
-      caracteristicasLida: [[]],   // características que o profissional sabe atender
+      caracteristicas: [[]],       // caracteristicas que o usuário tem
+      caracteristicasLida: [[]],   // caracteristicas que o profissional sabe atender
       isProfissional: [false],
     });
   }
@@ -79,9 +79,9 @@ export class CadastroPage implements OnInit {
   toggleSenha() { this.showSenha.update(v => !v); }
   toggleConfirmarSenha() { this.showConfirmarSenha.update(v => !v); }
 
-  // ─── Cadastro ───────────────────────────────────────────────────────────────
-  // Validação manual (além dos Validators do FormGroup) porque campos como
-  // data, CPF e CEP têm máscara própria e precisam de checagem específica.
+  // Cadastro
+  // Validação manual (alem dos Validators do FormGroup) porque campos como
+  // data, CPF e CEP tem mascara propria e precisam de checagem específicae
 
   async salvar() {
     const v = this.formGroup.value;
@@ -108,7 +108,7 @@ export class CadastroPage implements OnInit {
       await this.exibirMensagem('Informe um CEP válido.'); return;
     }
 
-    // O input usa máscara dd/mm/aaaa, mas o backend espera um Date real.
+    // O input usa máscara dd/mm/aaaa mas o backend espera Date
     const partes = v.dtNasc.split('/');
     const dtNascDate = new Date(
       Number(partes[2]),  // ano
@@ -129,8 +129,6 @@ export class CadastroPage implements OnInit {
 
     this.usuarioService.salvar(usuario).subscribe({
       next: async (usuarioSalvo) => {
-        // Se marcou "sou profissional", faz uma segunda chamada para ativar
-        // o perfil profissional e leva direto para cadastrar os serviços.
         if (v.isProfissional) {
           this.usuarioService.criarProfissional(usuarioSalvo.id).subscribe({
             next: async () => {
@@ -161,37 +159,73 @@ export class CadastroPage implements OnInit {
   // profissional "sabe lidar") num único registro por característica, já
   // que tem/lida moram na mesma linha de CaracteristicaUsuario. Se a mesma
   // característica aparecer nas duas listas, os dois campos ficam true.
-  private async salvarCaracteristicas(idUsuario: string, v: any): Promise<void> {
-    const tenho: CaracteristicaModel[] = v.caracteristicas ?? [];
-    const seiLidar: CaracteristicaModel[] = v.caracteristicasLida ?? [];
-
-    const porId = new Map<string, { nome: string; tem: boolean; lida: boolean }>();
-    for (const c of tenho) {
-      porId.set(c.id, { nome: c.nome, tem: true, lida: false });
-    }
-    for (const c of seiLidar) {
-      const atual = porId.get(c.id) ?? { nome: c.nome, tem: false, lida: false };
-      atual.lida = true;
-      porId.set(c.id, atual);
-    }
-
-    if (porId.size === 0) return;
-
-    const chamadas = Array.from(porId.entries()).map(([idCaracteristica, dados]) => {
-      const cu = new CaracteristicaUsuarioModel();
-      cu.idUsuario = idUsuario;
-      cu.idCaracteristica = idCaracteristica;
-      cu.tem = dados.tem;
-      cu.lida = dados.lida;
-      return this.caracteristicaUsuarioService.salvar(cu);
-    });
-
-    await new Promise<void>((resolve) => {
-      forkJoin(chamadas).pipe(
-        catchError(() => of(null)), // não trava o cadastro se uma característica falhar
-      ).subscribe(() => resolve());
-    });
+  // Junta as duas listas do formulário (o que o usuário "tem" e o que o
+// profissional "sabe lidar") num único registro por característica, já
+// que tem/lida moram na mesma linha de CaracteristicaUsuario. Se a mesma
+// característica aparecer nas duas listas, os dois campos ficam true.
+private async salvarCaracteristicas(idUsuario: string, v: any): Promise<void> {
+  let tenho: CaracteristicaModel[] = v.caracteristicas;
+  if (!tenho) {
+    tenho = [];
   }
+
+  let seiLidar: CaracteristicaModel[] = v.caracteristicasLida;
+  if (!seiLidar) {
+    seiLidar = [];
+  }
+
+  // Lista simples: cada posição guarda o id de uma característica e se
+  // o usuário "tem" e/ou "sabe lidar" com ela.
+  const lista: { idCaracteristica: string; tem: boolean; lida: boolean }[] = [];
+
+  // Primeiro, adiciona todas as características que o usuário marcou
+  // como "tenho" (todas entram com lida = false por enquanto).
+  for (const caracteristica of tenho) {
+    lista.push({ idCaracteristica: caracteristica.id, tem: true, lida: false });
+  }
+
+  // Agora percorre a lista de "sei lidar". Se a característica já
+  // estiver na lista (porque também apareceu em "tenho"), só liga o
+  // campo lida nela. Se ainda não estiver, adiciona uma entrada nova.
+  for (const caracteristica of seiLidar) {
+    let jaEstaNaLista = false;
+
+    for (const item of lista) {
+      if (item.idCaracteristica === caracteristica.id) {
+        item.lida = true;
+        jaEstaNaLista = true;
+        break;
+      }
+    }
+
+    if (!jaEstaNaLista) {
+      lista.push({ idCaracteristica: caracteristica.id, tem: false, lida: true });
+    }
+  }
+
+  if (lista.length === 0) {
+    return;
+  }
+
+  // Monta uma chamada HTTP pra cada característica da lista (ainda sem
+  // disparar nenhuma — só cria os "pedidos", o forkJoin lá embaixo que
+  // dispara todos juntos).
+  const chamadas: Observable<CaracteristicaUsuarioModel>[] = [];
+  for (const item of lista) {
+    const cu = new CaracteristicaUsuarioModel();
+    cu.idUsuario = idUsuario;
+    cu.idCaracteristica = item.idCaracteristica;
+    cu.tem = item.tem;
+    cu.lida = item.lida;
+    chamadas.push(this.caracteristicaUsuarioService.salvar(cu));
+  }
+
+  await new Promise<void>((resolve) => {
+    forkJoin(chamadas).pipe(
+      catchError(() => of(null)), // não trava o cadastro se uma característica falhar
+    ).subscribe(() => resolve());
+  });
+}
 
   async exibirMensagem(texto: string) {
     const toast = await this.toastController.create({

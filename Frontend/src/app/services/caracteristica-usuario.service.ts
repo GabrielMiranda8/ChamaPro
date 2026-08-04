@@ -14,9 +14,6 @@ export class CaracteristicaUsuarioService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  // Backend devolve caracteristicaId/caracteristicaNome/usuarioId (nomes
-  // diferentes do nosso model) — convertemos aqui, igual já é feito em
-  // profissional-servico.service.ts.
   private converterData(cu: any): CaracteristicaUsuarioModel {
     return {
       ...cu,
