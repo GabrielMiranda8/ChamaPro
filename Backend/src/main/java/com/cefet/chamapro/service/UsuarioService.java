@@ -11,7 +11,11 @@ import com.cefet.chamapro.entity.Cliente;
 import com.cefet.chamapro.entity.Endereco;
 import com.cefet.chamapro.entity.Profissional;
 import com.cefet.chamapro.entity.Usuario;
+import com.cefet.chamapro.entity.CaracteristicaUsuario;
+import com.cefet.chamapro.entity.ProfissionalServico;
+import com.cefet.chamapro.repository.CaracteristicaUsuarioRepository;
 import com.cefet.chamapro.repository.EnderecoRepository;
+import com.cefet.chamapro.repository.ProfissionalServicoRepository;
 import com.cefet.chamapro.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -27,6 +31,8 @@ public class UsuarioService {
 
     private final UsuarioRepository repository;
     private final EnderecoRepository enderecoRepository;
+    private final CaracteristicaUsuarioRepository caracteristicaUsuarioRepository;
+    private final ProfissionalServicoRepository profissionalServicoRepository;
 
     @Transactional
     public UsuarioResponseDTO criar(UsuarioRequestDTO dto) {
@@ -99,10 +105,27 @@ public class UsuarioService {
         return toResponseDTO(atualizado);
     }
 
+    // Nenhuma das tabelas relacionadas (endereço, características,
+    // serviços do profissional) tem cascade configurado — por isso cada
+    // uma precisa ser apagada aqui manualmente, antes do usuário, senão o
+    // banco recusa o DELETE por violar a chave estrangeira.
+    @Transactional
     public void deletar(String id) {
         if (!repository.existsById(id)) {
             throw new EntityNotFoundException("Usuário não encontrado");
         }
+
+        List<Endereco> enderecos = enderecoRepository.findByUsuarioId(id);
+        enderecoRepository.deleteAll(enderecos);
+
+        List<CaracteristicaUsuario> caracteristicas = caracteristicaUsuarioRepository.findByUsuario_Id(id);
+        caracteristicaUsuarioRepository.deleteAll(caracteristicas);
+
+        // Só existe algo aqui se o usuário for profissional; pra cliente
+        // essa lista sempre vem vazia, e o deleteAll não faz nada.
+        List<ProfissionalServico> servicos = profissionalServicoRepository.findByProfissional_Id(id);
+        profissionalServicoRepository.deleteAll(servicos);
+
         repository.deleteById(id);
     }
 

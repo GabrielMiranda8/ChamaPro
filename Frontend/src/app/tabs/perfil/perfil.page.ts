@@ -78,7 +78,7 @@ export class PerfilPage implements OnInit {
       .toUpperCase();
   }
 
-  // Acoes da conta
+  // ─── Ações da conta ─────────────────────────────────────────────────────────
 
   async confirmarDelete(): Promise<void> {
     const alert = await this.alertController.create({
@@ -108,8 +108,17 @@ export class PerfilPage implements OnInit {
           handler: () => {
             const logado = this.dados;
             if (!logado) return;
-            this.usuarioService.excluir(logado.id);
-            this.navController.navigateRoot('/login');
+
+            this.usuarioService.excluir(logado.id).subscribe({
+              next: () => {
+                this.usuarioService.logout(); // limpa o token, já que a conta não existe mais
+                this.navController.navigateRoot('/login');
+              },
+              error: (err) => {
+                console.log('Erro ao excluir conta:', err);
+                this.exibirMensagem('Não foi possível excluir sua conta. Tente novamente.');
+              },
+            });
           },
         },
       ],
@@ -135,7 +144,16 @@ export class PerfilPage implements OnInit {
     await alert.present();
   }
 
-  // A FAZERR
+  async exibirMensagem(texto: string) {
+    const toast = await this.toastController.create({
+      message: texto,
+      duration: 2000,
+      position: 'bottom',
+    });
+    toast.present();
+  }
+
+  // ─── Atalhos ainda não implementados ────────────────────────────────────────
 
   editarPerfil(): void {
     console.log('Editar Perfil');
