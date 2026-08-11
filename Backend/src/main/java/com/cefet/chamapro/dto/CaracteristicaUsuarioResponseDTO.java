@@ -1,8 +1,5 @@
 package com.cefet.chamapro.dto;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 import com.cefet.chamapro.entity.CaracteristicaUsuario;
 
 import lombok.Getter;
