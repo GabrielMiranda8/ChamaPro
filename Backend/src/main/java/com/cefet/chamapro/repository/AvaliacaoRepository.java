@@ -19,7 +19,5 @@ public interface AvaliacaoRepository extends JpaRepository<Avaliacao, String> {
 
     List<Avaliacao> findByAutor_Id(String autorId);
 
-    List<Avaliacao> findByServico_Id(String idServico);
-
     Optional<Avaliacao> findByAlvo_IdAndAutor_Id(String alvoId, String autorId);
 }
