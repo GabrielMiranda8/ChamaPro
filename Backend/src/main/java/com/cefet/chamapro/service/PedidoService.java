@@ -139,4 +139,24 @@ public class PedidoService {
         }
         pRepository.deleteById(id);
     }
+
+    @Transactional
+    public PedidoResponseDTO atualizarStatus(String id) {
+        Pedido p = pRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado. Id: " + id));
+
+        if (p.getStatus() == Status.FINALIZADO) {
+            throw new BusinessException("O pedido já está concluído e não pode ser atualizado.");
+        }
+        
+        if (p.getStatus() == Status.PENDENTE) {
+            p.setStatus(Status.ACEITO);
+        } else if (p.getStatus() == Status.ACEITO) {
+            p.setStatus(Status.EM_ANDAMENTO);
+        } else if (p.getStatus() == Status.EM_ANDAMENTO) {
+            p.setStatus(Status.FINALIZADO);
+        }
+
+        return new PedidoResponseDTO(pRepository.save(p));
+    }
 }
