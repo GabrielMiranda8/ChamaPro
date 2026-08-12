@@ -5,6 +5,8 @@ import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,21 +42,21 @@ public class Pedido {
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
+    @ManyToOne
+    @JoinColumn(name = "endereco_id", nullable = false)
+    private Endereco endereco;
+
+    //@ManyToOne
+    //@JoinColumn(name = "chat_id", nullable = true)
+    //private Chat chat;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     @Column(nullable = false)
     private BigDecimal preco;
 
     @Column(nullable = false)
     private Date data;
-
-    @Column(nullable = false)
-    private Endereco endereco;
-
-    @Column(nullable = false)
-    private Status status;
-
-    @Column(nullable = true)
-    private Chat chat;
-
-    @Column(nullable = true)
-    private Avaliacao avaliacao;
 }

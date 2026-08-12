@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -66,13 +67,20 @@ public class PedidoController {
     }
     
     @PutMapping("/{id}")
-    @Operation(summary = "Atualizar pedido")
+    @Operation(summary = "Alterar pedido")
     public ResponseEntity<PedidoResponseDTO> atualizar(@PathVariable String id, @Valid @RequestBody PedidoRequestDTO pRequestDTO) {
 
     	PedidoResponseDTO pResponseDTO = pService.atualizar(id, pRequestDTO);
 
         return ResponseEntity.ok(pResponseDTO);
     }    
+
+    @PatchMapping("/{id}/situacao")
+    @Operation(summary = "Atualizar status do pedido")
+    public ResponseEntity<PedidoResponseDTO> atualizarStatus(@PathVariable String id) {
+        PedidoResponseDTO pedidoResponseDTO = pService.atualizarStatus(id);
+        return ResponseEntity.ok(pedidoResponseDTO);
+    }
 
 
     @DeleteMapping("/{id}")

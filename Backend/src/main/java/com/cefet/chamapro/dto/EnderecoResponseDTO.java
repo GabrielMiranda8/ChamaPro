@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class EnderecoResponseDTO {
 	
+    private String id;
 	private String cep;
     private String bairro;
     private String rua;
@@ -18,6 +19,7 @@ public class EnderecoResponseDTO {
     private String complemento; 
     
     public EnderecoResponseDTO(Endereco endereco) {
+    	this.id = endereco.getId();
     	this.cep = endereco.getCep();
         this.rua = endereco.getRua();
         this.bairro = endereco.getBairro();

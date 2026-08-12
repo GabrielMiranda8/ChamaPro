@@ -1,12 +1,10 @@
 package com.cefet.chamapro.repository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.cefet.chamapro.dto.PedidoResponseDTO;
 import com.cefet.chamapro.entity.Pedido;
 
 public interface PedidoRepository extends JpaRepository<Pedido, String> {
