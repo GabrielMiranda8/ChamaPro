@@ -35,6 +35,13 @@ export class EnderecoService {
     );
   }
 
+  buscarPorUsuario(idUsuario: string): Observable<EnderecoModel[]> {
+    return this.http.get<EnderecoModel[]>(
+      `${this.API_URL}/usuario/${idUsuario}`,
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() }
+    );
+  }
+
   alterar(endereco: EnderecoModel): Observable<EnderecoModel> {
       return this.http.put<EnderecoModel>(
         `${this.API_URL}/${endereco.id}`,

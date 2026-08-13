@@ -45,6 +45,13 @@ public class EnderecoController {
         return ResponseEntity.ok(enderecoResponseDTO);
     }
 
+    @GetMapping("/usuario/{idUsuario}")
+    @Operation(summary = "Listar enderecos de um usuário")
+    public ResponseEntity<List<EnderecoResponseDTO>> listarPorUsuario(@PathVariable String idUsuario) {
+        List<EnderecoResponseDTO> enderecos = enderecoService.listarPorUsuario(idUsuario);
+        return ResponseEntity.ok(enderecos);
+    }
+
     @PostMapping
     @Operation(summary = "Cadastrar endereco")
     public ResponseEntity<EnderecoResponseDTO> inserir(@Valid @RequestBody EnderecoRequestDTO enderecoRequestDTO) {

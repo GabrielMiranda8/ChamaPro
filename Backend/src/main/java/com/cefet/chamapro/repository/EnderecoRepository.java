@@ -13,4 +13,6 @@ public interface EnderecoRepository extends JpaRepository<Endereco, String>{
 	boolean existsByCepAndIdNot(String cep, String id);
 	
 	List<Endereco> findByUsuarioId(String usuarioId);
+
+    List<Endereco> findByUsuario_Id(String idUsuario);
 }

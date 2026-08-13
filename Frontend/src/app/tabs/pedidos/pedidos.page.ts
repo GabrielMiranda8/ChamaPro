@@ -212,6 +212,7 @@ export class PedidosPage implements OnInit {
     if (pedido.status === 'FINALIZADO') return false;
     if (pedido.status === 'RECUSADO') return false;
     if (pedido.status === 'CANCELADO') return false;
+    if (pedido.status === 'EM_ANDAMENTO') return false;
     return true;
   }
 

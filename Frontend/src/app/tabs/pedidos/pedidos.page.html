@@ -31,10 +31,10 @@
       <div class="top">
         <div>
           <h2>{{ pedido.nomeServico }}</h2>
-          <p class="profissional" *ngIf="tipoUsuario === 'PROFISSIONAL'">
+          <p class="profissional">
             Cliente: {{ pedido.nomeCliente }}
           </p>
-          <p class="profissional" *ngIf="tipoUsuario !== 'PROFISSIONAL'">
+          <p class="profissional">
             Profissional: {{ pedido.nomeProfissional }}
           </p>
         </div>
@@ -54,7 +54,7 @@
       </div>
 
       <!-- Ações do CLIENTE: só cancelar, enquanto o pedido ainda estiver ativo -->
-      <button *ngIf="tipoUsuario !== 'PROFISSIONAL' && pedidoEstaAtivo(pedido)" class="cancelar"
+      <button *ngIf="pedidoEstaAtivo(pedido)" class="cancelar"
         (click)="cancelarPedido(pedido)">
         Cancelar pedido
       </button>

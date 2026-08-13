@@ -37,12 +37,18 @@ public class EnderecoService {
         return new EnderecoResponseDTO(endereco);
     }
 
+    @Transactional(readOnly = true)
+    public List<EnderecoResponseDTO> listarPorUsuario(String idUsuario) {
+        if (!usuarioRepository.existsById(idUsuario)) {
+            throw new ResourceNotFoundException("Usuário não encontrado. Id: " + idUsuario);
+        }
+
+        List<Endereco> enderecos = enderecoRepository.findByUsuario_Id(idUsuario);
+        return enderecos.stream().map(EnderecoResponseDTO::new).toList();
+    }
+
     @Transactional
     public EnderecoResponseDTO inserir(EnderecoRequestDTO dto) {
-
-        if (enderecoRepository.existsByCep(dto.getCep())) {
-            throw new BusinessException("Já existe uma endereco com esse cep.");
-        }
 
         Usuario usuario = usuarioRepository.findById(dto.getIdUsuario())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado. Id: " + dto.getIdUsuario()));
@@ -67,7 +73,7 @@ public class EnderecoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Endereco não encontrado. Id: " + id));
 
         if (enderecoRepository.existsByCepAndIdNot(dto.getCep(), id)) {
-            throw new BusinessException("Já existe uma endereco com esse nome.");
+            throw new BusinessException("Já existe um endereco com esse cep e id.");
         }
 
         endereco.setCep(dto.getCep());
