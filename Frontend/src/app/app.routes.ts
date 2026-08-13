@@ -72,6 +72,10 @@ export const routes: Routes = [
     path: 'add-caracteristica',
     loadComponent: () => import('./pages/add-caracteristica/add-caracteristica.page').then( m => m.AddCaracteristicaPage)
   },
+  {
+    path: 'avaliacoes',
+    loadComponent: () => import('./pages/avaliacao/avaliacao.page').then(m => m.AvaliacaoPage)
+  },
   
   {
     path: '**',
