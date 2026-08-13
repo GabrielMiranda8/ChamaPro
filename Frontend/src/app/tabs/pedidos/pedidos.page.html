@@ -2,6 +2,31 @@
   <div class="container">
     <h1>Meus Pedidos</h1>
 
+    <div class="filtro-ordenacao">
+      <button [class.ativo]="campoOrdenacao === 'data'" (click)="alterarOrdenacao('data')">
+        Data
+        <ion-icon *ngIf="campoOrdenacao === 'data'"
+          [name]="direcaoOrdenacao === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"></ion-icon>
+      </button>
+
+      <button [class.ativo]="campoOrdenacao === 'preco'" (click)="alterarOrdenacao('preco')">
+        Preço
+        <ion-icon *ngIf="campoOrdenacao === 'preco'"
+          [name]="direcaoOrdenacao === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"></ion-icon>
+      </button>
+
+      <button [class.ativo]="campoOrdenacao === 'status'" (click)="alterarOrdenacao('status')">
+        Status
+        <ion-icon *ngIf="campoOrdenacao === 'status'"
+          [name]="direcaoOrdenacao === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"></ion-icon>
+      </button>
+
+      <button [class.ativo]="campoOrdenacao === 'urgencia'" (click)="alterarOrdenacao('urgencia')">
+        Urgência
+        <ion-icon *ngIf="campoOrdenacao === 'urgencia'"
+          [name]="direcaoOrdenacao === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"></ion-icon>
+      </button>
+    </div>
     <div class="pedido-card" *ngFor="let pedido of pedidos">
       <div class="top">
         <div>

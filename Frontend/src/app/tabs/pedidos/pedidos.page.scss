@@ -183,3 +183,47 @@ h1 {
   font-size: 15px;
   margin-top: 40px;
 }
+
+.filtro-ordenacao {
+  display: flex;
+  gap: 8px;
+
+  overflow-x: auto;
+
+  margin-bottom: 20px;
+
+  // Esconde a barra de scroll horizontal, mas mantém o scroll funcionando
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.filtro-ordenacao button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  flex-shrink: 0;
+
+  border: none;
+  border-radius: 999px;
+
+  padding: 8px 14px;
+
+  background: #fff;
+  color: #8b93a7;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.filtro-ordenacao button.ativo {
+  background: #1f2937;
+  color: #fff;
+}
+
+.filtro-ordenacao button ion-icon {
+  font-size: 15px;
+}

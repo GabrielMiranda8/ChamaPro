@@ -15,6 +15,8 @@ import {
   constructOutline,
   closeCircleOutline,
   banOutline,
+  arrowUpOutline,
+  arrowDownOutline
 } from 'ionicons/icons';
 
 import { PedidoModel } from 'src/app/model/pedido.model';
@@ -37,10 +39,9 @@ export class PedidosPage implements OnInit {
   pedidos: PedidoModel[] = [];
   carregando = false;
 
-  // guarda o tipo do usuário logado ('CLIENTE' ou 'PROFISSIONAL') pra decidir
-  // qual busca fazer e quais botões mostrar no template
   tipoUsuario = '';
-
+  campoOrdenacao = 'data';
+  direcaoOrdenacao = 'desc'; // 'asc' ou 'desc'
   constructor(
     private pedidoService: PedidoService,
     private tokenService: TokenService,
@@ -53,6 +54,8 @@ export class PedidosPage implements OnInit {
       'construct-outline': constructOutline,
       'close-circle-outline': closeCircleOutline,
       'ban-outline': banOutline,
+      'arrow-up-outline': arrowUpOutline,
+      'arrow-down-outline': arrowDownOutline
     });
   }
 
@@ -67,40 +70,108 @@ export class PedidosPage implements OnInit {
     this.tipoUsuario = usuario.tipo;
     this.carregando = true;
 
-    if (usuario.tipo === 'PROFISSIONAL') {
-      this.pedidoService.buscarPorProfissional(usuario.id).subscribe({
-        next: (pedidos) => {
-          this.pedidos = pedidos;
-          this.carregando = false;
-        },
-        error: (err) => {
-          console.log('Erro ao buscar pedidos do profissional: ', err);
-          this.carregando = false;
-          this.mostrarToast('Erro ao carregar pedidos.', 'danger');
-        }
-      });
-      return;
-    }
-
-    // se não é profissional, trata como cliente
-    this.pedidoService.buscarPorCliente(usuario.id).subscribe({
+    this.pedidoService.buscarPorUsuario(usuario.id).subscribe({
       next: (pedidos) => {
         this.pedidos = pedidos;
+        this.ordenarPedidos();
         this.carregando = false;
       },
       error: (err) => {
-        console.log('Erro ao buscar pedidos do cliente: ', err);
+        console.log('Erro ao buscar pedidos do usuario: ', err);
         this.carregando = false;
         this.mostrarToast('Erro ao carregar pedidos.', 'danger');
       }
     });
   }
 
-  // ─── Exibição de status ─────────────────────────────────────────────────────
-  // Isolei essa tradução status -> classe/ícone/texto em funções porque, com 6
-  // valores de status agora (PENDENTE, ACEITO, EM_ANDAMENTO, FINALIZADO,
-  // RECUSADO, CANCELADO), um ternário encadeado no template ficaria ilegível.
-  // Cada função abaixo tem uma responsabilidade só e usa if/else simples.
+  // Chamado pelo <select> do filtro sempre que o usuário troca o campo ou a direção
+  alterarOrdenacao(campo: string): void {
+    if (this.campoOrdenacao === campo) {
+      // Clicou de novo no mesmo campo -> inverte a direção
+      if (this.direcaoOrdenacao === 'asc') {
+        this.direcaoOrdenacao = 'desc';
+      } else {
+        this.direcaoOrdenacao = 'asc';
+      }
+    } else {
+      // Trocou de campo -> começa em decrescente por padrão
+      this.campoOrdenacao = campo;
+      this.direcaoOrdenacao = 'desc';
+    }
+    this.ordenarPedidos();
+  }
+
+  private ordenarPedidos(): void {
+    // Bubble sort simples - troca de posição enquanto o elemento da esquerda
+    // "perde" pro da direita, de acordo com o critério escolhido.
+    for (let i = 0; i < this.pedidos.length; i++) {
+      for (let j = 0; j < this.pedidos.length - 1 - i; j++) {
+        const atual = this.pedidos[j];
+        const proximo = this.pedidos[j + 1];
+
+        const deveTrocar = this.deveTrocarPosicao(atual, proximo);
+
+        if (deveTrocar) {
+          this.pedidos[j] = proximo;
+          this.pedidos[j + 1] = atual;
+        }
+      }
+    }
+  }
+
+  // Decide se "proximo" deveria vir antes de "atual", de acordo com o campo
+  // e a direção escolhidos. Retorna true = troca as posições.
+  private deveTrocarPosicao(atual: PedidoModel, proximo: PedidoModel): boolean {
+    let valorAtual: number;
+    let valorProximo: number;
+
+    if (this.campoOrdenacao === 'data') {
+      valorAtual = new Date(atual.data).getTime();
+      valorProximo = new Date(proximo.data).getTime();
+    } else if (this.campoOrdenacao === 'preco') {
+      valorAtual = atual.preco;
+      valorProximo = proximo.preco;
+    } else if (this.campoOrdenacao === 'status') {
+      valorAtual = this.obterPesoStatus(atual.status);
+      valorProximo = this.obterPesoStatus(proximo.status);
+    } else if (this.campoOrdenacao === 'urgencia') {
+      valorAtual = this.obterPesoUrgencia(atual.status);
+      valorProximo = this.obterPesoUrgencia(proximo.status);
+    } else {
+      valorAtual = 0;
+      valorProximo = 0;
+    }
+
+    if (this.direcaoOrdenacao === 'asc') {
+      return valorAtual > valorProximo;
+    } else {
+      return valorAtual < valorProximo;
+    }
+  }
+
+  // Define uma ordem "alfabética de negócio" pro status, já que STATUS é
+  // texto e não tem ordem natural. Ajuste os números como fizer sentido.
+  private obterPesoStatus(status: string): number {
+    if (status === 'PENDENTE') return 1;
+    if (status === 'ACEITO') return 2;
+    if (status === 'EM_ANDAMENTO') return 3;
+    if (status === 'FINALIZADO') return 4;
+    if (status === 'RECUSADO') return 5;
+    if (status === 'CANCELADO') return 6;
+    return 0;
+  }
+
+  // Assumindo urgência = quão "pendente de ação" o pedido está.
+  // Se você tiver um campo real de urgência, troca essa função pra ler ele direto.
+  private obterPesoUrgencia(status: string): number {
+    if (status === 'PENDENTE') return 4;
+    if (status === 'ACEITO') return 3;
+    if (status === 'EM_ANDAMENTO') return 2;
+    if (status === 'FINALIZADO') return 1;
+    if (status === 'RECUSADO') return 0;
+    if (status === 'CANCELADO') return 0;
+    return 0;
+  }
 
   obterClasseStatus(status: string): string {
     if (status === 'PENDENTE') return 'pendente';

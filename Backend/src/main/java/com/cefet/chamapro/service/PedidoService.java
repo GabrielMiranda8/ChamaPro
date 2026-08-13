@@ -77,6 +77,20 @@ public class PedidoService {
                 .toList();
     }
 
+    @Transactional
+    public List<PedidoResponseDTO> listarPorUsuario(String idUsuario) {
+        if (!clienteRepository.existsById(idUsuario) && !profissionalRepository.existsById(idUsuario)) {
+            throw new ResourceNotFoundException("Usuário não encontrado. Id: " + idUsuario);
+        }
+
+        List<Pedido> pedidos = pRepository.findByCliente_Id(idUsuario);
+        pedidos.addAll(pRepository.findByProfissional_Id(idUsuario));
+
+        return pedidos.stream()
+                .map(PedidoResponseDTO::new)
+                .toList();
+    }
+
     @Transactional(readOnly = true)
     public List<PedidoResponseDTO> listarPorServico(String idServico) {
         if (!servicoRepository.existsById(idServico)) {

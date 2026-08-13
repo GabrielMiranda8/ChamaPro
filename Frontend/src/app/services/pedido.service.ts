@@ -64,6 +64,20 @@ export class PedidoService {
     );
   }
 
+  buscarPorUsuario(idUsuario: string): Observable<PedidoModel[]> {
+    return this.http.get<PedidoModel[]>(
+      `${this.API_URL}/usuario/${idUsuario}`,
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() }
+    );
+  }
+
+  buscarPorServico(idServico: string): Observable<PedidoModel[]> {
+    return this.http.get<PedidoModel[]>(
+      `${this.API_URL}/servico/${idServico}`,
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() }
+    );
+  }
+
   atualizarStatus(id: string): Observable<PedidoModel> {
     return this.http.patch<PedidoModel>(
       `${this.API_URL}/${id}/status`,
