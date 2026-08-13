@@ -41,7 +41,7 @@ public class EnderecoService {
     public EnderecoResponseDTO inserir(EnderecoRequestDTO dto) {
 
         if (enderecoRepository.existsByCep(dto.getCep())) {
-            throw new BusinessException("Já existe uma endereco com esse nome.");
+            throw new BusinessException("Já existe uma endereco com esse cep.");
         }
 
         Usuario usuario = usuarioRepository.findById(dto.getIdUsuario())

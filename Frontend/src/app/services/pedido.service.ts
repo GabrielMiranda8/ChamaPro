@@ -9,7 +9,7 @@ import { TokenService } from './token.service';
   providedIn: 'root',
 })
 export class PedidoService {
-  private readonly API_URL = `${environment.apiUrl}/pedido`;
+  private readonly API_URL = `${environment.apiUrl}/pedidos`;
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
