@@ -21,6 +21,7 @@ import { CaracteristicaUsuarioService } from 'src/app/services/caracteristica-us
 import { CaracteristicaUsuarioModel } from 'src/app/model/caracteristica-usuario.model';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { EnderecoService } from 'src/app/services/endereco.service';
 
 @Component({
   selector: 'app-cadastro',
@@ -45,6 +46,7 @@ export class CadastroPage implements OnInit {
     private usuarioService: UsuarioService,
     private caracteristicaService: CaracteristicaService,
     private caracteristicaUsuarioService: CaracteristicaUsuarioService,
+    private enderecoService: EnderecoService,
     private toastController: ToastController,
     private navController: NavController,
   ) {
@@ -58,18 +60,24 @@ export class CadastroPage implements OnInit {
       dtNasc: ['', Validators.required],
       cpf: ['', [Validators.required, Validators.minLength(11)]],
       cep: ['', Validators.required],
-      caracteristicas: [[]],       // caracteristicas que o usuário tem
-      caracteristicasLida: [[]],   // caracteristicas que o profissional sabe atender
+      rua: ['', Validators.required],
+      bairro: ['', Validators.required],
+      cidade: ['', Validators.required],
+      numero: ['', Validators.required],
+      complemento: [''],
+      referencia: [''],
+      caracteristicas: [[]],
+      caracteristicasLida: [[]],
       isProfissional: [false],
     });
   }
 
   ngOnInit() {
     this.caracteristicaService.listar().subscribe({
-      next:(caracs) =>{
+      next: (caracs) => {
         this.todasCaracteristicas = caracs;
       },
-      error: (err) =>{
+      error: (err) => {
         console.log("Erro ao listar caracteristicas: ", err)
         this.exibirMensagem("Erro ao listar caracteristicas");
       }
@@ -123,6 +131,12 @@ export class CadastroPage implements OnInit {
     usuario.cpf = v.cpf;
     usuario.dtNasc = dtNascDate;
     usuario.endereco.cep = v.cep;
+    usuario.endereco.rua = v.rua;
+    usuario.endereco.bairro = v.bairro;
+    usuario.endereco.cidade = v.cidade;
+    usuario.endereco.numero = Number(v.numero);
+    usuario.endereco.complemento = v.complemento;
+    usuario.endereco.referencia = v.referencia;
     usuario.tipo = v.isProfissional ? 'PROFISSIONAL' : 'CLIENTE';
     // As características não vão dentro do usuário: cada uma vira um
     // registro próprio (CaracteristicaUsuario) salvo depois, em salvarCaracteristicas().
@@ -160,72 +174,72 @@ export class CadastroPage implements OnInit {
   // que tem/lida moram na mesma linha de CaracteristicaUsuario. Se a mesma
   // característica aparecer nas duas listas, os dois campos ficam true.
   // Junta as duas listas do formulário (o que o usuário "tem" e o que o
-// profissional "sabe lidar") num único registro por característica, já
-// que tem/lida moram na mesma linha de CaracteristicaUsuario. Se a mesma
-// característica aparecer nas duas listas, os dois campos ficam true.
-private async salvarCaracteristicas(idUsuario: string, v: any): Promise<void> {
-  let tenho: CaracteristicaModel[] = v.caracteristicas;
-  if (!tenho) {
-    tenho = [];
-  }
+  // profissional "sabe lidar") num único registro por característica, já
+  // que tem/lida moram na mesma linha de CaracteristicaUsuario. Se a mesma
+  // característica aparecer nas duas listas, os dois campos ficam true.
+  private async salvarCaracteristicas(idUsuario: string, v: any): Promise<void> {
+    let tenho: CaracteristicaModel[] = v.caracteristicas;
+    if (!tenho) {
+      tenho = [];
+    }
 
-  let seiLidar: CaracteristicaModel[] = v.caracteristicasLida;
-  if (!seiLidar) {
-    seiLidar = [];
-  }
+    let seiLidar: CaracteristicaModel[] = v.caracteristicasLida;
+    if (!seiLidar) {
+      seiLidar = [];
+    }
 
-  // Lista simples: cada posição guarda o id de uma característica e se
-  // o usuário "tem" e/ou "sabe lidar" com ela.
-  const lista: { idCaracteristica: string; tem: boolean; lida: boolean }[] = [];
+    // Lista simples: cada posição guarda o id de uma característica e se
+    // o usuário "tem" e/ou "sabe lidar" com ela.
+    const lista: { idCaracteristica: string; tem: boolean; lida: boolean }[] = [];
 
-  // Primeiro, adiciona todas as características que o usuário marcou
-  // como "tenho" (todas entram com lida = false por enquanto).
-  for (const caracteristica of tenho) {
-    lista.push({ idCaracteristica: caracteristica.id, tem: true, lida: false });
-  }
+    // Primeiro, adiciona todas as características que o usuário marcou
+    // como "tenho" (todas entram com lida = false por enquanto).
+    for (const caracteristica of tenho) {
+      lista.push({ idCaracteristica: caracteristica.id, tem: true, lida: false });
+    }
 
-  // Agora percorre a lista de "sei lidar". Se a característica já
-  // estiver na lista (porque também apareceu em "tenho"), só liga o
-  // campo lida nela. Se ainda não estiver, adiciona uma entrada nova.
-  for (const caracteristica of seiLidar) {
-    let jaEstaNaLista = false;
+    // Agora percorre a lista de "sei lidar". Se a característica já
+    // estiver na lista (porque também apareceu em "tenho"), só liga o
+    // campo lida nela. Se ainda não estiver, adiciona uma entrada nova.
+    for (const caracteristica of seiLidar) {
+      let jaEstaNaLista = false;
 
-    for (const item of lista) {
-      if (item.idCaracteristica === caracteristica.id) {
-        item.lida = true;
-        jaEstaNaLista = true;
-        break;
+      for (const item of lista) {
+        if (item.idCaracteristica === caracteristica.id) {
+          item.lida = true;
+          jaEstaNaLista = true;
+          break;
+        }
+      }
+
+      if (!jaEstaNaLista) {
+        lista.push({ idCaracteristica: caracteristica.id, tem: false, lida: true });
       }
     }
 
-    if (!jaEstaNaLista) {
-      lista.push({ idCaracteristica: caracteristica.id, tem: false, lida: true });
+    if (lista.length === 0) {
+      return;
     }
-  }
 
-  if (lista.length === 0) {
-    return;
-  }
+    // Monta uma chamada HTTP pra cada característica da lista (ainda sem
+    // disparar nenhuma — só cria os "pedidos", o forkJoin lá embaixo que
+    // dispara todos juntos).
+    const chamadas: Observable<CaracteristicaUsuarioModel>[] = [];
+    for (const item of lista) {
+      const cu = new CaracteristicaUsuarioModel();
+      cu.idUsuario = idUsuario;
+      cu.idCaracteristica = item.idCaracteristica;
+      cu.tem = item.tem;
+      cu.lida = item.lida;
+      chamadas.push(this.caracteristicaUsuarioService.salvar(cu));
+    }
 
-  // Monta uma chamada HTTP pra cada característica da lista (ainda sem
-  // disparar nenhuma — só cria os "pedidos", o forkJoin lá embaixo que
-  // dispara todos juntos).
-  const chamadas: Observable<CaracteristicaUsuarioModel>[] = [];
-  for (const item of lista) {
-    const cu = new CaracteristicaUsuarioModel();
-    cu.idUsuario = idUsuario;
-    cu.idCaracteristica = item.idCaracteristica;
-    cu.tem = item.tem;
-    cu.lida = item.lida;
-    chamadas.push(this.caracteristicaUsuarioService.salvar(cu));
+    await new Promise<void>((resolve) => {
+      forkJoin(chamadas).pipe(
+        catchError(() => of(null)), // não trava o cadastro se uma característica falhar
+      ).subscribe(() => resolve());
+    });
   }
-
-  await new Promise<void>((resolve) => {
-    forkJoin(chamadas).pipe(
-      catchError(() => of(null)), // não trava o cadastro se uma característica falhar
-    ).subscribe(() => resolve());
-  });
-}
 
   async exibirMensagem(texto: string) {
     const toast = await this.toastController.create({
@@ -262,6 +276,32 @@ private async salvarCaracteristicas(idUsuario: string, v: any): Promise<void> {
     valor = valor.replace(/\D/g, '');
     valor = valor.replace(/^(\d{5})(\d)/, '$1-$2');
     this.formGroup.patchValue({ cep: valor }, { emitEvent: false });
+
+    const cepLimpo = valor.replace(/\D/g, '');
+    if (cepLimpo.length === 8) {
+      this.buscarEnderecoPorCep(cepLimpo);
+    }
+  }
+
+  private buscarEnderecoPorCep(cep: string): void {
+    this.enderecoService.buscarPorCep(cep).subscribe({
+      next: (dados) => {
+        if (dados.erro) {
+          this.exibirMensagem('CEP não encontrado.');
+          return;
+        }
+
+        this.formGroup.patchValue({
+          rua: dados.logradouro,
+          bairro: dados.bairro,
+          cidade: dados.localidade,
+        });
+      },
+      error: (err) => {
+        console.log('Erro ao buscar CEP: ', err);
+        this.exibirMensagem('Não foi possível buscar o CEP. Preencha manualmente.');
+      }
+    });
   }
 
   // Confere se a data digitada é válida (ex: rejeita 31/02/2024) e não está no futuro.

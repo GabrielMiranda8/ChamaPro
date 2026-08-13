@@ -24,23 +24,21 @@
       <!-- Nome -->
       <div class="field-group">
         <ion-label class="field-label">Nome completo</ion-label>
-        <ion-input class="input" type="text" placeholder="João da Silva"
-          formControlName="nome" required></ion-input>
+        <ion-input class="input" type="text" placeholder="João da Silva" formControlName="nome" required></ion-input>
       </div>
 
       <!-- E-mail -->
       <div class="field-group">
         <ion-label class="field-label">E-mail</ion-label>
-        <ion-input class="input" type="email" placeholder="seu@email.com"
-          formControlName="email" required></ion-input>
+        <ion-input class="input" type="email" placeholder="seu@email.com" formControlName="email" required></ion-input>
       </div>
 
       <!-- Senha + Confirmar -->
       <div class="field-row">
         <div class="field-group flex-1">
           <ion-label class="field-label">Senha</ion-label>
-          <ion-input class="input" [type]="showSenha() ? 'text' : 'password'"
-            placeholder="••••••••" formControlName="senha" required>
+          <ion-input class="input" [type]="showSenha() ? 'text' : 'password'" placeholder="••••••••"
+            formControlName="senha" required>
             <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleSenha()">
               <ion-icon slot="icon-only" [name]="showSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
             </ion-button>
@@ -49,8 +47,8 @@
 
         <div class="field-group flex-1">
           <ion-label class="field-label">Confirmar</ion-label>
-          <ion-input class="input" [type]="showConfirmarSenha() ? 'text' : 'password'"
-            placeholder="••••••••" formControlName="confirmarSenha" required>
+          <ion-input class="input" [type]="showConfirmarSenha() ? 'text' : 'password'" placeholder="••••••••"
+            formControlName="confirmarSenha" required>
             <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleConfirmarSenha()">
               <ion-icon slot="icon-only" [name]="showConfirmarSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
             </ion-button>
@@ -62,41 +60,76 @@
       <div class="field-row">
         <div class="field-group flex-1">
           <ion-label class="field-label">Data de nascimento</ion-label>
-          <ion-input class="input" type="text" placeholder="dd/mm/aaaa"
-            formControlName="dtNasc" maxlength="10" inputmode="numeric"
-            required (ionInput)="mascaraData($event)">
+          <ion-input class="input" type="text" placeholder="dd/mm/aaaa" formControlName="dtNasc" maxlength="10"
+            inputmode="numeric" required (ionInput)="mascaraData($event)">
             <ion-icon slot="end" name="calendar-outline" class="input-icon"></ion-icon>
           </ion-input>
         </div>
 
         <div class="field-group flex-1">
           <ion-label class="field-label">CPF</ion-label>
-          <ion-input class="input" type="text" placeholder="000.000.000-00"
-            formControlName="cpf" maxlength="14" inputmode="numeric"
-            required (ionInput)="mascaraCpf($event)"></ion-input>
+          <ion-input class="input" type="text" placeholder="000.000.000-00" formControlName="cpf" maxlength="14"
+            inputmode="numeric" required (ionInput)="mascaraCpf($event)"></ion-input>
         </div>
       </div>
 
       <!-- CEP -->
+      <!-- CEP -->
       <div class="field-group">
         <ion-label class="field-label">CEP</ion-label>
-        <ion-input class="input" type="text" placeholder="35920-000"
-          formControlName="cep" maxlength="9" inputmode="numeric"
-          required (ionInput)="mascaraCep($event)"></ion-input>
+        <ion-input class="input" type="text" placeholder="35920-000" formControlName="cep" maxlength="9"
+          inputmode="numeric" required (ionInput)="mascaraCep($event)"></ion-input>
+      </div>
+
+      <!-- Rua + Número -->
+      <div class="field-row">
+        <div class="field-group" style="flex: 2;">
+          <ion-label class="field-label">Rua</ion-label>
+          <ion-input class="input" type="text" placeholder="Rua das Acácias" formControlName="rua" required></ion-input>
+        </div>
+
+        <div class="field-group flex-1">
+          <ion-label class="field-label">Número</ion-label>
+          <ion-input class="input" type="text" placeholder="120" formControlName="numero" inputmode="numeric"
+            required></ion-input>
+        </div>
+      </div>
+
+      <!-- Bairro + Cidade -->
+      <div class="field-row">
+        <div class="field-group flex-1">
+          <ion-label class="field-label">Bairro</ion-label>
+          <ion-input class="input" type="text" placeholder="Centro" formControlName="bairro" required></ion-input>
+        </div>
+
+        <div class="field-group flex-1">
+          <ion-label class="field-label">Cidade</ion-label>
+          <ion-input class="input" type="text" placeholder="Coronel Fabriciano" formControlName="cidade"
+            required></ion-input>
+        </div>
+      </div>
+
+      <!-- Complemento + Referência -->
+      <div class="field-row">
+        <div class="field-group flex-1">
+          <ion-label class="field-label">Complemento</ion-label>
+          <ion-input class="input" type="text" placeholder="Bloco B, Apto 301"
+            formControlName="complemento"></ion-input>
+        </div>
+
+        <div class="field-group flex-1">
+          <ion-label class="field-label">Referência</ion-label>
+          <ion-input class="input" type="text" placeholder="Perto da praça" formControlName="referencia"></ion-input>
+        </div>
       </div>
 
       <!-- Acessibilidade -->
       <div class="field-group">
         <ion-label class="field-label">Características</ion-label>
-        <ion-select
-          class="input select-input"
-          okText="Confirmar"
-          cancelText="Cancelar"
-          placeholder="Selecione suas características"
-          [multiple]="true"
-          formControlName="caracteristicas">
+        <ion-select class="input select-input" okText="Confirmar" cancelText="Cancelar"
+          placeholder="Selecione suas características" [multiple]="true" formControlName="caracteristicas">
           @for (carac of todasCaracteristicas; track carac.id) {
-            <ion-select-option [value]="carac">{{ carac.nome }}</ion-select-option>
+          <ion-select-option [value]="carac">{{ carac.nome }}</ion-select-option>
           }
         </ion-select>
       </div>
@@ -116,20 +149,15 @@
       </div>
 
       @if (formGroup.value.isProfissional) {
-        <div class="field-group">
-          <ion-label class="field-label">Sabe atender clientes com quais características?</ion-label>
-          <ion-select
-            class="input select-input"
-            okText="Confirmar"
-            cancelText="Cancelar"
-            placeholder="Selecione as que você sabe atender"
-            [multiple]="true"
-            formControlName="caracteristicasLida">
-            @for (carac of todasCaracteristicas; track carac.id) {
-              <ion-select-option [value]="carac">{{ carac.nome }}</ion-select-option>
-            }
-          </ion-select>
-        </div>
+      <div class="field-group">
+        <ion-label class="field-label">Sabe atender clientes com quais características?</ion-label>
+        <ion-select class="input select-input" okText="Confirmar" cancelText="Cancelar"
+          placeholder="Selecione as que você sabe atender" [multiple]="true" formControlName="caracteristicasLida">
+          @for (carac of todasCaracteristicas; track carac.id) {
+          <ion-select-option [value]="carac">{{ carac.nome }}</ion-select-option>
+          }
+        </ion-select>
+      </div>
       }
 
       <!-- Submit -->

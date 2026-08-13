@@ -42,13 +42,18 @@ export class EnderecoService {
     );
   }
 
+  buscarPorCep(cep: string): Observable<any> {
+    const cepLimpo = cep.replace(/\D/g, '');
+    return this.http.get(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+  }
+
   alterar(endereco: EnderecoModel): Observable<EnderecoModel> {
-      return this.http.put<EnderecoModel>(
-        `${this.API_URL}/${endereco.id}`,
-        endereco,
-        { headers: this.tokenService.gerarCabecalhoAutenticacao() }
-      );
-    }
+    return this.http.put<EnderecoModel>(
+      `${this.API_URL}/${endereco.id}`,
+      endereco,
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() }
+    );
+  }
 
   excluir(id: string): Observable<void> {
     return this.http.delete<void>(

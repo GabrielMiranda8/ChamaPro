@@ -40,10 +40,10 @@ public class Endereco {
     @Column(nullable = true)
     private Integer numero;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = true) 
     private String complemento; 
 
-    @Column(length = 200)
+    @Column(length = 200, nullable = true)
     private String referencia;
 
     @ManyToOne
