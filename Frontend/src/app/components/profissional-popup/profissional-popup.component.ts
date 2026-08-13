@@ -6,6 +6,7 @@ import {
   IonButton,
   IonIcon,
   ModalController,
+  ToastController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -42,7 +43,10 @@ export class ProfissionalPopupComponent implements OnInit {
   totalServicos = 0;         // Futuramente virá do backend
   disponibilidade = 'Seg a Sex, 8h – 18h'; // Futuramente virá do perfil
 
-  constructor(private modalCtrl: ModalController) {
+  constructor(
+    private modalCtrl: ModalController,
+    private toastController: ToastController,
+  ) {
     addIcons({
       closeOutline,
       handLeftOutline,
@@ -83,10 +87,6 @@ export class ProfissionalPopupComponent implements OnInit {
       // Fecha o popup também, devolvendo o sucesso para a busca
       this.modalCtrl.dismiss({ sucesso: true, pedido: data.pedido });
     }
-
-    if (data?.abrirChat) {
-      this.modalCtrl.dismiss({ abrirChat: true });
-    }
   }
 
   // ─── Fecha o popup sem ação ────────────────────────────────────────────────
@@ -97,8 +97,17 @@ export class ProfissionalPopupComponent implements OnInit {
 
   // ─── Chat ──────────────────────────────────────────────────────────────────
 
-  abrirChat() {
-    this.modalCtrl.dismiss({ abrirChat: true });
+  // O Chat ainda não foi implementado no backend (entidade Chat é só um
+  // placeholder vazio por enquanto). Por isso o botão fica visível mas não
+  // navega pra lugar nenhum - só avisa que a função está a caminho.
+  async abrirChat(): Promise<void> {
+    const toast = await this.toastController.create({
+      message: 'Chat em breve! Essa funcionalidade ainda está em desenvolvimento.',
+      duration: 2000,
+      color: 'medium',
+      position: 'top',
+    });
+    await toast.present();
   }
 
   // ─── Ver perfil completo ───────────────────────────────────────────────────
@@ -135,9 +144,15 @@ export class ProfissionalPopupComponent implements OnInit {
   }
 
   possuiCaracteristica(nome: string): boolean {
-    return this.profissional?.caracteristicas?.some(
-      c => c.nome.toUpperCase() === nome.toUpperCase()
-    ) ?? false;
+    if (!this.profissional?.caracteristicas) {
+      return false;
+    }
+    for (const c of this.profissional.caracteristicas) {
+      if (c.nome.toUpperCase() === nome.toUpperCase()) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }

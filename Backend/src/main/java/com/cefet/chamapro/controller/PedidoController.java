@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,7 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/pedido")
+@RequestMapping("/pedidos")
 @Tag(name = "Pedidos")
 public class PedidoController {
 
@@ -51,37 +50,50 @@ public class PedidoController {
         return ResponseEntity.ok(pService.listarPorCliente(idCliente));
     }
 
-
     @GetMapping("/{id}")
     @Operation(summary = "Buscar pedido por ID")
     public ResponseEntity<PedidoResponseDTO> buscarPorId(@PathVariable String id) {
-    	PedidoResponseDTO pResponseDTO = pService.buscarPorId(id);
+        PedidoResponseDTO pResponseDTO = pService.buscarPorId(id);
         return ResponseEntity.ok(pResponseDTO);
     }
 
     @PostMapping
     @Operation(summary = "Cadastrar pedido")
     public ResponseEntity<PedidoResponseDTO> inserir(@Valid @RequestBody PedidoRequestDTO pRequestDTO) {
-    	PedidoResponseDTO pResponseDTO = pService.inserir(pRequestDTO);
+        PedidoResponseDTO pResponseDTO = pService.inserir(pRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(pResponseDTO);
     }
-    
+
     @PutMapping("/{id}")
     @Operation(summary = "Alterar pedido")
-    public ResponseEntity<PedidoResponseDTO> atualizar(@PathVariable String id, @Valid @RequestBody PedidoRequestDTO pRequestDTO) {
+    public ResponseEntity<PedidoResponseDTO> atualizar(@PathVariable String id,
+            @Valid @RequestBody PedidoRequestDTO pRequestDTO) {
 
-    	PedidoResponseDTO pResponseDTO = pService.atualizar(id, pRequestDTO);
+        PedidoResponseDTO pResponseDTO = pService.atualizar(id, pRequestDTO);
 
         return ResponseEntity.ok(pResponseDTO);
-    }    
+    }
 
-    @PatchMapping("/{id}/situacao")
+    @PatchMapping("/{id}/status")
     @Operation(summary = "Atualizar status do pedido")
     public ResponseEntity<PedidoResponseDTO> atualizarStatus(@PathVariable String id) {
         PedidoResponseDTO pedidoResponseDTO = pService.atualizarStatus(id);
         return ResponseEntity.ok(pedidoResponseDTO);
     }
 
+    @PatchMapping("/{id}/recusar")
+    @Operation(summary = "Recusar pedido")
+    public ResponseEntity<PedidoResponseDTO> recusar(@PathVariable String id) {
+        PedidoResponseDTO pedidoResponseDTO = pService.recusar(id);
+        return ResponseEntity.ok(pedidoResponseDTO);
+    }
+
+    @PatchMapping("/{id}/cancelar")
+    @Operation(summary = "Cancelar pedido")
+    public ResponseEntity<PedidoResponseDTO> cancelar(@PathVariable String id) {
+        PedidoResponseDTO pedidoResponseDTO = pService.cancelar(id);
+        return ResponseEntity.ok(pedidoResponseDTO);
+    }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Excluir pedido")

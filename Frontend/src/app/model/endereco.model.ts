@@ -7,6 +7,7 @@ export class EnderecoModel {
     numero: number;
     complemento: string;
     referencia: string;
+    idUsuario: string; 
 
     constructor(){
         this.id = "";
@@ -17,5 +18,6 @@ export class EnderecoModel {
         this.numero = 0;
         this.complemento = "";
         this.referencia = "";
+        this.idUsuario = "";
     }
 }

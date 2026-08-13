@@ -1,14 +1,14 @@
-$primary:       #F97316;
+$primary: #F97316;
 $primary-light: #FFF7ED;
-$primary-dark:  #EA580C;
-$text-dark:     #1C1C1E;
-$text-medium:   #6B7280;
-$text-light:    #9CA3AF;
-$border-color:  #E5E7EB;
-$bg-input:      #F9FAFB;
-$radius-sm:     8px;
-$radius-md:     12px;
-$radius-lg:     16px;
+$primary-dark: #EA580C;
+$text-dark: #1C1C1E;
+$text-medium: #6B7280;
+$text-light: #9CA3AF;
+$border-color: #E5E7EB;
+$bg-input: #F9FAFB;
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
 
 // ─── Header ──────────────────────────────────────────────────────────────────
 .popup-header {
@@ -20,13 +20,13 @@ $radius-lg:     16px;
   }
 
   .header-content {
-    background: #{$primary};   // ← garante o laranja mesmo sem ion-toolbar
+    background: #{$primary}; // ← garante o laranja mesmo sem ion-toolbar
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 28px 20px 20px;
     position: relative;
-    color: #fff;                // texto branco explícito sobre fundo laranja
+    color: #fff; // texto branco explícito sobre fundo laranja
   }
 
   .close-btn {
@@ -44,7 +44,9 @@ $radius-lg:     16px;
     cursor: pointer;
     color: #fff;
 
-    ion-icon { font-size: 20px; }
+    ion-icon {
+      font-size: 20px;
+    }
   }
 
   .avatar {
@@ -92,7 +94,9 @@ $radius-lg:     16px;
     font-size: 12px;
     font-weight: 600;
 
-    ion-icon { font-size: 14px; }
+    ion-icon {
+      font-size: 14px;
+    }
 
     &.libras {
       background: #7C3AED;
@@ -205,7 +209,9 @@ $radius-lg:     16px;
     text-decoration: underline;
     padding: 0;
 
-    &:active { opacity: 0.7; }
+    &:active {
+      opacity: 0.7;
+    }
   }
 }
 
@@ -237,4 +243,8 @@ $radius-lg:     16px;
     font-size: 15px;
     color: #fff;
   }
+}
+
+.btn-chat-em-breve {
+  opacity: 0.55;
 }

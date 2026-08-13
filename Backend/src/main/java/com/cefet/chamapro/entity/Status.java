@@ -5,4 +5,6 @@ public enum Status {
     ACEITO,
     EM_ANDAMENTO,
     FINALIZADO,
+    RECUSADO,
+    CANCELADO
 }

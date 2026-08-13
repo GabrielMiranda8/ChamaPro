@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class EnderecoRequestDTO {
 
-    //@NotBlank(message = "O campo cep é obrigatório")
+    @NotBlank(message = "O campo cep é obrigatório")
     private String cep;
 
     //@NotBlank(message = "O campo rua é obrigatório")
@@ -28,5 +28,6 @@ public class EnderecoRequestDTO {
     private String complemento;
     private String referencia;
     
+    @NotBlank(message = "O campo idUsuario é obrigatório")
     private String idUsuario;
 }

@@ -1,51 +1,58 @@
 <ion-content>
   <div class="container">
     <h1>Meus Pedidos</h1>
-    <div
-      class="pedido-card"
-      *ngFor="let pedido of pedidos">
+
+    <div class="pedido-card" *ngFor="let pedido of pedidos">
       <div class="top">
         <div>
-          <h2>{{ pedido.servico }}</h2>
-          <p class="profissional">
-            {{ pedido.profissional }}
+          <h2>{{ pedido.nomeServico }}</h2>
+          <p class="profissional" *ngIf="tipoUsuario === 'PROFISSIONAL'">
+            {{ pedido.nomeCliente }}
+          </p>
+          <p class="profissional" *ngIf="tipoUsuario !== 'PROFISSIONAL'">
+            {{ pedido.nomeProfissional }}
           </p>
         </div>
         <div class="valor">
-          R$ {{ pedido.valor }}
+          R$ {{ pedido.preco }}
         </div>
       </div>
+
       <div class="bottom">
         <span class="data">
-          {{ pedido.data }}
+          {{ pedido.data | date:'dd MMM, HH:mm' }}
         </span>
-        <div
-          class="status"
-          [ngClass]="pedido.status">
-          <ion-icon
-            [name]="
-              pedido.status === 'concluido'
-              ? 'checkmark-circle-outline'
-              : pedido.status === 'agendado'
-              ? 'time-outline'
-              : 'construct-outline'">
-          </ion-icon>
-          <span>
-            {{
-              pedido.status === 'concluido'
-                ? 'Concluído'
-                : pedido.status === 'agendado'
-                ? 'Agendado'
-                : 'Em andamento'
-            }}
-          </span>
+        <div class="status" [ngClass]="obterClasseStatus(pedido.status)">
+          <ion-icon [name]="obterIconeStatus(pedido.status)"></ion-icon>
+          <span>{{ obterLabelStatus(pedido.status) }}</span>
         </div>
       </div>
-      <button
-        *ngIf="pedido.status !== 'concluido'"
-        class="cancelar">
+
+      <!-- Ações do CLIENTE: só cancelar, enquanto o pedido ainda estiver ativo -->
+      <button *ngIf="tipoUsuario !== 'PROFISSIONAL' && pedidoEstaAtivo(pedido)" class="cancelar"
+        (click)="cancelarPedido(pedido)">
         Cancelar pedido
       </button>
+
+      <!-- Ações do PROFISSIONAL: aceitar/recusar quando pendente -->
+      <div class="acoes-profissional" *ngIf="tipoUsuario === 'PROFISSIONAL' && pedido.status === 'PENDENTE'">
+        <button class="recusar" (click)="recusarPedido(pedido)">
+          Recusar
+        </button>
+        <button class="aceitar" (click)="aceitarPedido(pedido)">
+          Aceitar
+        </button>
+      </div>
+
+      <!-- Ações do PROFISSIONAL: avançar etapa quando já aceito ou em andamento -->
+      <button *ngIf="tipoUsuario === 'PROFISSIONAL' && (pedido.status === 'ACEITO' || pedido.status === 'EM_ANDAMENTO')"
+        class="avancar" (click)="avancarPedido(pedido)">
+        {{ obterTextoBotaoAvancar(pedido.status) }}
+      </button>
     </div>
+
+    <p class="vazio" *ngIf="!carregando && pedidos.length === 0">
+      Nenhum pedido encontrado.
+    </p>
   </div>
 </ion-content>

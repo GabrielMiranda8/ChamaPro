@@ -1,17 +1,18 @@
-import { ClienteModel } from "./cliente.model";
 import { EnderecoModel } from "./endereco.model";
-import { ProfissionalModel } from "./profissional.model";
-import { ServicoModel } from "./servico.model";
 
 export class PedidoModel {
     id: string;
     data: Date;
     preco: number;
     status: string;
-    endereco!: EnderecoModel;
+    endereco!: EnderecoModel; 
     idProfissional: string;
     idServico: string;
     idCliente: string;
+    idEndereco: string; 
+    nomeServico: string;
+    nomeCliente: string;
+    nomeProfissional: string;
 
     constructor(){
         this.id = "";
@@ -21,5 +22,9 @@ export class PedidoModel {
         this.idProfissional = "";
         this.idServico = "";
         this.idCliente = "";
+        this.idEndereco = "";
+        this.nomeServico = "";
+        this.nomeCliente = "";
+        this.nomeProfissional = "";
     }
 }

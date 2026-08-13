@@ -103,7 +103,8 @@ public class PedidoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Serviço não encontrado. Id: " + dto.getIdServico()));
 
         Endereco endereco = enderecoRepository.findById(dto.getIdEndereco())
-                .orElseThrow(() -> new ResourceNotFoundException("Endereço não encontrado. Id: " + dto.getIdEndereco()));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Endereço não encontrado. Id: " + dto.getIdEndereco()));
 
         Pedido p = new Pedido();
         p.setProfissional(profissional);
@@ -123,7 +124,8 @@ public class PedidoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado. Id: " + id));
 
         Endereco endereco = enderecoRepository.findById(dto.getIdEndereco())
-                .orElseThrow(() -> new ResourceNotFoundException("Endereço não encontrado. Id: " + dto.getIdEndereco()));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Endereço não encontrado. Id: " + dto.getIdEndereco()));
 
         p.setPreco(dto.getPreco());
         p.setData(dto.getData());
@@ -148,7 +150,7 @@ public class PedidoService {
         if (p.getStatus() == Status.FINALIZADO) {
             throw new BusinessException("O pedido já está concluído e não pode ser atualizado.");
         }
-        
+
         if (p.getStatus() == Status.PENDENTE) {
             p.setStatus(Status.ACEITO);
         } else if (p.getStatus() == Status.ACEITO) {
@@ -159,4 +161,32 @@ public class PedidoService {
 
         return new PedidoResponseDTO(pRepository.save(p));
     }
+
+    @Transactional
+    public PedidoResponseDTO recusar(String id) {
+        Pedido p = pRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado. Id: " + id));
+
+        if (p.getStatus() != Status.PENDENTE) {
+            throw new BusinessException("Só é possível recusar um pedido que ainda está pendente.");
+        }
+
+        p.setStatus(Status.RECUSADO);
+        return new PedidoResponseDTO(pRepository.save(p));
+    }
+
+    @Transactional
+    public PedidoResponseDTO cancelar(String id) {
+        Pedido p = pRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado. Id: " + id));
+
+        if (p.getStatus() == Status.FINALIZADO || p.getStatus() == Status.CANCELADO
+                || p.getStatus() == Status.RECUSADO) {
+            throw new BusinessException("Esse pedido não pode mais ser cancelado.");
+        }
+
+        p.setStatus(Status.CANCELADO);
+        return new PedidoResponseDTO(pRepository.save(p));
+    }
+
 }

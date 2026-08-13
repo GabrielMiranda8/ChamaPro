@@ -3,6 +3,7 @@ package com.cefet.chamapro.dto;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -12,7 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PedidoRequestDTO {
 
-    @NotBlank(message = "O campo preco é obrigatório")
+    @NotNull(message = "O campo preco é obrigatório")
+    @DecimalMin(value = "0.0", inclusive = false, message = "O preço deve ser maior que zero")
     private BigDecimal preco;
 
     @NotBlank(message = "O campo idServico é obrigatório")

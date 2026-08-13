@@ -35,10 +35,8 @@ import { UsuarioModel } from 'src/app/model/usuario.model';
 import { ServicoModel } from 'src/app/model/servico.model';
 import { ServicoService } from 'src/app/services/servico.service';
 import { ProfissionalServicoModel } from 'src/app/model/profissional-servico.model';
-
-// Substitua pelos seus serviços reais
-// import { PedidoService } from 'src/app/services/pedido.service';
-// import { ViaCepService } from 'src/app/services/via-cep.service';
+import { PedidoService } from 'src/app/services/pedido.service';
+import { EnderecoService } from 'src/app/services/endereco.service';
 
 @Component({
   selector: 'app-contrato',
@@ -87,8 +85,8 @@ export class ContratoComponent implements OnInit {
     private modalController: ModalController,
     private toastController: ToastController,
     private servicoService: ServicoService,
-    // private pedidoService: PedidoService,
-    // private viaCepService: ViaCepService,
+    private pedidoService: PedidoService,
+    private enderecoService: EnderecoService,
   ) {
     addIcons({
       cashOutline,
@@ -103,14 +101,14 @@ export class ContratoComponent implements OnInit {
   ngOnInit(): void {
     this.enderecoCliente = this.cliente?.endereco ?? null;
     this.inicializarForm();
-     this.servicoService.buscarPorId(this.profissionalServico.idServico).subscribe({
-      next: (servico) =>{
+    this.servicoService.buscarPorId(this.profissionalServico.idServico).subscribe({
+      next: (servico) => {
         this.servico = servico;
       },
-      error: (err) =>{
+      error: (err) => {
         console.log("Erro ao buscar servico: ", err);
       }
-     });
+    });
   }
 
   // ─── Formulário ────────────────────────────────────────────────────────────
@@ -144,7 +142,9 @@ export class ContratoComponent implements OnInit {
     const campos = ['cep', 'rua', 'numero', 'bairro', 'cidade'];
 
     if (usarCadastrado) {
-      campos.forEach((c) => group.get(c)?.clearValidators());
+      for (const campo of campos) {
+        group.get(campo)?.clearValidators();
+      }
     } else {
       group.get('cep')?.setValidators([Validators.required, Validators.pattern(/^\d{5}-\d{3}$/)]);
       group.get('rua')?.setValidators(Validators.required);
@@ -153,7 +153,9 @@ export class ContratoComponent implements OnInit {
       group.get('cidade')?.setValidators(Validators.required);
     }
 
-    campos.forEach((c) => group.get(c)?.updateValueAndValidity());
+    for (const campo of campos) {
+      group.get(campo)?.updateValueAndValidity();
+    }
   }
 
   // ─── Seleções ──────────────────────────────────────────────────────────────
@@ -212,16 +214,21 @@ export class ContratoComponent implements OnInit {
   }
 
   private marcarTudoComoTocado(group: FormGroup): void {
-    Object.values(group.controls).forEach((ctrl) => {
+    for (const nomeCampo in group.controls) {
+      const ctrl = group.controls[nomeCampo];
       ctrl.markAsTouched();
+      // se o controle for um FormGroup aninhado (ex: outroEndereco), desce nele também
       if ((ctrl as FormGroup).controls) {
         this.marcarTudoComoTocado(ctrl as FormGroup);
       }
-    });
+    }
   }
 
   // ─── Submit ────────────────────────────────────────────────────────────────
 
+  // Ponto de entrada do envio. Fica curto de propósito: só decide QUAL caminho
+  // seguir (endereço já cadastrado x endereço novo) e delega pros métodos abaixo.
+  // Assim cada função tem uma responsabilidade só e fica fácil de debugar.
   async enviarPedido(): Promise<void> {
     this.marcarTudoComoTocado(this.pedidoForm);
 
@@ -231,42 +238,73 @@ export class ContratoComponent implements OnInit {
     }
 
     const val = this.pedidoForm.value;
+    const dataHora = new Date(`${val.data}T${val.hora}:00`);
 
+    this.carregando = true;
+
+    if (val.usarEnderecoCliente === true) {
+      // Caso 1: usar o endereço que já está cadastrado no perfil do cliente.
+      // Esse endereço já existe no banco, então já tem um id - não precisa salvar de novo.
+      if (!this.enderecoCliente || !this.enderecoCliente.id) {
+        this.carregando = false;
+        this.mostrarToast('Você não tem um endereço cadastrado. Selecione "Outro endereço".', 'warning');
+        return;
+      }
+
+      this.criarPedido(this.enderecoCliente.id, dataHora);
+      return;
+    }
+
+    // Caso 2: endereço novo digitado no formulário.
+    // Esse endereço ainda não existe no banco, então primeiro salvamos ele
+    // separadamente (POST /enderecos) pra conseguir o id, e só depois criamos o pedido.
+    const novoEndereco = new EnderecoModel();
+    novoEndereco.cep = val.outroEndereco.cep;
+    novoEndereco.rua = val.outroEndereco.rua;
+    novoEndereco.numero = val.outroEndereco.numero;
+    novoEndereco.complemento = val.outroEndereco.complemento;
+    novoEndereco.bairro = val.outroEndereco.bairro;
+    novoEndereco.cidade = val.outroEndereco.cidade;
+    novoEndereco.referencia = val.outroEndereco.referencia;
+    novoEndereco.idUsuario = this.cliente.id; // EnderecoRequestDTO exige esse vínculo
+
+    this.enderecoService.salvar(novoEndereco).subscribe({
+      next: (enderecoSalvo) => {
+        this.criarPedido(enderecoSalvo.id, dataHora);
+      },
+      error: (err) => {
+        console.log('Erro ao salvar endereço: ', err);
+        this.carregando = false;
+        this.mostrarToast('Erro ao salvar o endereço. Tente novamente.', 'danger');
+      }
+    });
+  }
+
+  // Monta o payload igual ao PedidoRequestDTO do backend e envia.
+  // Importante: o backend NÃO espera "status" no corpo da requisição
+  // (o PedidoRequestDTO não tem esse campo) - ele mesmo define o status
+  // inicial do pedido ao criar. Por isso não setamos status aqui.
+  private criarPedido(idEndereco: string, dataHora: Date): void {
     const pedido = new PedidoModel();
     pedido.idProfissional = this.profissional.id;
     pedido.idCliente = this.cliente.id;
     pedido.idServico = this.profissionalServico.idServico;
     pedido.preco = this.profissionalServico.preco;
-    pedido.status = 'pendente';
-
-    // Combina data + hora
-    const dataHora = new Date(`${val.data}T${val.hora}:00`);
     pedido.data = dataHora;
+    pedido.idEndereco = idEndereco;
 
-    // Endereço
-    if (val.usarEnderecoCliente && this.enderecoCliente) {
-      pedido.endereco = this.enderecoCliente;
-    } else {
-      const e = new EnderecoModel();
-      Object.assign(e, val.outroEndereco);
-      pedido.endereco = e;
-    }
-
-    this.carregando = true;
-    try {
-      // Descomente e substitua pela chamada real ao seu serviço:
-      // await this.pedidoService.criar(pedido);
-
-      // Simulação de delay de rede
-      await new Promise((r) => setTimeout(r, 1200));
-
-      await this.mostrarToast('Pedido enviado com sucesso!', 'success');
-      this.modalController.dismiss({ pedido, sucesso: true });
-    } catch (err) {
-      this.mostrarToast('Erro ao enviar pedido. Tente novamente.', 'danger');
-    } finally {
-      this.carregando = false;
-    }
+    this.pedidoService.salvar(pedido).subscribe({
+      next: async (pedidoSalvo) => {
+        this.carregando = false;
+        await this.mostrarToast('Pedido enviado com sucesso!', 'success');
+        this.modalController.dismiss({ pedido: pedidoSalvo, sucesso: true });
+      },
+      error: (err) => {
+        console.log('Erro ao salvar pedido: ', err);
+        this.carregando = false;
+        this.mostrarToast('Erro ao enviar pedido. Tente novamente.', 'danger');
+      }
+    });
   }
 
   // ─── Ações secundárias ─────────────────────────────────────────────────────
@@ -276,10 +314,6 @@ export class ContratoComponent implements OnInit {
   }
 
   // ─── Utils ─────────────────────────────────────────────────────────────────
-
-  private extrairValorNumerico(valor: string): number {
-    return parseFloat(valor.replace(/[^\d]/g, '')) || 0;
-  }
 
   private gerarHoras(): string[] {
     const horas: string[] = [];
