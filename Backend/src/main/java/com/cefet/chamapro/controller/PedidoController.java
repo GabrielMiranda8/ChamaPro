@@ -50,6 +50,12 @@ public class PedidoController {
         return ResponseEntity.ok(pService.listarPorCliente(idCliente));
     }
 
+    @GetMapping("/usuario/{idUsuario}")
+    @Operation(summary = "Listar pedidos de um usuário")
+    public ResponseEntity<List<PedidoResponseDTO>> listarPorUsuario(@PathVariable String idUsuario) {
+        return ResponseEntity.ok(pService.listarPorUsuario(idUsuario));
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Buscar pedido por ID")
     public ResponseEntity<PedidoResponseDTO> buscarPorId(@PathVariable String id) {

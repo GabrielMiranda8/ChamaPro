@@ -82,6 +82,7 @@ export class PedidosPage implements OnInit {
         this.mostrarToast('Erro ao carregar pedidos.', 'danger');
       }
     });
+    console.log('Pedidos carregados: ', this.pedidos);
   }
 
   // Chamado pelo <select> do filtro sempre que o usuário troca o campo ou a direção
