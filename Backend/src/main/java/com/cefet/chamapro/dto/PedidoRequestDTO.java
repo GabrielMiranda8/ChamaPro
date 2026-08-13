@@ -32,4 +32,6 @@ public class PedidoRequestDTO {
     @NotBlank(message = "O campo idEndereco é obrigatório")
     private String idEndereco;
 
+    private String descricao;
+
 }

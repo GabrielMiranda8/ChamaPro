@@ -59,4 +59,7 @@ public class Pedido {
 
     @Column(nullable = false)
     private Date data;
+
+    @Column(length = 500, nullable = true)
+    private String descricao;
 }

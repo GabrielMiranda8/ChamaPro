@@ -32,10 +32,10 @@
         <div>
           <h2>{{ pedido.nomeServico }}</h2>
           <p class="profissional" *ngIf="tipoUsuario === 'PROFISSIONAL'">
-            {{ pedido.nomeCliente }}
+            Cliente: {{ pedido.nomeCliente }}
           </p>
           <p class="profissional" *ngIf="tipoUsuario !== 'PROFISSIONAL'">
-            {{ pedido.nomeProfissional }}
+            Profissional: {{ pedido.nomeProfissional }}
           </p>
         </div>
         <div class="valor">

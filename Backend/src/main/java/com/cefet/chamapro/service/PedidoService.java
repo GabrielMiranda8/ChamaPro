@@ -127,6 +127,7 @@ public class PedidoService {
         p.setEndereco(endereco);
         p.setPreco(dto.getPreco());
         p.setData(dto.getData());
+        p.setDescricao(dto.getDescricao());
         p.setStatus(Status.PENDENTE);
 
         return new PedidoResponseDTO(pRepository.save(p));
@@ -144,6 +145,7 @@ public class PedidoService {
         p.setPreco(dto.getPreco());
         p.setData(dto.getData());
         p.setEndereco(endereco);
+        p.setDescricao(dto.getDescricao());
 
         return new PedidoResponseDTO(pRepository.save(p));
     }
