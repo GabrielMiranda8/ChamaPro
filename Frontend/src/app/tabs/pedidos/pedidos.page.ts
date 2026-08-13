@@ -22,6 +22,7 @@ import {
 import { PedidoModel } from 'src/app/model/pedido.model';
 import { PedidoService } from 'src/app/services/pedido.service';
 import { TokenService } from 'src/app/services/token.service';
+import { UsuarioModel } from 'src/app/model/usuario.model';
 
 @Component({
   selector: 'app-pedidos',
@@ -38,6 +39,7 @@ export class PedidosPage implements OnInit {
 
   pedidos: PedidoModel[] = [];
   carregando = false;
+  dadosUsuario: UsuarioModel;
 
   tipoUsuario = '';
   campoOrdenacao = 'data';
@@ -57,20 +59,21 @@ export class PedidosPage implements OnInit {
       'arrow-up-outline': arrowUpOutline,
       'arrow-down-outline': arrowDownOutline
     });
+    this.dadosUsuario = new UsuarioModel();
   }
 
   ngOnInit(): void {
+    this.dadosUsuario = this.tokenService.extrair() as UsuarioModel;
+    this.tipoUsuario = this.dadosUsuario.tipo;
     this.carregarPedidos();
   }
 
   // ─── Carregamento ───────────────────────────────────────────────────────────
 
   private carregarPedidos(): void {
-    const usuario = this.tokenService.extrair();
-    this.tipoUsuario = usuario.tipo;
     this.carregando = true;
 
-    this.pedidoService.buscarPorUsuario(usuario.id).subscribe({
+    this.pedidoService.buscarPorUsuario(this.dadosUsuario.id).subscribe({
       next: (pedidos) => {
         this.pedidos = pedidos;
         this.ordenarPedidos();

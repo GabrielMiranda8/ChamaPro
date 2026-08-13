@@ -60,7 +60,7 @@
       </button>
 
       <!-- Ações do PROFISSIONAL: aceitar/recusar quando pendente -->
-      <div class="acoes-profissional" *ngIf="tipoUsuario === 'PROFISSIONAL' && pedido.status === 'PENDENTE'">
+      <div class="acoes-profissional" *ngIf="tipoUsuario === 'PROFISSIONAL' && pedido.status === 'PENDENTE' && pedido.idProfissional === dadosUsuario.id">
         <button class="recusar" (click)="recusarPedido(pedido)">
           Recusar
         </button>
