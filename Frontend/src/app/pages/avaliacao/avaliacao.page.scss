@@ -1,0 +1,302 @@
+// ── Variáveis (mesma paleta usada nas outras páginas standalone) ────────────
+$laranja: #E8632A;
+$laranja-hover: #d45520;
+$laranja-light: rgba(232, 99, 42, 0.1);
+$amarelo: #f59e0b;
+$texto: #1A1A1A;
+$texto-sec: #666666;
+$borda: #E5E5E5;
+$fundo: #F7F5F2;
+$branco: #ffffff;
+$verde: #16a34a;
+$verde-light: #dcfce7;
+
+// ── Content ───────────────────────────────────────────────
+.avaliacao-content {
+  --background: #{$fundo};
+  --color: #{$texto};
+  color-scheme: light;
+}
+
+// ── Wrapper ───────────────────────────────────────────────
+.page-shell {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 20px 40px;
+  color: $texto;
+}
+
+// ── Topbar ────────────────────────────────────────────────
+.topbar {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+
+  h1 {
+    font-size: 22px;
+    font-weight: 800;
+    color: $texto;
+    margin: 4px 0 4px;
+  }
+
+  p {
+    font-size: 13px;
+    color: $texto-sec;
+    margin: 0;
+  }
+}
+
+.back-button {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1.5px solid $borda;
+  background: $branco;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  padding: 0;
+
+  ion-icon {
+    font-size: 20px;
+    color: $texto;
+  }
+
+  &:active {
+    background: $fundo;
+  }
+}
+
+// ── Card laranja (resumo da nota média) ─────────────────────
+.orange-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: $laranja;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 28px;
+  box-shadow: 0 4px 16px rgba(232, 99, 42, 0.25);
+
+  .orange-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    ion-icon {
+      font-size: 20px;
+      color: $branco;
+    }
+  }
+
+  h2 {
+    font-size: 15px;
+    font-weight: 700;
+    color: $branco;
+    margin: 0 0 4px;
+  }
+
+  p {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+// ── Seção ─────────────────────────────────────────────────
+.section {
+  margin-bottom: 32px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: $texto;
+  margin: 0 0 14px;
+}
+
+.empty-hint {
+  font-size: 13px;
+  color: $texto-sec;
+  margin: 0;
+}
+
+// ── Pedidos pendentes de avaliação ───────────────────────────
+.pedido-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pedido-card {
+  background: $branco;
+  border: 1.5px solid $borda;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.pedido-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: $texto;
+  }
+
+  .alvo-nome {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: $texto-sec;
+  }
+
+  .check-icon {
+    font-size: 22px;
+    color: $verde;
+    flex-shrink: 0;
+  }
+}
+
+// ── Formulário de avaliação (estrelas + comentário) ──────────
+.form-avaliacao {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid $borda;
+}
+
+.estrelas-picker {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+
+  .estrela-clicavel {
+    font-size: 30px;
+    color: $borda;
+    cursor: pointer;
+    transition: transform 0.1s ease, color 0.15s ease;
+
+    &.ativa {
+      color: $amarelo;
+    }
+
+    &:active {
+      transform: scale(0.9);
+    }
+  }
+}
+
+.comentario-input {
+  width: 100%;
+  background: $fundo;
+  border: 1.5px solid $borda;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: $texto;
+  font-family: inherit;
+  resize: none;
+  margin-bottom: 14px;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: $texto-sec;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $laranja;
+  }
+}
+
+.enviar-btn {
+  width: 100%;
+  height: 46px;
+  border: none;
+  border-radius: 14px;
+  background: $laranja;
+  color: $branco;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:active {
+    background: $laranja-hover;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+
+// ── Histórico de avaliações (enviadas/recebidas) ─────────────
+.historico-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.historico-card {
+  background: $branco;
+  border: 1.5px solid $borda;
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.historico-estrelas {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 8px;
+
+  ion-icon {
+    font-size: 17px;
+    color: $amarelo;
+  }
+}
+
+.historico-comentario {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 14px;
+  color: $texto;
+  margin: 0 0 8px;
+  line-height: 1.4;
+
+  ion-icon {
+    font-size: 15px;
+    color: $texto-sec;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+}
+
+.historico-data {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: $texto-sec;
+  margin: 0;
+
+  ion-icon {
+    font-size: 14px;
+  }
+}
