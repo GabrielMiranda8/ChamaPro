@@ -106,21 +106,34 @@ export class PedidosPage implements OnInit {
   }
 
   private ordenarPedidos(): void {
-    // Bubble sort simples - troca de posição enquanto o elemento da esquerda
-    // "perde" pro da direita, de acordo com o critério escolhido.
+    const listaOrdenada: PedidoModel[] = [];
+
+    // Copia os pedidos pra uma lista nova, sem mexer na original ainda
     for (let i = 0; i < this.pedidos.length; i++) {
-      for (let j = 0; j < this.pedidos.length - 1 - i; j++) {
-        const atual = this.pedidos[j];
-        const proximo = this.pedidos[j + 1];
+      listaOrdenada.push(this.pedidos[i]);
+    }
+
+    // Bubble sort na lista nova
+    for (let i = 0; i < listaOrdenada.length; i++) {
+      for (let j = 0; j < listaOrdenada.length - 1 - i; j++) {
+        const atual = listaOrdenada[j];
+        const proximo = listaOrdenada[j + 1];
 
         const deveTrocar = this.deveTrocarPosicao(atual, proximo);
 
         if (deveTrocar) {
-          this.pedidos[j] = proximo;
-          this.pedidos[j + 1] = atual;
+          listaOrdenada[j] = proximo;
+          listaOrdenada[j + 1] = atual;
         }
       }
     }
+
+    // Só agora troca a referência que o template usa
+    this.pedidos = listaOrdenada;
+  }
+
+  trackByPedidoId(index: number, pedido: PedidoModel): string {
+    return pedido.id;
   }
 
   // Decide se "proximo" deveria vir antes de "atual", de acordo com o campo

@@ -27,7 +27,7 @@
           [name]="direcaoOrdenacao === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"></ion-icon>
       </button>
     </div>
-    <div class="pedido-card" *ngFor="let pedido of pedidos">
+    <div class="pedido-card" *ngFor="let pedido of pedidos; trackBy: trackByPedidoId">
       <div class="top">
         <div>
           <h2>{{ pedido.nomeServico }}</h2>

@@ -47,7 +47,7 @@
           <div class="endereco-text">
             <strong>Endereço cadastrado</strong>
             <span class="endereco-detalhe" *ngIf="enderecoCliente">
-              {{ enderecoCliente.rua }}, {{ enderecoCliente.numero }} – {{ enderecoCliente.cidade }}, {{
+              CEP: {{ enderecoCliente.cep }} – Rua: {{ enderecoCliente.rua }}, Numero: {{ enderecoCliente.numero }}{{ enderecoCliente.complemento }} – Cidade: {{ enderecoCliente.cidade }}, Bairro: {{
               enderecoCliente.bairro }}
             </span>
             <span class="endereco-detalhe sem-endereco" *ngIf="!enderecoCliente">
