@@ -1,14 +1,19 @@
-import { UsuarioModel } from "./usuario.model";
-
 export class AvaliacaoModel {
     id: string;
-    valor: number;
-    usuario!: UsuarioModel;
+    autorId: string;
+    alvoId: string;
+    pedidoId: string;
+    nota: number;
+    data: Date;
     descricao: string;
 
     constructor(){
         this.id = "";
-        this.valor = 0;
+        this.autorId = "";
+        this.alvoId = "";
+        this.pedidoId = "";
+        this.nota = 0;
+        this.data = new Date();
         this.descricao = "";
     }
 }
