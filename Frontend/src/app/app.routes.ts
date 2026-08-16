@@ -50,7 +50,11 @@ export const routes: Routes = [
             path: 'dados',
             loadComponent: () =>
               import('./tabs/perfil/dados/dados.page').then(m => m.DadosPage),
-          }
+          },
+          {
+            path: 'configuracoes',
+            loadComponent: () => import('./tabs/perfil/configuracoes/configuracoes.page').then(m => m.ConfiguracoesPage)
+          },
         ]
       },
       {
@@ -70,18 +74,20 @@ export const routes: Routes = [
   },
   {
     path: 'add-caracteristica',
-    loadComponent: () => import('./pages/add-caracteristica/add-caracteristica.page').then( m => m.AddCaracteristicaPage)
+    loadComponent: () => import('./pages/add-caracteristica/add-caracteristica.page').then(m => m.AddCaracteristicaPage)
   },
   {
     path: 'avaliacoes',
     loadComponent: () => import('./pages/avaliacao/avaliacao.page').then(m => m.AvaliacaoPage)
   },
-  
+
   {
     path: '**',
     redirectTo: 'login',
   },
-  
+
+
+
 
 
 

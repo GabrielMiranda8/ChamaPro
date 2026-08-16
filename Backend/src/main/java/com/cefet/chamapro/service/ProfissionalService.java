@@ -31,7 +31,7 @@ public class ProfissionalService {
 
     @Transactional(readOnly = true)
     public List<ProfissionalResponseDTO> listar() {
-        List<Profissional> profissionals = profissionalRepository.findAll();
+        List<Profissional> profissionals = profissionalRepository.findByAtivoTrue();
         return profissionals.stream().map(ProfissionalResponseDTO::new).toList();
     }
 

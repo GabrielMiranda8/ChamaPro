@@ -78,38 +78,6 @@
       <ion-icon name="chevron-forward-outline"></ion-icon>
     </div>
 
-    @if (dados.tipo == "PROFISSIONAL"){
-    <!-- Meus Serviços -->
-    <div class="menu-item" routerLink="/add-servico">
-      <div class="menu-left">
-
-        <div class="menu-icon">
-          <ion-icon name="briefcase-outline"></ion-icon>
-        </div>
-
-        <span>Meus Serviços</span>
-
-      </div>
-
-      <ion-icon name="chevron-forward-outline"></ion-icon>
-    </div>
-
-    }
-    <!-- Histórico -->
-    <div class="menu-item">
-      <div class="menu-left">
-
-        <div class="menu-icon">
-          <ion-icon name="reader-outline"></ion-icon>
-        </div>
-
-        <span>Histórico de Pedidos</span>
-
-      </div>
-
-      <ion-icon name="chevron-forward-outline"></ion-icon>
-    </div>
-
     <!-- Meus Serviços (apenas profissionais) -->
     @if (token.tipo === 'PROFISSIONAL') {
     <div class="menu-item" routerLink="/add-servico">
@@ -157,23 +125,8 @@
       <ion-icon name="chevron-forward-outline"></ion-icon>
     </div>
 
-    <!-- Segurança -->
-    <div class="menu-item" (click)="abrirSeguranca()">
-      <div class="menu-left">
-
-        <div class="menu-icon">
-          <ion-icon name="shield-outline"></ion-icon>
-        </div>
-
-        <span>Segurança</span>
-
-      </div>
-
-      <ion-icon name="chevron-forward-outline"></ion-icon>
-    </div>
-
     <!-- Configurações -->
-    <div class="menu-item" (click)="abrirConfiguracoes()">
+    <div class="menu-item" routerLink="/tabs/perfil/configuracoes">
       <div class="menu-left">
 
         <div class="menu-icon">
@@ -187,18 +140,6 @@
       <ion-icon name="chevron-forward-outline"></ion-icon>
     </div>
 
-  </div>
-
-  <!-- LOGOUT -->
-  <div class="logout-container">
-    <ion-button fill="clear" class="logout-btn" (click)="confirmarDelete()">
-      <ion-icon slot="start" name="log-out-outline"></ion-icon>
-      Excluir conta
-    </ion-button>
-    <ion-button fill="clear" class="logout-btn" (click)="sair()">
-      <ion-icon slot="start" name="log-out-outline"></ion-icon>
-      Sair da conta
-    </ion-button>
   </div>
 
 </ion-content>

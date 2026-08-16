@@ -26,7 +26,7 @@ public class PedidoRequestDTO {
     @NotBlank(message = "O campo idProfissional é obrigatório")
     private String idProfissional;
 
-    @NotNull(message = "O campo data é obrigatório")
+    //@NotNull(message = "O campo data é obrigatório")
     private Date data;
 
     @NotBlank(message = "O campo idEndereco é obrigatório")

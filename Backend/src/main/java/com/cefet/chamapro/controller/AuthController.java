@@ -25,6 +25,10 @@ public class AuthController {
             return ResponseEntity.status(401).body("Email ou senha inválidos");
         }
 
+        if (!usuario.isAtivo()) {
+            return ResponseEntity.status(401).body("Esta conta foi desativada");
+        }
+
         return ResponseEntity.ok(new LoginResponseDTO(jwtUtil.gerarToken(usuario)));
     }
 }

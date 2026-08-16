@@ -126,7 +126,7 @@ public class PedidoService {
         p.setServico(servico);
         p.setEndereco(endereco);
         p.setPreco(dto.getPreco());
-        p.setData(dto.getData());
+        //p.setData(dto.getData());
         p.setDescricao(dto.getDescricao());
         p.setStatus(Status.PENDENTE);
 

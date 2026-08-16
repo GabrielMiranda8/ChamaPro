@@ -72,12 +72,6 @@ export class ContratoComponent implements OnInit {
   /** Endereço do cliente para exibição */
   enderecoCliente: EnderecoModel | null = null;
 
-  /** Data mínima = hoje */
-  dataMinima: string = new Date().toISOString().split('T')[0];
-
-  /** Horários disponíveis para seleção */
-  horasDisponiveis: string[] = this.gerarHoras();
-
   servico!: ServicoModel;
 
   constructor(
@@ -136,8 +130,6 @@ export class ContratoComponent implements OnInit {
         cidade: [''],
         referencia: [''],
       }),
-      data: ['', Validators.required],
-      hora: ['', Validators.required],
       urgencia: ['baixa', Validators.required],
       descricao: [''],
     });
@@ -200,13 +192,13 @@ export class ContratoComponent implements OnInit {
 
     fetch(`https://viacep.com.br/ws/${cep}/json/`)
       .then((r) => r.json())
-      .then((data) => {
-        if (data.erro) return;
+      .then((dados) => {
+        if (dados.erro) return;
         const g = this.pedidoForm.get('outroEndereco') as FormGroup;
         g.patchValue({
-          rua: data.logradouro,
-          bairro: data.bairro,
-          cidade: data.localidade,
+          rua: dados.logradouro,
+          bairro: dados.bairro,
+          cidade: dados.localidade,
         });
       })
       .catch(() => {/* silently ignore */ });
@@ -249,7 +241,6 @@ export class ContratoComponent implements OnInit {
     }
 
     const val = this.pedidoForm.value;
-    const dataHora = new Date(`${val.data}T${val.hora}:00`);
 
     this.carregando = true;
 
@@ -262,7 +253,7 @@ export class ContratoComponent implements OnInit {
         return;
       }
 
-      this.criarPedido(this.enderecoCliente.id, dataHora);
+      this.criarPedido(this.enderecoCliente.id);
       return;
     }
 
@@ -281,7 +272,7 @@ export class ContratoComponent implements OnInit {
 
     this.enderecoService.salvar(novoEndereco).subscribe({
       next: (enderecoSalvo) => {
-        this.criarPedido(enderecoSalvo.id, dataHora);
+        this.criarPedido(enderecoSalvo.id);
       },
       error: (err) => {
         console.log('Erro ao salvar endereço: ', err);
@@ -295,13 +286,12 @@ export class ContratoComponent implements OnInit {
   // Importante: o backend NÃO espera "status" no corpo da requisição
   // (o PedidoRequestDTO não tem esse campo) - ele mesmo define o status
   // inicial do pedido ao criar. Por isso não setamos status aqui.
-  private criarPedido(idEndereco: string, dataHora: Date): void {
+  private criarPedido(idEndereco: string): void {
     const pedido = new PedidoModel();
     pedido.idProfissional = this.profissional.id;
     pedido.idCliente = this.cliente.id;
     pedido.idServico = this.profissionalServico.idServico;
     pedido.preco = this.profissionalServico.preco;
-    pedido.data = dataHora;
     pedido.idEndereco = idEndereco;
 
     this.pedidoService.salvar(pedido).subscribe({

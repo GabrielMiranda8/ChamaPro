@@ -57,7 +57,7 @@ public class Pedido {
     @Column(nullable = false)
     private BigDecimal preco;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Date data;
 
     @Column(length = 500, nullable = true)

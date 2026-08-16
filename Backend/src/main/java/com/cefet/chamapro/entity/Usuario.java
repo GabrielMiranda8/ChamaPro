@@ -51,4 +51,8 @@ public class Usuario {
 
     @Column(nullable = false, length = 200)
     private String tipo;
+
+    //columDefinition para nao quebrar o auto update
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private boolean ativo = true;
 }

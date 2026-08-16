@@ -11,11 +11,7 @@ import com.cefet.chamapro.entity.Cliente;
 import com.cefet.chamapro.entity.Endereco;
 import com.cefet.chamapro.entity.Profissional;
 import com.cefet.chamapro.entity.Usuario;
-import com.cefet.chamapro.entity.CaracteristicaUsuario;
-import com.cefet.chamapro.entity.ProfissionalServico;
-import com.cefet.chamapro.repository.CaracteristicaUsuarioRepository;
 import com.cefet.chamapro.repository.EnderecoRepository;
-import com.cefet.chamapro.repository.ProfissionalServicoRepository;
 import com.cefet.chamapro.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -31,15 +27,13 @@ public class UsuarioService {
 
     private final UsuarioRepository repository;
     private final EnderecoRepository enderecoRepository;
-    private final CaracteristicaUsuarioRepository caracteristicaUsuarioRepository;
-    private final ProfissionalServicoRepository profissionalServicoRepository;
 
     @Transactional
     public UsuarioResponseDTO criar(UsuarioRequestDTO dto) {
-        if (repository.existsByEmail(dto.email())) {
+        if (repository.existsByEmailAndAtivoTrue(dto.email())) {
             throw new IllegalArgumentException("Email já cadastrado");
         }
-        if (repository.existsByCpf(dto.cpf())) {
+        if (repository.existsByCpfAndAtivoTrue(dto.cpf())) {
             throw new IllegalArgumentException("CPF já cadastrado");
         }
 
@@ -57,6 +51,7 @@ public class UsuarioService {
         usuario.setDtConta(new Date());
         usuario.setNota(dto.nota() != null ? dto.nota() : 0.0);
         usuario.setTipo(dto.tipo());
+        usuario.setAtivo(true);
 
         Usuario salvo = repository.save(usuario);
 
@@ -105,28 +100,16 @@ public class UsuarioService {
         return toResponseDTO(atualizado);
     }
 
-    // Nenhuma das tabelas relacionadas (endereço, características,
-    // serviços do profissional) tem cascade configurado — por isso cada
-    // uma precisa ser apagada aqui manualmente, antes do usuário, senão o
-    // banco recusa o DELETE por violar a chave estrangeira.
+    // Soft-delete: não apaga o usuário nem nada relacionado (pedidos,
+    // avaliações, etc.), só marca a conta como inativa. Preserva o
+    // histórico e evita os problemas de chave estrangeira do delete físico.
     @Transactional
     public void deletar(String id) {
-        if (!repository.existsById(id)) {
-            throw new EntityNotFoundException("Usuário não encontrado");
-        }
+        Usuario usuario = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
-        List<Endereco> enderecos = enderecoRepository.findByUsuarioId(id);
-        enderecoRepository.deleteAll(enderecos);
-
-        List<CaracteristicaUsuario> caracteristicas = caracteristicaUsuarioRepository.findByUsuario_Id(id);
-        caracteristicaUsuarioRepository.deleteAll(caracteristicas);
-
-        // Só existe algo aqui se o usuário for profissional; pra cliente
-        // essa lista sempre vem vazia, e o deleteAll não faz nada.
-        List<ProfissionalServico> servicos = profissionalServicoRepository.findByProfissional_Id(id);
-        profissionalServicoRepository.deleteAll(servicos);
-
-        repository.deleteById(id);
+        usuario.setAtivo(false);
+        repository.save(usuario);
     }
 
     private Usuario buscarUsuarioPorId(String id) {

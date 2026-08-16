@@ -1,0 +1,38 @@
+<ion-content [fullscreen]="true" class="config-content">
+
+  <!-- HEADER -->
+  <div class="config-header">
+    <ion-button fill="clear" class="back-btn" routerLink="/tabs/perfil">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </ion-button>
+    <h2>Configurações</h2>
+  </div>
+
+  <!-- CONTA -->
+  <div class="section">
+    <p class="section-title">Conta</p>
+
+    <div class="menu-list">
+      <div class="menu-item danger" (click)="sair()">
+        <div class="menu-left">
+          <div class="menu-icon">
+            <ion-icon name="log-out-outline"></ion-icon>
+          </div>
+          <span>Sair da conta</span>
+        </div>
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </div>
+
+      <div class="menu-item danger" (click)="confirmarDelete()">
+        <div class="menu-left">
+          <div class="menu-icon">
+            <ion-icon name="trash-outline"></ion-icon>
+          </div>
+          <span>Excluir conta</span>
+        </div>
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </div>
+    </div>
+  </div>
+
+</ion-content>

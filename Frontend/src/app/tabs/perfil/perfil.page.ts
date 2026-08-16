@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AlertController, NavController, ToastController } from '@ionic/angular';
-import { IonContent, IonButton, IonIcon } from '@ionic/angular/standalone';
+import { IonContent, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
-  personOutline, mailOutline, calendarOutline, cardOutline, locationOutline,
-  briefcaseOutline, arrowBackOutline, createOutline, readerOutline,
-  notificationsOutline, shieldOutline, settingsOutline, chevronForwardOutline,
-  logOutOutline, star, accessibilityOutline,
+  personOutline, mailOutline, calendarOutline, briefcaseOutline,
+  notificationsOutline, settingsOutline, chevronForwardOutline,
+  star, accessibilityOutline,
 } from 'ionicons/icons';
 
 import { UsuarioService } from 'src/app/services/usuario.service';
@@ -21,7 +19,7 @@ import { TokenModel } from 'src/app/model/token.model';
   templateUrl: './perfil.page.html',
   styleUrls: ['./perfil.page.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, IonContent, IonButton, IonIcon],
+  imports: [CommonModule, RouterModule, IonContent, IonIcon],
 })
 export class PerfilPage implements OnInit {
   dados: UsuarioModel = new UsuarioModel();
@@ -29,26 +27,16 @@ export class PerfilPage implements OnInit {
 
   constructor(
     private usuarioService: UsuarioService,
-    private toastController: ToastController,
-    private navController: NavController,
-    private alertController: AlertController,
     private tokenService: TokenService,
   ) {
     addIcons({
       personOutline,
       mailOutline,
       calendarOutline,
-      cardOutline,
-      locationOutline,
       briefcaseOutline,
-      arrowBackOutline,
-      createOutline,
       chevronForwardOutline,
-      readerOutline,
       notificationsOutline,
-      shieldOutline,
       settingsOutline,
-      logOutOutline,
       star,
       accessibilityOutline,
     });
@@ -78,81 +66,6 @@ export class PerfilPage implements OnInit {
       .toUpperCase();
   }
 
-  // ─── Ações da conta ─────────────────────────────────────────────────────────
-
-  async confirmarDelete(): Promise<void> {
-    const alert = await this.alertController.create({
-      header: ' Deletar Conta',
-      message: 'Esta ação é irrevrersível. Todos os seus dados serão apagados permanentemente.',
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Sim, deletar',
-          role: 'destructive',
-          cssClass: 'alert-btn-danger',
-          handler: () => this.deletarConta(),
-        },
-      ],
-    });
-    await alert.present();
-  }
-
-  async deletarConta(): Promise<void> {
-    const alert = await this.alertController.create({
-      header: 'Excluir',
-      message: 'Deseja excluir sua conta? Essa ação é permanente',
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Excluir',
-          handler: () => {
-            const logado = this.dados;
-            if (!logado) return;
-
-            this.usuarioService.excluir(logado.id).subscribe({
-              next: () => {
-                this.usuarioService.logout(); // limpa o token, já que a conta não existe mais
-                this.navController.navigateRoot('/login');
-              },
-              error: (err) => {
-                console.log('Erro ao excluir conta:', err);
-                this.exibirMensagem('Não foi possível excluir sua conta. Tente novamente.');
-              },
-            });
-          },
-        },
-      ],
-    });
-    await alert.present();
-  }
-
-  async sair(): Promise<void> {
-    const alert = await this.alertController.create({
-      header: 'Sair',
-      message: 'Deseja sair da sua conta?',
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Sair',
-          handler: () => {
-            this.usuarioService.logout();
-            this.navController.navigateRoot('/login');
-          },
-        },
-      ],
-    });
-    await alert.present();
-  }
-
-  async exibirMensagem(texto: string) {
-    const toast = await this.toastController.create({
-      message: texto,
-      duration: 2000,
-      position: 'bottom',
-    });
-    toast.present();
-  }
-
   // ─── Atalhos ainda não implementados ────────────────────────────────────────
 
   editarPerfil(): void {
@@ -173,9 +86,5 @@ export class PerfilPage implements OnInit {
 
   abrirSeguranca(): void {
     console.log('Segurança');
-  }
-
-  abrirConfiguracoes(): void {
-    console.log('Configurações');
   }
 }

@@ -73,13 +73,9 @@
   <!-- DESTAQUES -->
   <div class="section">
 
-    <h3>Destaques</h3>
+    <h3>Mais próximos</h3>
 
-    <div
-      class="professional-card"
-      *ngFor="let profissional of profissionais"
-      (click)="abrirProfissional(profissional)"
-    >
+    <div class="professional-card" *ngFor="let profissional of profissionais" (click)="abrirProfissional(profissional)">
 
       <div class="professional-left">
 
@@ -93,10 +89,7 @@
 
             <h4>{{ profissional.nome }}</h4>
 
-            <div
-              class="libras-badge"
-              *ngIf="profissional.libras"
-            >
+            <div class="libras-badge" *ngIf="profissional.libras">
               <ion-icon name="hand-left-outline"></ion-icon>
             </div>
 
@@ -119,13 +112,13 @@
         <span class="price">
           R$ {{ profissional.valor }}/h
         </span>
-
-        <span
+        <!-- <span
           class="verified"
           *ngIf="profissional.verificado"
         >
           Verificado
         </span>
+ -->
 
       </div>
 
