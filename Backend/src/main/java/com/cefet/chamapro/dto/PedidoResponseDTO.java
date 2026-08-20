@@ -24,7 +24,6 @@ public class PedidoResponseDTO {
     private String nomeCliente;
     private String idProfissional;
     private String nomeProfissional;
-    private Date data;
     private String idEndereco;
     private BigDecimal preco;
     private Status status;
@@ -42,7 +41,6 @@ public class PedidoResponseDTO {
         this.nomeCliente = pedido.getCliente().getNome();
         this.idProfissional = pedido.getProfissional().getId();
         this.nomeProfissional = pedido.getProfissional().getNome();
-        this.data = pedido.getData();
         this.idEndereco = pedido.getEndereco().getId();
         this.preco = pedido.getPreco();
         this.status = pedido.getStatus();

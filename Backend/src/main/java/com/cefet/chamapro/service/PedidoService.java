@@ -166,7 +166,6 @@ public class PedidoService {
                         () -> new ResourceNotFoundException("Endereço não encontrado. Id: " + dto.getIdEndereco()));
 
         p.setPreco(dto.getPreco());
-        p.setData(dto.getData());
         p.setEndereco(endereco);
         p.setDescricao(dto.getDescricao());
 

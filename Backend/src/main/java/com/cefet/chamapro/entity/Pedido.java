@@ -49,9 +49,9 @@ public class Pedido {
     @JoinColumn(name = "endereco_id", nullable = false)
     private Endereco endereco;
 
-    //@ManyToOne
-    //@JoinColumn(name = "chat_id", nullable = true)
-    //private Chat chat;
+    // @ManyToOne
+    // @JoinColumn(name = "chat_id", nullable = true)
+    // private Chat chat;
 
     @Column
     @Enumerated(EnumType.STRING)
@@ -60,13 +60,10 @@ public class Pedido {
     @Column(nullable = false)
     private BigDecimal preco;
 
-    @Column(nullable = true)
-    private Date data;
-
     @Column(length = 500, nullable = true)
     private String descricao;
 
-        @Column(nullable = true)
+    @Column(nullable = true)
     private LocalDate dataSugerida;
 
     @Column(nullable = true)

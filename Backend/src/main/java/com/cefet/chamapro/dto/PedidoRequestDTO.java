@@ -28,9 +28,6 @@ public class PedidoRequestDTO {
     @NotBlank(message = "O campo idProfissional é obrigatório")
     private String idProfissional;
 
-    //@NotNull(message = "O campo data é obrigatório")
-    private Date data;
-
     @NotNull(message = "O campo dataSugerida é obrigatório")
     private LocalDate dataSugerida;
 
