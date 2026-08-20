@@ -24,7 +24,7 @@ import { PedidoModel } from 'src/app/model/pedido.model';
 import { PedidoService } from 'src/app/services/pedido.service';
 import { TokenService } from 'src/app/services/token.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
-import { AddHorarioComponent } from 'src/app/components/add-horario/add-horario.component.component';
+import { AddHorarioComponent } from 'src/app/components/add-horario/add-horario.component';
 
 @Component({
   selector: 'app-pedidos',

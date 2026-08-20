@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { AddHorarioComponentComponent } from './add-horario.component.component';
+import { AddHorarioComponentComponent } from './add-horario.component';
 
 describe('AddHorarioComponentComponent', () => {
   let component: AddHorarioComponentComponent;
