@@ -90,7 +90,7 @@ export class AddServicoPage implements OnInit {
 
     forkJoin({
       servicos: this.servicoService.listar(),
-      // caracteristicas: this.caracteristicaService.listar(), // TODO: ainda não implementado no backend
+      // caracteristicas: this.caracteristicaService.listar(), // A FAZER
       // já cadastrados antes, para permitir editar em vez de duplicar
       meusServicos: this.profissionalServicoService
         .buscarPorProfissional(this.usuarioId)
@@ -98,7 +98,7 @@ export class AddServicoPage implements OnInit {
     }).subscribe({
       next: ({ servicos, meusServicos }) => {
         this.todosServicos = servicos;
-        // this.todasCaracteristicas = caracteristicas; // TODO: ainda não implementado no backend
+        // this.todasCaracteristicas = caracteristicas; // A FAZER
 
         // Pré-seleciona os serviços já cadastrados antes e recupera o preço
         // e o tempo de carreira que o profissional já tinha informado.

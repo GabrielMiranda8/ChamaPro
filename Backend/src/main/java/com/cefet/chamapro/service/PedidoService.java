@@ -1,11 +1,13 @@
 package com.cefet.chamapro.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cefet.chamapro.dto.AceitarPedidoDTO;
 import com.cefet.chamapro.dto.PedidoRequestDTO;
 import com.cefet.chamapro.dto.PedidoResponseDTO;
 import com.cefet.chamapro.entity.Profissional;
@@ -13,6 +15,7 @@ import com.cefet.chamapro.entity.Servico;
 import com.cefet.chamapro.entity.Status;
 import com.cefet.chamapro.entity.Pedido;
 import com.cefet.chamapro.entity.Cliente;
+import com.cefet.chamapro.entity.Compromisso;
 import com.cefet.chamapro.entity.Endereco;
 import com.cefet.chamapro.exception.BusinessException;
 import com.cefet.chamapro.exception.ResourceNotFoundException;
@@ -20,6 +23,7 @@ import com.cefet.chamapro.repository.ProfissionalRepository;
 import com.cefet.chamapro.repository.ServicoRepository;
 import com.cefet.chamapro.repository.PedidoRepository;
 import com.cefet.chamapro.repository.ClienteRepository;
+import com.cefet.chamapro.repository.CompromissoRepository;
 import com.cefet.chamapro.repository.EnderecoRepository;
 
 @Service
@@ -39,6 +43,9 @@ public class PedidoService {
 
     @Autowired
     private EnderecoRepository enderecoRepository;
+
+    @Autowired
+    private CompromissoService compromissoService;
 
     @Transactional(readOnly = true)
     public List<PedidoResponseDTO> listar() {
@@ -126,12 +133,28 @@ public class PedidoService {
         p.setServico(servico);
         p.setEndereco(endereco);
         p.setPreco(dto.getPreco());
-        //p.setData(dto.getData());
+        // p.setData(dto.getData());
         p.setDescricao(dto.getDescricao());
         p.setStatus(Status.PENDENTE);
 
         return new PedidoResponseDTO(pRepository.save(p));
     }
+
+    @Transactional
+    public PedidoResponseDTO aceitar(String id, AceitarPedidoDTO dto) {
+        Pedido p = pRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado. Id: " + id));
+
+        if (p.getStatus() != Status.PENDENTE) {
+            throw new BusinessException("Só é possível aceitar um pedido que está pendente.");
+        }
+
+        compromissoService.inserir(p, dto.getData(), dto.getHoraInicio(), dto.getHoraFim());
+
+        p.setStatus(Status.ACEITO);
+        return new PedidoResponseDTO(pRepository.save(p));
+    }
+
 
     @Transactional
     public PedidoResponseDTO atualizar(String id, PedidoRequestDTO dto) {
@@ -188,6 +211,7 @@ public class PedidoService {
         }
 
         p.setStatus(Status.RECUSADO);
+        compromissoService.desativarPorPedido(p.getId());
         return new PedidoResponseDTO(pRepository.save(p));
     }
 
@@ -202,6 +226,7 @@ public class PedidoService {
         }
 
         p.setStatus(Status.CANCELADO);
+        compromissoService.desativarPorPedido(p.getId());
         return new PedidoResponseDTO(pRepository.save(p));
     }
 

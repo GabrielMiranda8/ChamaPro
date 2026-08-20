@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cefet.chamapro.dto.AceitarPedidoDTO;
 import com.cefet.chamapro.dto.PedidoRequestDTO;
 import com.cefet.chamapro.dto.PedidoResponseDTO;
 import com.cefet.chamapro.service.PedidoService;
@@ -80,6 +81,14 @@ public class PedidoController {
         return ResponseEntity.ok(pResponseDTO);
     }
 
+    @PatchMapping("/{id}/aceitar")
+    @Operation(summary = "Aceitar pedido e agendar horário na agenda do profissional")
+    public ResponseEntity<PedidoResponseDTO> aceitar(@PathVariable String id,
+            @Valid @RequestBody AceitarPedidoDTO dto) {
+        PedidoResponseDTO pedidoResponseDTO = pService.aceitar(id, dto);
+        return ResponseEntity.ok(pedidoResponseDTO);
+    }
+    
     @PatchMapping("/{id}/status")
     @Operation(summary = "Atualizar status do pedido")
     public ResponseEntity<PedidoResponseDTO> atualizarStatus(@PathVariable String id) {

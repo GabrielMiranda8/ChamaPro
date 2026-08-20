@@ -13,6 +13,11 @@ export class PedidoModel {
     nomeServico: string;
     nomeCliente: string;
     nomeProfissional: string;
+    dataSugerida: string;        
+    horaSugerida: string;        
+    dataAgendada: string;        
+    horaInicioAgendada: string;  
+    horaFimAgendada: string;
 
     constructor(){
         this.id = "";
@@ -26,5 +31,10 @@ export class PedidoModel {
         this.nomeServico = "";
         this.nomeCliente = "";
         this.nomeProfissional = "";
+        this.dataSugerida = "";       
+        this.horaSugerida = "";       
+        this.dataAgendada = "";        
+        this.horaInicioAgendada = "";  
+        this.horaFimAgendada = "";
     }
 }

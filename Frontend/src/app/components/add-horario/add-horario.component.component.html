@@ -1,0 +1,67 @@
+<ion-header class="agendar-header">
+  <div class="header-content">
+    <div class="header-info">
+      <h2 class="header-title">Definir horário</h2>
+      <p class="header-subtitle">{{ pedido?.nomeServico }} — {{ pedido?.nomeCliente }}</p>
+    </div>
+    <button class="close-btn" (click)="fechar()">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+  </div>
+</ion-header>
+
+<ion-content class="agendar-content">
+  <form [formGroup]="form" (ngSubmit)="confirmar()">
+
+    <div class="section">
+      <div class="section-title">
+        <ion-icon name="calendar-outline" class="section-icon"></ion-icon>
+        <span>Data do atendimento</span>
+      </div>
+
+      <div class="input-wrapper" [class.invalid]="isInvalid('data')">
+        <ion-input formControlName="data" type="date" [min]="dataMinima"></ion-input>
+      </div>
+      <p class="error-msg" *ngIf="isInvalid('data')">Selecione a data.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <ion-icon name="time-outline" class="section-icon"></ion-icon>
+        <span>Horário reservado</span>
+      </div>
+
+      <div class="input-row">
+        <div class="input-wrapper flex-1" [class.invalid]="isInvalid('horaInicio')">
+          <ion-select formControlName="horaInicio" placeholder="Início" interface="action-sheet" cancelText="Cancelar">
+            <ion-select-option *ngFor="let h of horasDisponiveis" [value]="h" [disabled]="horarioEstaOcupado(h)">
+              {{ h }}{{ horarioEstaOcupado(h) ? ' (ocupado)' : '' }}
+            </ion-select-option>
+          </ion-select>
+        </div>
+
+        <div class="input-wrapper flex-1" [class.invalid]="isInvalid('horaFim')">
+          <ion-select formControlName="horaFim" placeholder="Término" interface="action-sheet" cancelText="Cancelar">
+            <ion-select-option *ngFor="let h of horasDisponiveis" [value]="h">{{ h }}</ion-select-option>
+          </ion-select>
+        </div>
+      </div>
+
+      <p class="error-msg" *ngIf="isInvalid('horaInicio') || isInvalid('horaFim')">
+        Informe o horário de início e término.
+      </p>
+      <p class="hint-msg">Horários em cinza já estão ocupados na sua agenda nesse dia.</p>
+    </div>
+
+    <div class="action-buttons">
+      <ion-button fill="outline" class="btn-cancelar" (click)="fechar()" type="button">
+        Cancelar
+      </ion-button>
+
+      <ion-button class="btn-enviar" type="submit" [disabled]="carregando">
+        <ion-spinner *ngIf="carregando" name="crescent" slot="start"></ion-spinner>
+        {{ carregando ? 'Confirmando...' : 'Aceitar e agendar' }}
+      </ion-button>
+    </div>
+  </form>
+</ion-content>

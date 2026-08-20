@@ -1,0 +1,120 @@
+$primary:        #F97316;
+$text-dark:      #1C1C1E;
+$text-light:     #9CA3AF;
+$border-color:   #E5E7EB;
+$bg-input:       #F9FAFB;
+$error:          #EF4444;
+$radius-md:      12px;
+
+.agendar-header {
+  --background: #{$primary};
+  box-shadow: none;
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px 14px;
+    gap: 12px;
+  }
+
+  .header-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 4px;
+  }
+
+  .header-subtitle {
+    margin: 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.88);
+  }
+
+  .close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+}
+
+.agendar-content {
+  --background: #F5F5F7;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 16px;
+  --padding-bottom: 24px;
+}
+
+.section {
+  background: #fff;
+  border-radius: $radius-md;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: $text-dark;
+  margin-bottom: 12px;
+
+  .section-icon {
+    color: $primary;
+    font-size: 18px;
+  }
+}
+
+.input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.input-wrapper {
+  background: $bg-input;
+  border: 1px solid $border-color;
+  border-radius: 10px;
+  padding: 4px 10px;
+
+  &.invalid {
+    border-color: $error;
+  }
+}
+
+.error-msg {
+  color: $error;
+  font-size: 12px;
+  margin: 6px 0 0;
+}
+
+.hint-msg {
+  color: $text-light;
+  font-size: 12px;
+  margin: 6px 0 0;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+
+  ion-button {
+    flex: 1;
+  }
+
+  .btn-enviar {
+    --background: #{$primary};
+  }
+}

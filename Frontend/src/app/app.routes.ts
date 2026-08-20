@@ -55,6 +55,10 @@ export const routes: Routes = [
             path: 'configuracoes',
             loadComponent: () => import('./tabs/perfil/configuracoes/configuracoes.page').then(m => m.ConfiguracoesPage)
           },
+          {
+            path: 'agenda',
+            loadComponent: () => import('./tabs/perfil/agenda/agenda.page').then(m => m.AgendaPage)
+          },
         ]
       },
       {
@@ -85,6 +89,8 @@ export const routes: Routes = [
     path: '**',
     redirectTo: 'login',
   },
+
+
 
 
 

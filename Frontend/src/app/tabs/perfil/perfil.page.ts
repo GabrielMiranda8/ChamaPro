@@ -72,14 +72,6 @@ export class PerfilPage implements OnInit {
     console.log('Editar Perfil');
   }
 
-  historicoPedidos(): void {
-    console.log('Histórico');
-  }
-
-  gerenciarAgenda(): void {
-    console.log('Agenda');
-  }
-
   abrirNotificacoes(): void {
     console.log('Notificações');
   }

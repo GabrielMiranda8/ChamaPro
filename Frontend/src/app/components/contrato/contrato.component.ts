@@ -73,6 +73,8 @@ export class ContratoComponent implements OnInit {
   enderecoCliente: EnderecoModel | null = null;
 
   servico!: ServicoModel;
+  dataMinima = new Date().toISOString().split('T')[0];
+  horasDisponiveis: string[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -93,6 +95,8 @@ export class ContratoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.horasDisponiveis = this.gerarHoras();
+
     this.enderecoService.buscarPorUsuario(this.cliente.id).subscribe({
       next: (enderecos) => {
         if (enderecos.length > 0) {
@@ -104,7 +108,7 @@ export class ContratoComponent implements OnInit {
         console.log("Erro ao buscar endereço do cliente: ", err);
       }
     });
-    
+
     this.inicializarForm();
     this.servicoService.buscarPorId(this.profissionalServico.idServico).subscribe({
       next: (servico) => {
@@ -130,6 +134,8 @@ export class ContratoComponent implements OnInit {
         cidade: [''],
         referencia: [''],
       }),
+      data: ['', Validators.required],
+      hora: ['', Validators.required],
       urgencia: ['baixa', Validators.required],
       descricao: [''],
     });
@@ -287,12 +293,17 @@ export class ContratoComponent implements OnInit {
   // (o PedidoRequestDTO não tem esse campo) - ele mesmo define o status
   // inicial do pedido ao criar. Por isso não setamos status aqui.
   private criarPedido(idEndereco: string): void {
+    const dataSugerida = this.pedidoForm.get('data')!.value;
+    const horaSugerida = this.pedidoForm.get('hora')!.value;
+
     const pedido = new PedidoModel();
     pedido.idProfissional = this.profissional.id;
     pedido.idCliente = this.cliente.id;
     pedido.idServico = this.profissionalServico.idServico;
     pedido.preco = this.profissionalServico.preco;
     pedido.idEndereco = idEndereco;
+    pedido.dataSugerida = dataSugerida;   
+    pedido.horaSugerida = horaSugerida;  
 
     this.pedidoService.salvar(pedido).subscribe({
       next: async (pedidoSalvo) => {

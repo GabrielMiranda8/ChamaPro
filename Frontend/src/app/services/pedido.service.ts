@@ -21,6 +21,15 @@ export class PedidoService {
     );
   }
 
+  aceitar(id: string, data: string, horaInicio: string, horaFim: string): Observable<PedidoModel> {
+    const corpo = { data, horaInicio, horaFim };
+    return this.http.patch<PedidoModel>(
+      `${this.API_URL}/${id}/aceitar`,
+      corpo,
+      { headers: this.tokenService.gerarCabecalhoAutenticacao() }
+    );
+  }
+
   listar(): Observable<PedidoModel[]> {
     return this.http.get<PedidoModel[]>(
       this.API_URL,

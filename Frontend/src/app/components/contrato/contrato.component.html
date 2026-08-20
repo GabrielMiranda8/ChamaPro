@@ -47,7 +47,8 @@
           <div class="endereco-text">
             <strong>Endereço cadastrado</strong>
             <span class="endereco-detalhe" *ngIf="enderecoCliente">
-              CEP: {{ enderecoCliente.cep }} – Rua: {{ enderecoCliente.rua }}, Numero: {{ enderecoCliente.numero }} {{ enderecoCliente.complemento }} – Cidade: {{ enderecoCliente.cidade }}, Bairro: {{
+              CEP: {{ enderecoCliente.cep }} – Rua: {{ enderecoCliente.rua }}, Numero: {{ enderecoCliente.numero }} {{
+              enderecoCliente.complemento }} – Cidade: {{ enderecoCliente.cidade }}, Bairro: {{
               enderecoCliente.bairro }}
             </span>
             <span class="endereco-detalhe sem-endereco" *ngIf="!enderecoCliente">
@@ -112,11 +113,11 @@
       </div>
     </div>
 
-    <!-- DATA E HORÁRIO
+    <!-- DATA E HORÁRIO -->
     <div class="section">
       <div class="section-title">
         <ion-icon name="calendar-outline" class="section-icon"></ion-icon>
-        <span>Data e Horário</span>
+        <span>Data e Horário desejados</span>
       </div>
 
       <div class="input-row">
@@ -131,11 +132,10 @@
           </ion-select>
         </div>
       </div>
-      
 
       <p class="error-msg" *ngIf="isInvalid('data') || isInvalid('hora')">Data e horário são obrigatórios.</p>
+      <p class="hint-msg">O profissional pode confirmar esse horário ou ajustar ao aceitar seu pedido.</p>
     </div>
-     -->
     <!-- URGÊNCIA -->
     <div class="section">
       <div class="section-title">

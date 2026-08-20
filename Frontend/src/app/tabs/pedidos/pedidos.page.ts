@@ -6,6 +6,7 @@ import {
   IonIcon,
   AlertController,
   ToastController,
+  ModalController
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
@@ -23,6 +24,7 @@ import { PedidoModel } from 'src/app/model/pedido.model';
 import { PedidoService } from 'src/app/services/pedido.service';
 import { TokenService } from 'src/app/services/token.service';
 import { UsuarioModel } from 'src/app/model/usuario.model';
+import { AddHorarioComponent } from 'src/app/components/add-horario/add-horario.component.component';
 
 @Component({
   selector: 'app-pedidos',
@@ -49,6 +51,7 @@ export class PedidosPage implements OnInit {
     private tokenService: TokenService,
     private alertController: AlertController,
     private toastController: ToastController,
+    private modalController: ModalController,
   ) {
     addIcons({
       'time-outline': timeOutline,
@@ -262,17 +265,20 @@ export class PedidosPage implements OnInit {
 
   // ─── Ações do PROFISSIONAL ──────────────────────────────────────────────────
 
-  aceitarPedido(pedido: PedidoModel): void {
-    this.pedidoService.atualizarStatus(pedido.id).subscribe({
-      next: (pedidoAtualizado) => {
-        this.substituirPedidoNaLista(pedidoAtualizado);
-        this.mostrarToast('Pedido aceito!', 'success');
-      },
-      error: (err) => {
-        console.log('Erro ao aceitar pedido: ', err);
-        this.mostrarToast('Erro ao aceitar o pedido.', 'danger');
-      }
+  async aceitarPedido(pedido: PedidoModel): Promise<void> {
+    const modal = await this.modalController.create({
+      component: AddHorarioComponent,
+      componentProps: { pedido },
     });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+
+    if (data && data.sucesso) {
+      this.substituirPedidoNaLista(data.pedido);
+      this.mostrarToast('Pedido aceito!', 'success');
+    }
   }
 
   recusarPedido(pedido: PedidoModel): void {

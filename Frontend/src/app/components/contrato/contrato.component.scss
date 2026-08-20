@@ -190,6 +190,11 @@ $radius-lg:      16px;
   margin: -6px 0 8px 4px;
 }
 
+.hint-msg{
+  color: $text-light;
+  font-size: 12px
+} 
+
 // ─── Preço ───────────────────────────────────────────────────────────────────
 .valor-sugerido {
   font-size: 13px;

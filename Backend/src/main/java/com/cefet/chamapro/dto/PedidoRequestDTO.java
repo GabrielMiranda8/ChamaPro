@@ -1,6 +1,8 @@
 package com.cefet.chamapro.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 
 import jakarta.validation.constraints.DecimalMin;
@@ -29,9 +31,16 @@ public class PedidoRequestDTO {
     //@NotNull(message = "O campo data é obrigatório")
     private Date data;
 
+    @NotNull(message = "O campo dataSugerida é obrigatório")
+    private LocalDate dataSugerida;
+
+    @NotNull(message = "O campo horaSugerida é obrigatório")
+    private LocalTime horaSugerida;
+    
     @NotBlank(message = "O campo idEndereco é obrigatório")
     private String idEndereco;
 
     private String descricao;
+
 
 }

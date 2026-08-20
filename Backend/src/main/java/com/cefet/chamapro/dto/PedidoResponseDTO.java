@@ -1,6 +1,8 @@
 package com.cefet.chamapro.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 
 import com.cefet.chamapro.entity.Pedido;
@@ -15,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PedidoResponseDTO {
 
-	private String id;
+    private String id;
     private String idServico;
     private String nomeServico;
     private String idCliente;
@@ -26,9 +28,14 @@ public class PedidoResponseDTO {
     private String idEndereco;
     private BigDecimal preco;
     private Status status;
+    private LocalDate dataSugerida;
+    private LocalTime horaSugerida;
+    private LocalDate dataAgendada;
+    private LocalTime horaInicioAgendada;
+    private LocalTime horaFimAgendada;
 
     public PedidoResponseDTO(Pedido pedido) {
-    	this.id = pedido.getId();
+        this.id = pedido.getId();
         this.idServico = pedido.getServico().getId();
         this.nomeServico = pedido.getServico().getNome();
         this.idCliente = pedido.getCliente().getId();
@@ -39,6 +46,14 @@ public class PedidoResponseDTO {
         this.idEndereco = pedido.getEndereco().getId();
         this.preco = pedido.getPreco();
         this.status = pedido.getStatus();
+        this.dataSugerida = pedido.getDataSugerida();
+        this.horaSugerida = pedido.getHoraSugerida();
+
+        if (pedido.getCompromisso() != null && pedido.getCompromisso().isAtivo()) {
+            this.dataAgendada = pedido.getCompromisso().getData();
+            this.horaInicioAgendada = pedido.getCompromisso().getHoraInicio();
+            this.horaFimAgendada = pedido.getCompromisso().getHoraFim();
+        }
     }
 
 }

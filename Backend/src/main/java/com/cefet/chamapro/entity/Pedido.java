@@ -1,6 +1,8 @@
 package com.cefet.chamapro.entity;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 
 import jakarta.persistence.Column;
@@ -12,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -62,4 +65,13 @@ public class Pedido {
 
     @Column(length = 500, nullable = true)
     private String descricao;
+
+        @Column(nullable = true)
+    private LocalDate dataSugerida;
+
+    @Column(nullable = true)
+    private LocalTime horaSugerida;
+
+    @Column(name = "compromisso_id", nullable = false)
+    private Compromisso compromisso;
 }
