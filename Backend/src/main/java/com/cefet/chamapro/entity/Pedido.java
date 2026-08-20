@@ -72,6 +72,6 @@ public class Pedido {
     @Column(nullable = true)
     private LocalTime horaSugerida;
 
-    @Column(name = "compromisso_id", nullable = false)
+    @OneToOne(mappedBy = "pedido")
     private Compromisso compromisso;
 }
