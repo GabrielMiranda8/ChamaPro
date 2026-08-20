@@ -1,10 +1,10 @@
-$primary:        #F97316;
-$text-dark:      #1C1C1E;
-$text-light:     #9CA3AF;
-$border-color:   #E5E7EB;
-$bg-input:       #F9FAFB;
-$error:          #EF4444;
-$radius-md:      12px;
+$primary: #F97316;
+$text-dark: #1C1C1E;
+$text-light: #9CA3AF;
+$border-color: #E5E7EB;
+$bg-input: #F9FAFB;
+$error: #EF4444;
+$radius-md: 12px;
 
 .agendar-header {
   --background: #{$primary};
@@ -87,10 +87,18 @@ $radius-md:      12px;
   border: 1px solid $border-color;
   border-radius: 10px;
   padding: 4px 10px;
+  color: $text-dark;
 
   &.invalid {
     border-color: $error;
   }
+}
+
+.input-icon-left {
+  font-size: 18px;
+  color: $text-light;
+  margin-right: 8px;
+  flex-shrink: 0;
 }
 
 .error-msg {

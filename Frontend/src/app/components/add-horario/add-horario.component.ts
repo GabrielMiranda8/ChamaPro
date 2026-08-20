@@ -82,7 +82,7 @@ export class AddHorarioComponent implements OnInit {
 
   private gerarHoras(): string[] {
     const horas: string[] = [];
-    for (let h = 6; h <= 22; h++) {
+    for (let h = 0; h <= 23; h++) {
       horas.push(`${h.toString().padStart(2, '0')}:00`);
       horas.push(`${h.toString().padStart(2, '0')}:30`);
     }

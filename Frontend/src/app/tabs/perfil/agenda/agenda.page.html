@@ -7,34 +7,94 @@
     <h2>Minha Agenda</h2>
   </div>
 
-  <div class="container">
+  <!-- Navegação de semana -->
+  <div class="week-nav">
+    <ion-button fill="outline" size="small" class="hoje-btn" (click)="irParaHoje()">Hoje</ion-button>
 
-    <div class="compromisso-card" *ngFor="let c of compromissos">
+    <div class="week-arrows">
+      <button (click)="mudarSemana(-1)" aria-label="Semana anterior">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+      <button (click)="mudarSemana(1)" aria-label="Próxima semana">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </button>
+    </div>
+
+    <span class="mes-label">{{ mesLabel }}</span>
+  </div>
+
+  <!-- Cabeçalho dos dias -->
+  <div class="dias-header">
+    <div class="hora-gutter"></div>
+    <div class="dia-coluna" *ngFor="let dia of dias">
+      <p class="dia-nome">{{ diasSemanaLabel[dia.getDay()] }}</p>
+      <p class="dia-numero" [class.hoje]="formatarIso(dia) === hojeIso">{{ dia.getDate() }}</p>
+    </div>
+  </div>
+
+  <!-- Grade de horários -->
+  <div class="grade-scroll">
+    <div class="grade">
+      <div class="hora-gutter">
+        <div class="linha-hora" *ngFor="let h of horas" [style.height.px]="alturaHora">
+          <span>{{ h }}h</span>
+        </div>
+      </div>
+
+      <div class="dia-coluna-grade" *ngFor="let dia of dias">
+        <div class="linha-hora-fundo" *ngFor="let h of horas" [style.height.px]="alturaHora"></div>
+
+        <button class="evento-card" *ngFor="let ev of eventosPorDia(formatarIso(dia))"
+          [style.top.px]="calcularTopo(ev.horaInicio)" [style.height.px]="calcularAltura(ev.horaInicio, ev.horaFim)"
+          (click)="abrirDetalhes(ev)">
+          <span class="evento-titulo">{{ ev.nomeServico }}</span>
+          <span class="evento-hora">{{ ev.horaInicio }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Próximos serviços -->
+  <div class="container">
+    <p class="secao-titulo">Próximos serviços</p>
+
+    <div class="vazio" *ngIf="!carregando && proximosServicos.length === 0">
+      <ion-icon name="calendar-clear-outline"></ion-icon>
+      <p>Nenhum serviço agendado.</p>
+    </div>
+
+    <div class="compromisso-card" *ngFor="let c of proximosServicos" (click)="abrirDetalhes(c)">
       <div class="data-box">
-        <span class="dia-semana">{{ obterDiaSemana(c.data) }}</span>
-        <span class="data">{{ c.data | date:'dd/MM' }}</span>
+        <span class="dia-semana">{{ diasSemanaLabel[obterDiaSemanaDeData(c.data)] }}</span>
+        <span class="data">{{ formatarDataBr(c.data) }}</span>
       </div>
 
       <div class="info">
         <h3>{{ c.nomeServico }}</h3>
-        <p class="cliente">
-          <ion-icon name="person-outline"></ion-icon>
-          {{ c.nomeCliente }}
-        </p>
-        <p class="horario">
-          <ion-icon name="time-outline"></ion-icon>
-          {{ c.horaInicio }} - {{ c.horaFim }}
-        </p>
+        <p class="cliente">{{ c.nomeCliente }} • {{ c.endereco }}</p>
+      </div>
+
+      <div class="horario">
+        <p class="hora">{{ c.horaInicio }}</p>
       </div>
     </div>
 
-    <div class="vazio" *ngIf="!carregando && compromissos.length === 0">
-      <ion-icon name="calendar-clear-outline"></ion-icon>
-      <p>Nenhum compromisso agendado.</p>
-    </div>
-
     <ion-spinner *ngIf="carregando" name="crescent"></ion-spinner>
+  </div>
 
+  <!-- Modal de detalhes (mesma ideia do bottom sheet do exemplo React) -->
+  <div class="detalhe-overlay" *ngIf="selecionado" (click)="fecharDetalhes()">
+    <div class="detalhe-sheet" (click)="$event.stopPropagation()">
+      <h3>{{ selecionado.nomeServico }}</h3>
+      <p class="linha">Cliente: {{ selecionado.nomeCliente }}</p>
+      <p class="linha" *ngIf="selecionado.endereco">{{ selecionado.endereco }}</p>
+      <p class="linha">{{ formatarDataBr(selecionado.data) }} às {{ selecionado.horaInicio }} - {{ selecionado.horaFim
+        }}</p>
+      <p class="preco">R$ {{ selecionado.preco.toFixed(2) }}</p>
+      <p class="linha" *ngIf="selecionado.descricao">{{ selecionado.descricao }}</p>
+
+      <ion-button class="fechar-btn" (click)="fecharDetalhes()">Fechar</ion-button>
+    </div>
   </div>
 
 </ion-content>

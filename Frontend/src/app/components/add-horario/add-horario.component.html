@@ -20,6 +20,7 @@
       </div>
 
       <div class="input-wrapper" [class.invalid]="isInvalid('data')">
+        <ion-icon name="calendar-outline" class="input-icon-left"></ion-icon>
         <ion-input formControlName="data" type="date" [min]="dataMinima"></ion-input>
       </div>
       <p class="error-msg" *ngIf="isInvalid('data')">Selecione a data.</p>

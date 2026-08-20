@@ -51,8 +51,7 @@ public class CompromissoService {
         }
 
         List<Compromisso> compromissos = cRepository
-                .findByProfissional_IdAndAtivoTrueAndDataGreaterThanEqualOrderByDataAscHoraInicioAsc(
-                        idProfissional, LocalDate.now());
+                .findByProfissional_IdAndAtivoTrueOrderByDataAscHoraInicioAsc(idProfissional);
 
         List<CompromissoResponseDTO> lista = new ArrayList<>();
         for (int i = 0; i < compromissos.size(); i++) {

@@ -1,3 +1,9 @@
+$primary: #F97316;
+$primary-dark: #EA580C;
+$text-dark: #1C1C1E;
+$text-light: #9CA3AF;
+$border-color: #E5E7EB;
+
 .agenda-content {
   --background: #f7f7f7;
 }
@@ -7,33 +13,174 @@
   align-items: center;
   gap: 8px;
   padding: 12px 12px 4px;
+  background: linear-gradient(135deg, $primary, $primary-dark);
+  border-radius: 0 0 20px 20px;
 
   h2 {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
-    color: #1f2937;
+    color: #fff;
     margin: 0;
   }
 
   .back-btn {
+    --color: #fff;
     --padding-start: 4px;
     --padding-end: 4px;
   }
 }
 
+.week-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 4px;
+
+  .hoje-btn {
+    --border-radius: 20px;
+    font-size: 12px;
+    height: 28px;
+  }
+
+  .week-arrows {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    button {
+      background: none;
+      border: none;
+      padding: 6px;
+      border-radius: 50%;
+      color: $text-light;
+
+      &:active {
+        background: $border-color;
+      }
+    }
+  }
+
+  .mes-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: $text-dark;
+  }
+}
+
+.dias-header {
+  display: grid;
+  grid-template-columns: 32px repeat(7, 1fr);
+  border-bottom: 1px solid $border-color;
+  margin-top: 8px;
+
+  .dia-coluna {
+    text-align: center;
+    padding: 6px 0;
+  }
+
+  .dia-nome {
+    font-size: 9px;
+    color: $text-light;
+    margin: 0;
+  }
+
+  .dia-numero {
+    margin: 2px auto 0;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 50%;
+    color: $text-dark;
+
+    &.hoje {
+      background: linear-gradient(135deg, $primary, $primary-dark);
+      color: #fff;
+    }
+  }
+}
+
+.grade-scroll {
+  overflow-y: auto;
+  max-height: 48vh;
+}
+
+.grade {
+  display: grid;
+  grid-template-columns: 32px repeat(7, 1fr);
+  position: relative;
+}
+
+.hora-gutter {
+  .linha-hora {
+    position: relative;
+
+    span {
+      position: absolute;
+      top: -6px;
+      right: 4px;
+      font-size: 9px;
+      color: $text-light;
+    }
+  }
+}
+
+.dia-coluna-grade {
+  position: relative;
+  border-left: 1px solid $border-color;
+
+  .linha-hora-fundo {
+    border-bottom: 1px solid rgba($border-color, 0.6);
+  }
+}
+
+.evento-card {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  background: linear-gradient(135deg, $primary, $primary-dark);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 3px 4px;
+  text-align: left;
+  overflow: hidden;
+
+  .evento-titulo {
+    display: block;
+    font-size: 8px;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  .evento-hora {
+    display: block;
+    font-size: 7px;
+    opacity: 0.85;
+  }
+}
+
 .container {
-  padding: 12px 20px 100px;
+  padding: 16px 20px 100px;
+}
+
+.secao-titulo {
+  font-size: 14px;
+  font-weight: 700;
+  color: $text-dark;
+  margin-bottom: 10px;
 }
 
 .compromisso-card {
   display: flex;
-  gap: 14px;
+  align-items: center;
+  gap: 12px;
 
   background: #fff;
-  border-radius: 18px;
-  padding: 16px;
-  margin-bottom: 14px;
-
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
@@ -43,20 +190,20 @@
   align-items: center;
   justify-content: center;
 
-  min-width: 60px;
+  min-width: 54px;
   border-radius: 12px;
   background: #FFF7ED;
-  color: #EA580C;
-  padding: 8px 4px;
+  color: $primary-dark;
+  padding: 6px 4px;
 
   .dia-semana {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     text-transform: uppercase;
   }
 
   .data {
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 700;
   }
 }
@@ -65,29 +212,80 @@
   flex: 1;
 
   h3 {
-    margin: 0 0 6px;
-    font-size: 16px;
+    margin: 0 0 2px;
+    font-size: 14px;
     font-weight: 600;
-    color: #1f2937;
+    color: $text-dark;
   }
 
-  p {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin: 2px 0;
-    font-size: 14px;
-    color: #6b7280;
+  .cliente {
+    margin: 0;
+    font-size: 12px;
+    color: $text-light;
+  }
+}
+
+.horario {
+  .hora {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: $primary-dark;
   }
 }
 
 .vazio {
   text-align: center;
-  color: #9CA3AF;
-  margin-top: 60px;
+  color: $text-light;
+  margin: 30px 0;
 
   ion-icon {
-    font-size: 40px;
-    margin-bottom: 8px;
+    font-size: 34px;
+    margin-bottom: 6px;
+  }
+}
+
+// Modal de detalhes (bottom sheet)
+.detalhe-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 999;
+}
+
+.detalhe-sheet {
+  width: 100%;
+  max-width: 480px;
+  background: #fff;
+  border-radius: 24px 24px 0 0;
+  padding: 20px;
+
+  h3 {
+    margin: 0 0 8px;
+    font-size: 17px;
+    font-weight: 700;
+    color: $text-dark;
+  }
+
+  .linha {
+    margin: 2px 0;
+    font-size: 13px;
+    color: $text-light;
+  }
+
+  .preco {
+    margin: 8px 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: $primary;
+  }
+
+  .fechar-btn {
+    --background: #{$primary};
+    width: 100%;
+    margin-top: 12px;
   }
 }

@@ -13,6 +13,7 @@ import com.cefet.chamapro.entity.Compromisso;
 public interface CompromissoRepository extends JpaRepository<Compromisso, String> {
 
     List<Compromisso> findByProfissional_IdAndDataAndAtivoTrue(String profissionalId, LocalDate data);
+    List<Compromisso> findByProfissional_IdAndAtivoTrueOrderByDataAscHoraInicioAsc(String profissionalId);
 
     Optional<Compromisso> findByPedido_Id(String pedidoId);
 
