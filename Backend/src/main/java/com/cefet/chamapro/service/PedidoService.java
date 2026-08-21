@@ -149,7 +149,7 @@ public class PedidoService {
             throw new BusinessException("Só é possível aceitar um pedido que está pendente.");
         }
 
-        compromissoService.inserir(p, dto.getData(), dto.getHoraInicio(), dto.getHoraFim());
+        compromissoService.inserir(p, dto.getDataInicio(), dto.getDataFim(), dto.getHoraInicio(), dto.getHoraFim());
 
         p.setStatus(Status.ACEITO);
         return new PedidoResponseDTO(pRepository.save(p));

@@ -21,8 +21,8 @@ export class PedidoService {
     );
   }
 
-  aceitar(id: string, data: string, horaInicio: string, horaFim: string): Observable<PedidoModel> {
-    const corpo = { data, horaInicio, horaFim };
+  aceitar(id: string, dataInicio: string, dataFim: string, horaInicio: string, horaFim: string): Observable<PedidoModel> {
+    const corpo = { dataInicio, dataFim, horaInicio, horaFim };
     return this.http.patch<PedidoModel>(
       `${this.API_URL}/${id}/aceitar`,
       corpo,

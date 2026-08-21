@@ -23,7 +23,8 @@ public class CompromissoResponseDTO {
     private String endereco;
     private String descricao;
     private BigDecimal preco;
-    private LocalDate data;
+    private LocalDate dataInicio;
+    private LocalDate dataFim;
     private LocalTime horaInicio;
     private LocalTime horaFim;
 
@@ -34,7 +35,8 @@ public class CompromissoResponseDTO {
         this.nomeCliente = compromisso.getPedido().getCliente().getNome();
         this.descricao = compromisso.getPedido().getDescricao();
         this.preco = compromisso.getPedido().getPreco();
-        this.data = compromisso.getData();
+        this.dataInicio = compromisso.getDataInicio();
+        this.dataFim = compromisso.getDataFim();
         this.horaInicio = compromisso.getHoraInicio();
         this.horaFim = compromisso.getHoraFim();
 

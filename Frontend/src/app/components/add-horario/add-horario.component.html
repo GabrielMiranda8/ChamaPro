@@ -16,15 +16,29 @@
     <div class="section">
       <div class="section-title">
         <ion-icon name="calendar-outline" class="section-icon"></ion-icon>
-        <span>Data do atendimento</span>
+        <span>Data de início do atendimento</span>
       </div>
 
-      <div class="input-wrapper" [class.invalid]="isInvalid('data')">
+      <div class="input-wrapper" [class.invalid]="isInvalid('dataInicio')">
         <ion-icon name="calendar-outline" class="input-icon-left"></ion-icon>
-        <ion-input formControlName="data" type="date" [min]="dataMinima"></ion-input>
+        <ion-input formControlName="dataInicio" type="date" [min]="dataMinima"></ion-input>
       </div>
-      <p class="error-msg" *ngIf="isInvalid('data')">Selecione a data.</p>
+      <p class="error-msg" *ngIf="isInvalid('dataInicio')">Selecione a data de início.</p>
+
+      <div class="section-title">
+        <ion-icon name="calendar-outline" class="section-icon"></ion-icon>
+        <span>Data de término do atendimento</span>
+      </div>
+      
+      <div class="input-wrapper" [class.invalid]="isInvalid('dataFim')">
+        <ion-icon name="calendar-outline" class="input-icon-left"></ion-icon>
+        <ion-input formControlName="dataFim" type="date" [min]="dataMinima"></ion-input>
+      </div>
+      <p class="error-msg" *ngIf="isInvalid('dataFim')">Selecione a data de término.</p>
+
     </div>
+
+
 
     <div class="section">
       <div class="section-title">

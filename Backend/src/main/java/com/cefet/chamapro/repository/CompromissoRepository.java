@@ -27,7 +27,7 @@ public interface CompromissoRepository extends JpaRepository<Compromisso, String
                   AND c.horaInicio < :horaFim
                   AND :horaInicio < c.horaFim
             """)
-    List<Compromisso> buscarConflitos(String profissionalId, LocalDate data, LocalTime horaInicio, LocalTime horaFim);
+    List<Compromisso> buscarConflitos(String profissionalId, LocalDate dataInicio, LocalDate dataFim, LocalTime horaInicio, LocalTime horaFim);
 
     List<Compromisso> findByProfissional_IdAndAtivoTrueAndDataGreaterThanEqualOrderByDataAscHoraInicioAsc(
             String profissionalId, LocalDate data);

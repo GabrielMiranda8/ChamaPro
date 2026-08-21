@@ -11,8 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AceitarPedidoDTO {
 
-    @NotNull(message = "O campo data é obrigatório")
-    private LocalDate data;
+    @NotNull(message = "O campo dataInicio é obrigatório")
+    private LocalDate dataInicio;
+
+    @NotNull(message = "O campo dataFim é obrigatório")
+    private LocalDate dataFim;
 
     @NotNull(message = "O campo horaInicio é obrigatório")
     private LocalTime horaInicio;

@@ -38,7 +38,10 @@ public class Compromisso {
     private Pedido pedido;
 
     @Column(nullable = false)
-    private LocalDate data;
+    private LocalDate dataInicio;
+
+    @Column(nullable = false)
+    private LocalDate dataFim;
 
     @Column(nullable = false)
     private LocalTime horaInicio;

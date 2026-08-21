@@ -63,10 +63,14 @@ public class CompromissoService {
     // Chamado pelo PedidoService ao aceitar um pedido. Recebe o Pedido já
     // carregado (pra não precisar buscar de novo) e os dados do horário.
     @Transactional
-    public CompromissoResponseDTO inserir(Pedido pedido, LocalDate data, LocalTime horaInicio, LocalTime horaFim) {
+    public CompromissoResponseDTO inserir(Pedido pedido, LocalDate dataInicio, LocalDate dataFim, LocalTime horaInicio, LocalTime horaFim) {
 
         if (!horaFim.isAfter(horaInicio)) {
             throw new BusinessException("O horário de término deve ser depois do horário de início.");
+        }
+
+        if (!dataFim.isAfter(dataInicio) && !dataFim.isEqual(dataInicio)) {
+            throw new BusinessException("A data de término deve ser depois da data de início.");
         }
 
         if (horaInicio.getMinute() != 0 && horaInicio.getMinute() != 30) {
@@ -78,7 +82,7 @@ public class CompromissoService {
         }
 
         List<Compromisso> conflitos = cRepository.buscarConflitos(
-                pedido.getProfissional().getId(), data, horaInicio, horaFim);
+                pedido.getProfissional().getId(), dataInicio, dataFim, horaInicio, horaFim);
 
         if (!conflitos.isEmpty()) {
             throw new BusinessException("Você já tem um compromisso marcado nesse horário.");
@@ -87,7 +91,8 @@ public class CompromissoService {
         Compromisso c = new Compromisso();
         c.setProfissional(pedido.getProfissional());
         c.setPedido(pedido);
-        c.setData(data);
+        c.setDataInicio(dataInicio);
+        c.setDataFim(dataFim);
         c.setHoraInicio(horaInicio);
         c.setHoraFim(horaFim);
         c.setAtivo(true);

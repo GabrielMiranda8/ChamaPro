@@ -29,7 +29,8 @@ public class PedidoResponseDTO {
     private Status status;
     private LocalDate dataSugerida;
     private LocalTime horaSugerida;
-    private LocalDate dataAgendada;
+    private LocalDate dataAgendadaInicial;
+    private LocalDate dataAgendadaFinal;
     private LocalTime horaInicioAgendada;
     private LocalTime horaFimAgendada;
 
@@ -48,7 +49,8 @@ public class PedidoResponseDTO {
         this.horaSugerida = pedido.getHoraSugerida();
 
         if (pedido.getCompromisso() != null && pedido.getCompromisso().isAtivo()) {
-            this.dataAgendada = pedido.getCompromisso().getData();
+            this.dataAgendadaInicial = pedido.getCompromisso().getDataInicio();
+            this.dataAgendadaFinal = pedido.getCompromisso().getDataFim();
             this.horaInicioAgendada = pedido.getCompromisso().getHoraInicio();
             this.horaFimAgendada = pedido.getCompromisso().getHoraFim();
         }

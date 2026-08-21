@@ -72,12 +72,14 @@ export class AddHorarioComponent implements OnInit {
     const horaInicialSugerida = this.pedido.horaSugerida || '';
 
     this.form = this.formBuilder.group({
-      data: [dataInicial, Validators.required],
+      dataInicio: [dataInicial, Validators.required],
+      dataFim: [dataInicial, Validators.required],
       horaInicio: [horaInicialSugerida, Validators.required],
       horaFim: ['', Validators.required],
     });
 
-    this.form.get('data')!.valueChanges.subscribe(() => this.buscarHorariosOcupados());
+    this.form.get('dataInicio')!.valueChanges.subscribe(() => this.buscarHorariosOcupados());
+    this.form.get('dataFim')!.valueChanges.subscribe(() => this.buscarHorariosOcupados());
   }
 
   private gerarHoras(): string[] {
@@ -92,7 +94,9 @@ export class AddHorarioComponent implements OnInit {
   // ─── Disponibilidade ─────────────────────────────────────────────────────────
 
   private buscarHorariosOcupados(): void {
-    const data = this.form.get('data')!.value;
+    const dataInicio = this.form.get('dataInicio')!.value;
+    const dataFim = this.form.get('dataFim')!.value;
+    const data = dataInicio || dataFim;
     if (!data) {
       return;
     }
@@ -127,16 +131,17 @@ export class AddHorarioComponent implements OnInit {
   // ─── Confirmação ───────────────────────────────────────────────────────────
 
   confirmar(): void {
-    this.form.get('data')!.markAsTouched();
+    this.form.get('dataInicio')!.markAsTouched();
     this.form.get('horaInicio')!.markAsTouched();
     this.form.get('horaFim')!.markAsTouched();
 
     if (this.form.invalid) {
-      this.mostrarToast('Preencha data, horário de início e de término.', 'warning');
+      this.mostrarToast('Preencha data inicial, data de término, horário de início e de término.', 'warning');
       return;
     }
 
-    const data = this.form.get('data')!.value;
+    const dataInicio = this.form.get('dataInicio')!.value;
+    const dataFim = this.form.get('dataFim')!.value;
     const horaInicio = this.form.get('horaInicio')!.value;
     const horaFim = this.form.get('horaFim')!.value;
 
@@ -152,7 +157,7 @@ export class AddHorarioComponent implements OnInit {
 
     this.carregando = true;
 
-    this.pedidoService.aceitar(this.pedido.id, data, horaInicio, horaFim).subscribe({
+    this.pedidoService.aceitar(this.pedido.id, dataInicio, dataFim, horaInicio, horaFim).subscribe({
       next: async (pedidoAtualizado) => {
         this.carregando = false;
         await this.mostrarToast('Pedido aceito e agenda atualizada!', 'success');
