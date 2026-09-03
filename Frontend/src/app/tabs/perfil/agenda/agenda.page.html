@@ -65,8 +65,8 @@
 
     <div class="compromisso-card" *ngFor="let c of proximosServicos" (click)="abrirDetalhes(c)">
       <div class="data-box">
-        <span class="dia-semana">{{ diasSemanaLabel[obterDiaSemanaDeData(c.data)] }}</span>
-        <span class="data">{{ formatarDataBr(c.data) }}</span>
+        <span class="dia-semana">{{ diasSemanaLabel[obterDiaSemanaDeData(c.dataInicio)] }}</span>
+        <span class="data">{{ formatarDataBr(c.dataInicio) }}</span>
       </div>
 
       <div class="info">
@@ -88,7 +88,7 @@
       <h3>{{ selecionado.nomeServico }}</h3>
       <p class="linha">Cliente: {{ selecionado.nomeCliente }}</p>
       <p class="linha" *ngIf="selecionado.endereco">{{ selecionado.endereco }}</p>
-      <p class="linha">{{ formatarDataBr(selecionado.data) }} às {{ selecionado.horaInicio }} - {{ selecionado.horaFim
+      <p class="linha">{{ formatarDataBr(selecionado.dataInicio) }} às {{ selecionado.horaInicio }} - {{ selecionado.horaFim
         }}</p>
       <p class="preco">R$ {{ selecionado.preco.toFixed(2) }}</p>
       <p class="linha" *ngIf="selecionado.descricao">{{ selecionado.descricao }}</p>

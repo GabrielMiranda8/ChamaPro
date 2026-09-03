@@ -118,7 +118,7 @@ export class AgendaPage implements OnInit {
   eventosPorDia(diaIso: string): CompromissoModel[] {
     const lista: CompromissoModel[] = [];
     for (let i = 0; i < this.compromissos.length; i++) {
-      if (this.compromissos[i].data === diaIso) {
+      if (this.compromissos[i].dataInicio === diaIso) {
         lista.push(this.compromissos[i]);
       }
     }
@@ -152,7 +152,7 @@ export class AgendaPage implements OnInit {
   get proximosServicos(): CompromissoModel[] {
     const lista: CompromissoModel[] = [];
     for (let i = 0; i < this.compromissos.length; i++) {
-      if (this.compromissos[i].data >= this.hojeIso) {
+      if (this.compromissos[i].dataInicio >= this.hojeIso) {
         lista.push(this.compromissos[i]);
       }
     }
@@ -160,8 +160,8 @@ export class AgendaPage implements OnInit {
     // ordena por data + hora (bubble sort, mesmo padrão já usado no projeto)
     for (let i = 0; i < lista.length - 1; i++) {
       for (let j = 0; j < lista.length - 1 - i; j++) {
-        const chaveA = lista[j].data + lista[j].horaInicio;
-        const chaveB = lista[j + 1].data + lista[j + 1].horaInicio;
+        const chaveA = lista[j].dataInicio + lista[j].horaInicio;
+        const chaveB = lista[j + 1].dataInicio + lista[j + 1].horaInicio;
         if (chaveA > chaveB) {
           const temp = lista[j];
           lista[j] = lista[j + 1];

@@ -6,7 +6,8 @@ export class CompromissoModel {
   endereco: string;
   descricao: string;
   preco: number;
-  data: string;
+  dataInicio: string;
+  dataFim: string;
   horaInicio: string;
   horaFim: string;
 
@@ -18,7 +19,8 @@ export class CompromissoModel {
     this.endereco = '';
     this.descricao = '';
     this.preco = 0;
-    this.data = '';
+    this.dataInicio = '';
+    this.dataFim = '';
     this.horaInicio = '';
     this.horaFim = '';
   }
