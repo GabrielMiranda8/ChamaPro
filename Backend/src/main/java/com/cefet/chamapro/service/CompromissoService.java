@@ -33,7 +33,7 @@ public class CompromissoService {
             throw new ResourceNotFoundException("Profissional não encontrado. Id: " + idProfissional);
         }
 
-        List<Compromisso> compromissos = cRepository.findByProfissional_IdAndDataAndAtivoTrue(idProfissional, data);
+        List<Compromisso> compromissos = cRepository.findByProfissional_IdAndDataInicioAndAtivoTrue(idProfissional, data);
 
         List<CompromissoResponseDTO> lista = new ArrayList<>();
         for (int i = 0; i < compromissos.size(); i++) {
@@ -51,7 +51,7 @@ public class CompromissoService {
         }
 
         List<Compromisso> compromissos = cRepository
-                .findByProfissional_IdAndAtivoTrueOrderByDataAscHoraInicioAsc(idProfissional);
+                .findByProfissional_IdAndAtivoTrueOrderByDataInicioAscHoraInicioAsc(idProfissional);
 
         List<CompromissoResponseDTO> lista = new ArrayList<>();
         for (int i = 0; i < compromissos.size(); i++) {

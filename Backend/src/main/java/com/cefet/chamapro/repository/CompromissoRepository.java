@@ -23,15 +23,15 @@ public interface CompromissoRepository extends JpaRepository<Compromisso, String
         @Query("""
                             SELECT c FROM Compromisso c
                             WHERE c.profissional.id = :profissionalId
-                              AND c.dataInicio = :dataInicio
-                              AND c.dataFim = :dataFim
                               AND c.ativo = true
+                              AND c.dataInicio <= :dataFim
+                              AND c.dataFim >= :dataInicio
                               AND c.horaInicio < :horaFim
                               AND :horaInicio < c.horaFim
                         """)
         List<Compromisso> buscarConflitos(String profissionalId, LocalDate dataInicio, LocalDate dataFim,
                         LocalTime horaInicio, LocalTime horaFim);
 
-        List<Compromisso> findByProfissional_IdAndAtivoTrueAndDataInicioGreaterThanEqualOrderByDataAscHoraInicioAsc(
+        List<Compromisso> findByProfissional_IdAndAtivoTrueAndDataInicioGreaterThanEqualOrderByDataInicioAscHoraInicioAsc(
                         String profissionalId, LocalDate data);
 }
