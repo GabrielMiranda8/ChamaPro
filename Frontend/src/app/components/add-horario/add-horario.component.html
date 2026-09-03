@@ -29,13 +29,24 @@
         <ion-icon name="calendar-outline" class="section-icon"></ion-icon>
         <span>Data de término do atendimento</span>
       </div>
-      
+
       <div class="input-wrapper" [class.invalid]="isInvalid('dataFim')">
         <ion-icon name="calendar-outline" class="input-icon-left"></ion-icon>
         <ion-input formControlName="dataFim" type="date" [min]="dataMinima"></ion-input>
       </div>
       <p class="error-msg" *ngIf="isInvalid('dataFim')">Selecione a data de término.</p>
 
+
+      <div class="section-title">
+        <ion-icon name="calendar-outline" class="section-icon"></ion-icon>
+        <span>Data teste</span>
+      </div>
+      <div class="input-row">
+        <ion-datetime displayFormat="DD/MM/YYYY" presentation="date" min="dataMinima">
+        </ion-datetime>
+        <ion-datetime displayFormat="DD/MM/YYYY" presentation="date" min="dataMinima">
+        </ion-datetime>
+      </div>
     </div>
 
 

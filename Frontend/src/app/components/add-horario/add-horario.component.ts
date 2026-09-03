@@ -12,6 +12,7 @@ import {
   IonSpinner,
   ModalController,
   ToastController,
+  IonDatetime,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { calendarOutline, closeOutline, timeOutline } from 'ionicons/icons';
@@ -36,6 +37,7 @@ import { CompromissoService } from 'src/app/services/compromisso.service';
     IonButton,
     IonIcon,
     IonSpinner,
+    IonDatetime,
   ],
 })
 export class AddHorarioComponent implements OnInit {
@@ -45,7 +47,7 @@ export class AddHorarioComponent implements OnInit {
   form!: FormGroup;
   horasDisponiveis: string[] = [];
   horariosOcupados: CompromissoModel[] = [];
-  dataMinima = new Date().toISOString().split('T')[0];
+  dataMinima = new Date().toISOString();
   carregando = false;
 
   constructor(
@@ -62,6 +64,7 @@ export class AddHorarioComponent implements OnInit {
     this.horasDisponiveis = this.gerarHoras();
     this.inicializarForm();
     this.buscarHorariosOcupados();
+    console.log("Data minima: ", this.dataMinima);
   }
 
   // ─── Formulário ────────────────────────────────────────────────────────────
@@ -156,6 +159,7 @@ export class AddHorarioComponent implements OnInit {
     }
 
     this.carregando = true;
+    console.log(`Aceitando pedido ${this.pedido.id} com data/hora: ${dataInicio} ${horaInicio} - ${dataFim} ${horaFim}`);
 
     this.pedidoService.aceitar(this.pedido.id, dataInicio, dataFim, horaInicio, horaFim).subscribe({
       next: async (pedidoAtualizado) => {

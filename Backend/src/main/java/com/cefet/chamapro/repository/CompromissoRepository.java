@@ -12,23 +12,26 @@ import com.cefet.chamapro.entity.Compromisso;
 
 public interface CompromissoRepository extends JpaRepository<Compromisso, String> {
 
-    List<Compromisso> findByProfissional_IdAndDataAndAtivoTrue(String profissionalId, LocalDate data);
-    List<Compromisso> findByProfissional_IdAndAtivoTrueOrderByDataAscHoraInicioAsc(String profissionalId);
+        List<Compromisso> findByProfissional_IdAndDataInicioAndAtivoTrue(String profissionalId, LocalDate data);
 
-    Optional<Compromisso> findByPedido_Id(String pedidoId);
+        List<Compromisso> findByProfissional_IdAndAtivoTrueOrderByDataInicioAscHoraInicioAsc(String profissionalId);
 
-    // Dois intervalos [inicioA, fimA) e [inicioB, fimB) se cruzam quando
-    // inicioA < fimB E inicioB < fimA. É a checagem clássica de sobreposição.
-    @Query("""
-                SELECT c FROM Compromisso c
-                WHERE c.profissional.id = :profissionalId
-                  AND c.data = :data
-                  AND c.ativo = true
-                  AND c.horaInicio < :horaFim
-                  AND :horaInicio < c.horaFim
-            """)
-    List<Compromisso> buscarConflitos(String profissionalId, LocalDate dataInicio, LocalDate dataFim, LocalTime horaInicio, LocalTime horaFim);
+        Optional<Compromisso> findByPedido_Id(String pedidoId);
 
-    List<Compromisso> findByProfissional_IdAndAtivoTrueAndDataGreaterThanEqualOrderByDataAscHoraInicioAsc(
-            String profissionalId, LocalDate data);
+        // Dois intervalos [inicioA, fimA) e [inicioB, fimB) se cruzam quando
+        // inicioA < fimB E inicioB < fimA. É a checagem clássica de sobreposição.
+        @Query("""
+                            SELECT c FROM Compromisso c
+                            WHERE c.profissional.id = :profissionalId
+                              AND c.dataInicio = :dataInicio
+                              AND c.dataFim = :dataFim
+                              AND c.ativo = true
+                              AND c.horaInicio < :horaFim
+                              AND :horaInicio < c.horaFim
+                        """)
+        List<Compromisso> buscarConflitos(String profissionalId, LocalDate dataInicio, LocalDate dataFim,
+                        LocalTime horaInicio, LocalTime horaFim);
+
+        List<Compromisso> findByProfissional_IdAndAtivoTrueAndDataInicioGreaterThanEqualOrderByDataAscHoraInicioAsc(
+                        String profissionalId, LocalDate data);
 }
