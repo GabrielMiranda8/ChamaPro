@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 import {
   IonContent,
@@ -52,6 +53,7 @@ export class PedidosPage implements OnInit {
     private alertController: AlertController,
     private toastController: ToastController,
     private modalController: ModalController,
+    private router: Router,
   ) {
     addIcons({
       'time-outline': timeOutline,
@@ -308,6 +310,11 @@ export class PedidosPage implements OnInit {
         this.mostrarToast('Erro ao atualizar o pedido.', 'danger');
       }
     });
+  }
+
+  // Leva pra página de avaliação já com o pedido em questão selecionado
+  avaliarPedido(pedido: PedidoModel): void {
+    this.router.navigate(['/avaliacoes'], { queryParams: { pedidoId: pedido.id } });
   }
 
   obterTextoBotaoAvancar(status: string): string {

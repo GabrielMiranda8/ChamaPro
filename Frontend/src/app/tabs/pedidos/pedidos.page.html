@@ -74,6 +74,11 @@
         class="avancar" (click)="avancarPedido(pedido)">
         {{ obterTextoBotaoAvancar(pedido.status) }}
       </button>
+
+      <!-- Pedido concluído: cliente e profissional podem avaliar um ao outro -->
+      <button *ngIf="pedido.status === 'FINALIZADO'" class="avaliar" (click)="avaliarPedido(pedido)">
+        Avaliar
+      </button>
     </div>
 
     <p class="vazio" *ngIf="!carregando && pedidos.length === 0">
