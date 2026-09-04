@@ -5,6 +5,7 @@ import {
   IonContent, IonIcon, IonSpinner, ToastController,
 } from '@ionic/angular/standalone';
 import { NavController } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
 import { addIcons } from 'ionicons';
 import {
   chevronBackOutline, starOutline, star, chatbubbleEllipsesOutline,
@@ -66,6 +67,7 @@ export class AvaliacaoPage implements OnInit {
     private tokenService: TokenService,
     private toastController: ToastController,
     private navController: NavController,
+    private route: ActivatedRoute,
   ) {
     addIcons({
       'chevron-back-outline': chevronBackOutline,
@@ -77,10 +79,15 @@ export class AvaliacaoPage implements OnInit {
     });
   }
 
+  // Id do pedido vindo por query param (ex: botão "Avaliar" na página de Pedidos),
+  // usado pra abrir o formulário certo assim que os dados carregarem.
+  private pedidoIdSelecionado: string | null = null;
+
   ngOnInit(): void {
     const token = this.tokenService.extrair();
     this.usuarioId = token.id;
     this.tipoUsuario = token.tipo;
+    this.pedidoIdSelecionado = this.route.snapshot.queryParamMap.get('pedidoId');
     this.carregarDados();
   }
 
@@ -109,12 +116,30 @@ export class AvaliacaoPage implements OnInit {
           .map(p => this.paraPedidoParaAvaliar(p));
 
         this.carregando = false;
+        this.tratarPedidoSelecionadoPorUrl(idsPedidosJaAvaliados);
       },
       error: () => {
         this.carregando = false;
         this.exibirMensagem('Não foi possível carregar suas avaliações. Tente novamente.');
       },
     });
+  }
+
+  // Se o usuário chegou aqui pelo botão "Avaliar" de um pedido específico,
+  // abre o formulário dele direto (ou avisa se já foi avaliado antes).
+  private tratarPedidoSelecionadoPorUrl(idsPedidosJaAvaliados: Set<string>): void {
+    if (!this.pedidoIdSelecionado) {
+      return;
+    }
+
+    if (idsPedidosJaAvaliados.has(this.pedidoIdSelecionado)) {
+      this.exibirMensagem('Você já avaliou esse pedido.');
+    } else if (this.pendentes.some(p => p.id === this.pedidoIdSelecionado)) {
+      this.pedidoAberto = this.pedidoIdSelecionado;
+      this.notaSelecionada[this.pedidoIdSelecionado] = 0;
+    }
+
+    this.pedidoIdSelecionado = null;
   }
 
   private paraPedidoParaAvaliar(p: PedidoModel): PedidoParaAvaliar {
@@ -167,7 +192,8 @@ export class AvaliacaoPage implements OnInit {
       error: (err) => {
         delete this.enviando[pedido.id];
         console.log('Erro ao enviar avaliação: ', err);
-        this.exibirMensagem('Erro ao enviar avaliação. Tente novamente.');
+        const mensagemBackend = err?.error?.errors?.[0]?.message || err?.error?.message;
+        this.exibirMensagem(mensagemBackend || 'Erro ao enviar avaliação. Tente novamente.');
       },
     });
   }
@@ -191,7 +217,7 @@ export class AvaliacaoPage implements OnInit {
   private async exibirMensagem(texto: string): Promise<void> {
     const toast = await this.toastController.create({
       message: texto,
-      duration: 2200,
+      duration: 3500,
       position: 'top',
     });
     await toast.present();
