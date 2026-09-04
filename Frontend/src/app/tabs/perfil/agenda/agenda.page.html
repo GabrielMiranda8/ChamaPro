@@ -45,6 +45,7 @@
         <div class="linha-hora-fundo" *ngFor="let h of horas" [style.height.px]="alturaHora"></div>
 
         <button class="evento-card" *ngFor="let ev of eventosPorDia(formatarIso(dia))"
+          [class.evento-multi-dia]="ehPeriodoMultiDia(ev)"
           [style.top.px]="calcularTopo(ev.horaInicio)" [style.height.px]="calcularAltura(ev.horaInicio, ev.horaFim)"
           (click)="abrirDetalhes(ev)">
           <span class="evento-titulo">{{ ev.nomeServico }}</span>
@@ -71,7 +72,12 @@
 
       <div class="info">
         <h3>{{ c.nomeServico }}</h3>
-        <p class="cliente">{{ c.nomeCliente }} • {{ c.endereco }}</p>
+        <p class="cliente">
+          {{ c.nomeCliente }} • {{ c.endereco }}
+          <span *ngIf="ehPeriodoMultiDia(c)" class="periodo-badge">
+            {{ formatarPeriodoBr(c) }}
+          </span>
+        </p>
       </div>
 
       <div class="horario">
@@ -82,14 +88,15 @@
     <ion-spinner *ngIf="carregando" name="crescent"></ion-spinner>
   </div>
 
-  <!-- Modal de detalhes (mesma ideia do bottom sheet do exemplo React) -->
+  <!-- Modal de detalhes -->
   <div class="detalhe-overlay" *ngIf="selecionado" (click)="fecharDetalhes()">
     <div class="detalhe-sheet" (click)="$event.stopPropagation()">
       <h3>{{ selecionado.nomeServico }}</h3>
       <p class="linha">Cliente: {{ selecionado.nomeCliente }}</p>
       <p class="linha" *ngIf="selecionado.endereco">{{ selecionado.endereco }}</p>
-      <p class="linha">{{ formatarDataBr(selecionado.dataInicio) }} às {{ selecionado.horaInicio }} - {{ selecionado.horaFim
-        }}</p>
+      <p class="linha">
+        {{ formatarPeriodoBr(selecionado) }} • {{ selecionado.horaInicio }} - {{ selecionado.horaFim }}
+      </p>
       <p class="preco">R$ {{ selecionado.preco.toFixed(2) }}</p>
       <p class="linha" *ngIf="selecionado.descricao">{{ selecionado.descricao }}</p>
 

@@ -115,11 +115,15 @@ export class AgendaPage implements OnInit {
 
   // ─── Eventos na grade ────────────────────────────────────────────────────
 
+  // Um compromisso agora pode durar vários dias (dataInicio até dataFim).
+  // Por isso ele precisa aparecer em TODOS os dias da grade que caem
+  // dentro desse período, não só num dia exato.
   eventosPorDia(diaIso: string): CompromissoModel[] {
     const lista: CompromissoModel[] = [];
     for (let i = 0; i < this.compromissos.length; i++) {
-      if (this.compromissos[i].dataInicio === diaIso) {
-        lista.push(this.compromissos[i]);
+      const c = this.compromissos[i];
+      if (diaIso >= c.dataInicio && diaIso <= c.dataFim) {
+        lista.push(c);
       }
     }
     return lista;
@@ -147,17 +151,20 @@ export class AgendaPage implements OnInit {
     return altura;
   }
 
-  // ─── Lista "Próximos serviços" (só data >= hoje) ────────────────────────
+  // ─── Lista "Próximos serviços" ──────────────────────────────────────────
+  // Um serviço continua relevante enquanto ainda não passou da dataFim —
+  // isso cobre tanto compromissos futuros quanto os que já começaram mas
+  // ainda estão "em andamento" (ex: uma semana de trabalho que começou ontem).
 
   get proximosServicos(): CompromissoModel[] {
     const lista: CompromissoModel[] = [];
     for (let i = 0; i < this.compromissos.length; i++) {
-      if (this.compromissos[i].dataInicio >= this.hojeIso) {
+      if (this.compromissos[i].dataFim >= this.hojeIso) {
         lista.push(this.compromissos[i]);
       }
     }
 
-    // ordena por data + hora (bubble sort, mesmo padrão já usado no projeto)
+    // ordena por dataInicio + hora (bubble sort, mesmo padrão já usado no projeto)
     for (let i = 0; i < lista.length - 1; i++) {
       for (let j = 0; j < lista.length - 1 - i; j++) {
         const chaveA = lista[j].dataInicio + lista[j].horaInicio;
@@ -175,6 +182,19 @@ export class AgendaPage implements OnInit {
   formatarDataBr(dataIso: string): string {
     const partes = dataIso.split('-');
     return `${partes[2]}/${partes[1]}/${partes[0]}`;
+  }
+
+  // Mostra "12/09" ou, se for um período de vários dias, "12/09 – 19/09"
+  formatarPeriodoBr(c: CompromissoModel): string {
+    if (c.dataInicio === c.dataFim) {
+      return this.formatarDataBr(c.dataInicio);
+    }
+    return `${this.formatarDataBr(c.dataInicio)} – ${this.formatarDataBr(c.dataFim)}`;
+  }
+
+  // Diz se um compromisso dura mais de um dia (útil pra template)
+  ehPeriodoMultiDia(c: CompromissoModel): boolean {
+    return c.dataInicio !== c.dataFim;
   }
 
   // ─── Modal de detalhes ───────────────────────────────────────────────────

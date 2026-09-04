@@ -133,7 +133,8 @@ public class PedidoService {
         p.setServico(servico);
         p.setEndereco(endereco);
         p.setPreco(dto.getPreco());
-        // p.setData(dto.getData());
+        p.setDataSugerida(dto.getDataSugerida());
+        p.setHoraSugerida(dto.getHoraSugerida());
         p.setDescricao(dto.getDescricao());
         p.setStatus(Status.PENDENTE);
 
@@ -154,7 +155,6 @@ public class PedidoService {
         p.setStatus(Status.ACEITO);
         return new PedidoResponseDTO(pRepository.save(p));
     }
-
 
     @Transactional
     public PedidoResponseDTO atualizar(String id, PedidoRequestDTO dto) {

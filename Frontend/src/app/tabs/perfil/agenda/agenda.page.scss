@@ -289,3 +289,18 @@ $border-color: #E5E7EB;
     margin-top: 12px;
   }
 }
+
+.evento-card.evento-multi-dia {
+  border-left: 3px solid #fff;
+}
+
+.periodo-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba($primary, 0.15);
+  color: $primary-dark;
+  font-size: 10px;
+  font-weight: 600;
+}
