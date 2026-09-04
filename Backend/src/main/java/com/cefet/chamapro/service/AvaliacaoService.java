@@ -1,5 +1,6 @@
 package com.cefet.chamapro.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import com.cefet.chamapro.dto.AvaliacaoRequestDTO;
 import com.cefet.chamapro.dto.AvaliacaoResponseDTO;
 import com.cefet.chamapro.entity.Avaliacao;
 import com.cefet.chamapro.entity.Pedido;
+import com.cefet.chamapro.entity.Status;
 import com.cefet.chamapro.entity.Usuario;
 import com.cefet.chamapro.exception.BusinessException;
 import com.cefet.chamapro.exception.ResourceNotFoundException;
@@ -66,6 +68,18 @@ public class AvaliacaoService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<AvaliacaoResponseDTO> listarPorPedido(String idPedido) {
+        if (!pedidoRepository.existsById(idPedido)) {
+            throw new ResourceNotFoundException("Pedido não encontrado. Id: " + idPedido);
+        }
+
+        return aRepository.findByPedido_Id(idPedido)
+                .stream()
+                .map(AvaliacaoResponseDTO::new)
+                .toList();
+    }
+
     @Transactional
     public AvaliacaoResponseDTO inserir(AvaliacaoRequestDTO dto) {
         if (aRepository.existsByAutor_IdAndAlvo_IdAndPedido_Id(dto.getAutorId(), dto.getAlvoId(), dto.getPedidoId())) {
@@ -75,6 +89,10 @@ public class AvaliacaoService {
         Pedido pedido = pedidoRepository.findById(dto.getPedidoId())
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado. Id: " + dto.getPedidoId()));
 
+        if (pedido.getStatus() != Status.FINALIZADO) {
+            throw new BusinessException("Só é possível avaliar pedidos finalizados.");
+        }
+
         Usuario autor = usuarioRepository.findById(dto.getAutorId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Autor não encontrado. Id: " + dto.getAutorId()));
@@ -82,15 +100,25 @@ public class AvaliacaoService {
         Usuario alvo = usuarioRepository.findById(dto.getAlvoId())
                 .orElseThrow(() -> new ResourceNotFoundException("Alvo não encontrado. Id: " + dto.getAlvoId()));
 
+        if (autor.getId().equals(alvo.getId())) {
+            throw new BusinessException("Não é possível avaliar a si mesmo.");
+        }
+
+        validarParticipantesDoPedido(pedido, autor.getId(), alvo.getId());
+
         Avaliacao a = new Avaliacao();
         a.setAutor(autor);
         a.setAlvo(alvo);
-        a.setData(dto.getData());
+        a.setData(LocalDateTime.now());
         a.setDescricao(dto.getDescricao());
         a.setNota(dto.getNota());
         a.setPedido(pedido);
 
-        return new AvaliacaoResponseDTO(aRepository.save(a));
+        Avaliacao salva = aRepository.save(a);
+
+        recalcularNota(alvo.getId());
+
+        return new AvaliacaoResponseDTO(salva);
     }
 
     @Transactional
@@ -98,32 +126,70 @@ public class AvaliacaoService {
         Avaliacao a = aRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Avaliacao não encontrada. Id: " + id));
 
-        Pedido pedido = pedidoRepository.findById(dto.getPedidoId())
-                .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado. Id: " + dto.getPedidoId()));
-
-        Usuario autor = usuarioRepository.findById(dto.getAutorId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Autor não encontrado. Id: " + dto.getAutorId()));
-
-        Usuario alvo = usuarioRepository.findById(dto.getAlvoId())
-                .orElseThrow(() -> new ResourceNotFoundException("Alvo não encontrado. Id: " + dto.getAlvoId()));
-            
-        a.setAlvo(alvo);
-        a.setAutor(autor);
-        a.setData(dto.getData());
+        // Autor, alvo e pedido de uma avaliação já cadastrada não podem ser
+        // trocados por aqui - só a nota e o comentário podem ser editados.
         a.setDescricao(dto.getDescricao());
         a.setNota(dto.getNota());
-        a.setPedido(pedido);
 
-        return new AvaliacaoResponseDTO(aRepository.save(a));
+        Avaliacao salva = aRepository.save(a);
+
+        recalcularNota(a.getAlvo().getId());
+
+        return new AvaliacaoResponseDTO(salva);
     }
 
 
     @Transactional
     public void excluir(String id) {
-        if (!aRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Avaliacao não encontrada com ID: " + id);
-        }
+        Avaliacao a = aRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Avaliacao não encontrada com ID: " + id));
+
+        String idAlvo = a.getAlvo().getId();
+
         aRepository.deleteById(id);
+
+        recalcularNota(idAlvo);
+    }
+
+    // ─── Helpers ────────────────────────────────────────────────────────────
+
+    // Garante que autor e alvo realmente fazem parte do pedido informado (ou
+    // seja, um é o cliente e o outro o profissional daquele pedido), evitando
+    // que qualquer usuário avalie qualquer outro usando um pedido alheio.
+    private void validarParticipantesDoPedido(Pedido pedido, String idAutor, String idAlvo) {
+        String idCliente = pedido.getCliente().getId();
+        String idProfissional = pedido.getProfissional().getId();
+
+        boolean clienteAvaliaProfissional = idAutor.equals(idCliente) && idAlvo.equals(idProfissional);
+        boolean profissionalAvaliaCliente = idAutor.equals(idProfissional) && idAlvo.equals(idCliente);
+
+        if (!clienteAvaliaProfissional && !profissionalAvaliaCliente) {
+            throw new BusinessException("Autor e alvo precisam ser o cliente e o profissional do pedido informado.");
+        }
+    }
+
+    // Recalcula a nota média de um usuário com base em todas as avaliações
+    // recebidas por ele, e persiste o novo valor em tb_usuario.nota. É essa
+    // chamada que faz a nota do profissional (ou do cliente) mudar depois
+    // de cada avaliação nova, editada ou removida.
+    private void recalcularNota(String idUsuarioAlvo) {
+        Usuario usuario = usuarioRepository.findById(idUsuarioAlvo).orElse(null);
+        if (usuario == null) {
+            return;
+        }
+
+        List<Avaliacao> avaliacoes = aRepository.findByAlvo_Id(idUsuarioAlvo);
+
+        if (avaliacoes.isEmpty()) {
+            usuario.setNota(0.0);
+        } else {
+            double media = avaliacoes.stream()
+                    .mapToDouble(av -> av.getNota().doubleValue())
+                    .average()
+                    .orElse(0.0);
+            usuario.setNota(Math.round(media * 10.0) / 10.0);
+        }
+
+        usuarioRepository.save(usuario);
     }
 }
