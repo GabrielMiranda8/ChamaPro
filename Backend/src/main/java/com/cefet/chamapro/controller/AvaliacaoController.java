@@ -45,6 +45,24 @@ public class AvaliacaoController {
         return ResponseEntity.ok(avaliacaoResponseDTO);
     }
 
+    @GetMapping("/autor/{idAutor}")
+    @Operation(summary = "Listar avaliacoes feitas por um usuário")
+    public ResponseEntity<List<AvaliacaoResponseDTO>> listarPorAutor(@PathVariable String idAutor) {
+        return ResponseEntity.ok(avaliacaoService.listarPorAutor(idAutor));
+    }
+
+    @GetMapping("/alvo/{idAlvo}")
+    @Operation(summary = "Listar avaliacoes recebidas por um usuário")
+    public ResponseEntity<List<AvaliacaoResponseDTO>> listarPorAlvo(@PathVariable String idAlvo) {
+        return ResponseEntity.ok(avaliacaoService.listarPorAlvo(idAlvo));
+    }
+
+    @GetMapping("/pedido/{idPedido}")
+    @Operation(summary = "Listar avaliacoes de um pedido")
+    public ResponseEntity<List<AvaliacaoResponseDTO>> listarPorPedido(@PathVariable String idPedido) {
+        return ResponseEntity.ok(avaliacaoService.listarPorPedido(idPedido));
+    }
+
     @PostMapping
     @Operation(summary = "Cadastrar avaliacao")
     public ResponseEntity<AvaliacaoResponseDTO> inserir(@Valid @RequestBody AvaliacaoRequestDTO avaliacaoRequestDTO) {
