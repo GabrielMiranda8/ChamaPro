@@ -1,0 +1,242 @@
+// ── Variáveis (mesma paleta usada nas outras páginas standalone) ────────────
+$laranja: #E8632A;
+$laranja-hover: #d45520;
+$laranja-light: rgba(232, 99, 42, 0.1);
+$texto: #1A1A1A;
+$texto-sec: #666666;
+$borda: #E5E5E5;
+$fundo: #F7F5F2;
+$branco: #ffffff;
+$verde: #16a34a;
+
+// ── Content ───────────────────────────────────────────────
+.chat-content {
+  --background: #{$fundo};
+  --color: #{$texto};
+  color-scheme: light;
+}
+
+// ── Wrapper ───────────────────────────────────────────────
+.page-shell {
+  height: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 20px 12px;
+  color: $texto;
+  box-sizing: border-box;
+}
+
+// ── Topbar ────────────────────────────────────────────────
+.topbar {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+
+  .topbar-info {
+    min-width: 0;
+  }
+
+  h1 {
+    font-size: 20px;
+    font-weight: 800;
+    color: $texto;
+    margin: 4px 0 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  p {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: $texto-sec;
+    margin: 0;
+  }
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: $texto-sec;
+  flex-shrink: 0;
+
+  &.online {
+    background: $verde;
+  }
+}
+
+.back-button {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1.5px solid $borda;
+  background: $branco;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  padding: 0;
+
+  ion-icon {
+    font-size: 20px;
+    color: $texto;
+  }
+
+  &:active {
+    background: $fundo;
+  }
+}
+
+// ── Área de mensagens ───────────────────────────────────────
+.mensagens {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px 2px 16px;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $borda;
+    border-radius: 4px;
+  }
+}
+
+.vazio {
+  margin: auto 0;
+  text-align: center;
+  color: $texto-sec;
+
+  ion-icon {
+    font-size: 40px;
+    color: $borda;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+// ── Bolhas de mensagem ───────────────────────────────────────
+.bolha-wrapper {
+  display: flex;
+  justify-content: flex-start;
+
+  &.minha {
+    justify-content: flex-end;
+  }
+}
+
+.bolha {
+  max-width: 78%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: $branco;
+  border: 1.5px solid $borda;
+  border-bottom-left-radius: 4px;
+
+  .texto {
+    margin: 0;
+    font-size: 14.5px;
+    line-height: 1.45;
+    color: $texto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .hora {
+    display: block;
+    margin-top: 4px;
+    font-size: 10.5px;
+    color: $texto-sec;
+    text-align: right;
+  }
+}
+
+.minha .bolha {
+  background: $laranja;
+  border-color: $laranja;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 4px;
+
+  .texto {
+    color: $branco;
+  }
+
+  .hora {
+    color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+// ── Barra de input ───────────────────────────────────────────
+.input-bar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding-top: 10px;
+
+  textarea {
+    flex: 1;
+    resize: none;
+    max-height: 100px;
+    border: 1.5px solid $borda;
+    border-radius: 16px;
+    padding: 11px 14px;
+    font-size: 14.5px;
+    font-family: inherit;
+    color: $texto;
+    background: $branco;
+
+    &:focus {
+      outline: none;
+      border-color: $laranja;
+    }
+
+    &::placeholder {
+      color: $texto-sec;
+    }
+  }
+
+  .enviar {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    border: none;
+    background: $laranja;
+    color: $branco;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    ion-icon {
+      font-size: 19px;
+    }
+
+    &:active {
+      background: $laranja-hover;
+    }
+
+    &:disabled {
+      background: $borda;
+      color: $texto-sec;
+      cursor: default;
+    }
+  }
+}

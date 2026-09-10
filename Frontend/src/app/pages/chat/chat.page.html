@@ -1,0 +1,56 @@
+<ion-content [fullscreen]="true" class="chat-content">
+  <div class="page-shell">
+
+    <div class="topbar">
+      <button class="back-button" type="button" (click)="voltar()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+      <div class="topbar-info">
+        <h1>{{ nomeOutraParte || 'Conversa' }}</h1>
+        <p>
+          <span class="status-dot" [class.online]="!conectando"></span>
+          {{ nomeServico ? nomeServico : (conectando ? 'Conectando...' : 'Online') }}
+        </p>
+      </div>
+    </div>
+
+    @if (carregando) {
+      <div class="ion-text-center" style="padding: 60px 0;">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+    } @else {
+
+      <div class="mensagens" #scrollArea>
+        @if (mensagens.length === 0) {
+          <div class="vazio">
+            <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+            <p>Nenhuma mensagem ainda.<br>Envie a primeira!</p>
+          </div>
+        }
+
+        @for (mensagem of mensagens; track mensagem.id) {
+          <div class="bolha-wrapper" [class.minha]="ehMinhaMensagem(mensagem)">
+            <div class="bolha">
+              <p class="texto">{{ mensagem.texto }}</p>
+              <span class="hora">{{ mensagem.data | date:'HH:mm' }}</span>
+            </div>
+          </div>
+        }
+      </div>
+
+    }
+
+    <div class="input-bar">
+      <textarea
+        rows="1"
+        placeholder="Digite uma mensagem..."
+        [(ngModel)]="texto"
+        (keydown)="aoPressionarTecla($event)"
+      ></textarea>
+      <button class="enviar" type="button" [disabled]="!texto.trim()" (click)="enviarMensagem()">
+        <ion-icon name="send-outline"></ion-icon>
+      </button>
+    </div>
+
+  </div>
+</ion-content>
