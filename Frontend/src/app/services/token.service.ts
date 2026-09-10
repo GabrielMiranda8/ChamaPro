@@ -19,6 +19,13 @@ export class TokenService {
     localStorage.removeItem(this.AUTORIZACAO_USUARIO);
   }
 
+  // Token bruto (sem "Bearer "), usado onde a autenticação não é feita via
+  // header HTTP normal - ex: connectHeaders do STOMP no chat.
+  obterTokenBruto(): string {
+    const salvo = JSON.parse(localStorage.getItem(this.AUTORIZACAO_USUARIO) || '{}');
+    return salvo?.token || '';
+  }
+
   gerarCabecalhoAutenticacao(): HttpHeaders {
     const salvo = JSON.parse(localStorage.getItem(this.AUTORIZACAO_USUARIO) || '{}');
     const token = salvo?.token || '';
