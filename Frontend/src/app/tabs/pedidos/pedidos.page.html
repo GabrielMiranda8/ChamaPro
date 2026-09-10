@@ -53,6 +53,12 @@
         </div>
       </div>
 
+      <!-- Chat: disponível assim que o pedido é aceito -->
+      <button *ngIf="pedidoTemChat(pedido)" class="chat" (click)="abrirChat(pedido)">
+        <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+        Conversar
+      </button>
+
       <!-- Ações do CLIENTE: só cancelar, enquanto o pedido ainda estiver ativo -->
       <button *ngIf="pedidoEstaAtivo(pedido)" class="cancelar"
         (click)="cancelarPedido(pedido)">

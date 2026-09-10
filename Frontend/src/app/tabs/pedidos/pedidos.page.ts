@@ -18,7 +18,8 @@ import {
   closeCircleOutline,
   banOutline,
   arrowUpOutline,
-  arrowDownOutline
+  arrowDownOutline,
+  chatbubbleEllipsesOutline
 } from 'ionicons/icons';
 
 import { PedidoModel } from 'src/app/model/pedido.model';
@@ -62,7 +63,8 @@ export class PedidosPage implements OnInit {
       'close-circle-outline': closeCircleOutline,
       'ban-outline': banOutline,
       'arrow-up-outline': arrowUpOutline,
-      'arrow-down-outline': arrowDownOutline
+      'arrow-down-outline': arrowDownOutline,
+      'chatbubble-ellipses-outline': chatbubbleEllipsesOutline
     });
     this.dadosUsuario = new UsuarioModel();
   }
@@ -315,6 +317,21 @@ export class PedidosPage implements OnInit {
   // Leva pra página de avaliação já com o pedido em questão selecionado
   avaliarPedido(pedido: PedidoModel): void {
     this.router.navigate(['/avaliacoes'], { queryParams: { pedidoId: pedido.id } });
+  }
+
+  // Só faz sentido conversar depois que o profissional aceitou o pedido -
+  // antes disso ainda não há um "outro lado" confirmado pra combinar nada.
+  pedidoTemChat(pedido: PedidoModel): boolean {
+    return pedido.status === 'ACEITO' || pedido.status === 'EM_ANDAMENTO' || pedido.status === 'FINALIZADO';
+  }
+
+  // Abre o chat específico desse pedido, já passando nome da outra parte
+  // e o serviço pro cabeçalho da conversa.
+  abrirChat(pedido: PedidoModel): void {
+    const nomeOutraParte = this.tipoUsuario === 'PROFISSIONAL' ? pedido.nomeCliente : pedido.nomeProfissional;
+    this.router.navigate(['/chat', pedido.id], {
+      queryParams: { nome: nomeOutraParte, servico: pedido.nomeServico }
+    });
   }
 
   obterTextoBotaoAvancar(status: string): string {
