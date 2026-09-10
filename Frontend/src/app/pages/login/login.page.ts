@@ -7,6 +7,7 @@ import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { NavController } from '@ionic/angular';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { TokenService } from 'src/app/services/token.service';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +28,8 @@ export class LoginPage implements OnInit {
     private toastController: ToastController,
     private navController: NavController,
     private usuarioService: UsuarioService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private loadingController: LoadingController,
   ) {
     addIcons({ eyeOutline, eyeOffOutline });
 
@@ -45,7 +47,14 @@ export class LoginPage implements OnInit {
     this.showSenha = !this.showSenha;
   }
 
-  autenticar() {
+  async autenticar() {
+    const loading = await this.loadingController.create({
+      message: 'Aguarde...',
+      spinner: 'crescent'
+    });
+
+    await loading.present();
+
     if (!this.formGroup.valid) {
       this.exibirMensagem('Preencha e-mail e senha.');
       return;
@@ -54,11 +63,13 @@ export class LoginPage implements OnInit {
     const { email, senha } = this.formGroup.value;
 
     this.usuarioService.login(email, senha).subscribe({
-      next: (token: string) =>{
+      next: async (token: string) =>{
+        await loading.dismiss();
          this.tokenService.salvar(token);
         this.navController.navigateRoot('/tabs/inicio');
       }, 
-      error: (err) =>{
+      error: async (err) =>{
+        await loading.dismiss();
         this.exibirMensagem('Email ou senha inválidos.');
         console.log("Erro no login", err);
       }

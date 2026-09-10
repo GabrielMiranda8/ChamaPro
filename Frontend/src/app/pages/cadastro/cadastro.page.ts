@@ -22,6 +22,7 @@ import { CaracteristicaUsuarioModel } from 'src/app/model/caracteristica-usuario
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { EnderecoService } from 'src/app/services/endereco.service';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-cadastro',
@@ -49,6 +50,7 @@ export class CadastroPage implements OnInit {
     private enderecoService: EnderecoService,
     private toastController: ToastController,
     private navController: NavController,
+    private loadingController: LoadingController,
   ) {
     addIcons({ arrowBackOutline, eyeOutline, eyeOffOutline, calendarOutline, briefcaseOutline });
 
@@ -92,6 +94,13 @@ export class CadastroPage implements OnInit {
   // data, CPF e CEP tem mascara propria e precisam de checagem específicae
 
   async salvar() {
+    const loading = await this.loadingController.create({
+      message: 'Aguarde...',
+      spinner: 'crescent'
+    });
+
+    await loading.present();
+
     const v = this.formGroup.value;
 
     if (!v.nome?.trim()) {
@@ -146,10 +155,12 @@ export class CadastroPage implements OnInit {
         if (v.isProfissional) {
           this.usuarioService.criarProfissional(usuarioSalvo.id).subscribe({
             next: async () => {
+              await loading.dismiss();
               await this.salvarCaracteristicas(usuarioSalvo.id, v);
               this.navController.navigateForward(`/add-servico/${usuarioSalvo.id}`);
             },
             error: async () => {
+              await loading.dismiss();
               await this.exibirMensagem('Conta criada, porém não foi possível ativar perfil profissional.');
               await this.salvarCaracteristicas(usuarioSalvo.id, v);
               this.navController.navigateForward(`/add-servico/${usuarioSalvo.id}`);
@@ -162,7 +173,8 @@ export class CadastroPage implements OnInit {
         await this.exibirMensagem('Conta criada com sucesso!');
         this.navController.navigateRoot('/login');
       },
-      error: (err) => {
+      error: async (err) => {
+        await loading.dismiss();
         console.log('Erro ao salvar:', err);
         this.exibirMensagem('Erro ao criar conta. Verifique os dados.');
       }
