@@ -42,4 +42,18 @@ public class JwtUtil {
             return false;
         }
     }
+
+    public String extrairId(String token) {
+        return Jwts.parser().verifyWith(getKey()).build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("id", String.class);
+    }
+
+     public String extrairTipo(String token) {
+        return Jwts.parser().verifyWith(getKey()).build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("tipo", String.class);
+    }
 }
