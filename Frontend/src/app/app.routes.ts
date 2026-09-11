@@ -84,6 +84,10 @@ export const routes: Routes = [
     path: 'avaliacoes',
     loadComponent: () => import('./pages/avaliacao/avaliacao.page').then(m => m.AvaliacaoPage)
   },
+  {
+    path: 'chat/:pedidoId',
+    loadComponent: () => import('./pages/chat/chat.page').then(m => m.ChatPage)
+  },
 
   {
     path: '**',
