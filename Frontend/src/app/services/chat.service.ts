@@ -49,8 +49,11 @@ export class ChatService {
 
     this.client = new Client({
       webSocketFactory: () => new SockJS(`${environment.apiUrl}/ws-chat`, null, {
-        transports: ['websocket']   // evita xhr-polling/xhr-streaming
+        transports: ['websocket'] 
       }) as any,
+      connectHeaders: {
+        Authorization: `Bearer ${token}`  
+      },
       reconnectDelay: 5000,
       onConnect: () => {
         if (!this.client) return;
