@@ -29,19 +29,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                // Preflight sempre livre, senão o browser bloqueia tudo que exige auth
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/usuarios").permitAll() // cadastro
-                .requestMatchers("/ws-chat/**").permitAll()
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        // Preflight sempre livre, senão o browser bloqueia tudo que exige auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/usuarios").permitAll() // cadastro
+                        .requestMatchers("/ws-chat/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -50,15 +49,15 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("https://api-chamapro.onrender.com"));
-        config.setAllowedOriginPatterns(List.of(
+        config.setAllowedOrigins(List.of(
+                "http://localhost:8100", // Ionic serve
+                "capacitor://localhost", // App no celular
+                "ionic://localhost",
                 "http://localhost:*",
                 "http://127.0.0.1:*",
                 "https://localhost",
-                "capacitor://localhost",
                 "ionic://localhost",
-                "https://api-chamapro.onrender.com"
-        ));
+                "https://api-chamapro.onrender.com"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Authorization"));
