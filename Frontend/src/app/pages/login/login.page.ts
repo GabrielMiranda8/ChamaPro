@@ -63,17 +63,24 @@ export class LoginPage implements OnInit {
     const { email, senha } = this.formGroup.value;
 
     this.usuarioService.login(email, senha).subscribe({
-      next: async (token: string) =>{
+      next: async (token: string) => {
         await loading.dismiss();
-         this.tokenService.salvar(token);
+        this.tokenService.salvar(token);
         this.navController.navigateRoot('/tabs/inicio');
-      }, 
-      error: async (err) =>{
+      },
+      error: async (err) => {
         await loading.dismiss();
         this.exibirMensagem('Email ou senha inválidos.');
         console.log("Erro no login", err);
-      }
+          this.exibirMensagem('Erro: ' + JSON.stringify({
+            status: err.status,
+            message: err.message,
+            url: err.url
+          }));
+          console.log("Erro no login", err);
+        }
     });
+
   }
 
   cadastro() {
