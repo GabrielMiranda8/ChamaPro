@@ -55,7 +55,8 @@ public class SecurityConfig {
                 "http://127.0.0.1:*",
                 "https://localhost",
                 "capacitor://localhost",
-                "ionic://localhost"
+                "ionic://localhost",
+                "https://api-chamapro.onrender.com"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
