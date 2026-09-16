@@ -50,14 +50,11 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.setAllowedOrigins(List.of(
+                "https://api-chamapro.onrender.com", // produção
                 "http://localhost:8100", // Ionic serve
                 "capacitor://localhost", // App no celular
-                "ionic://localhost",
-                "http://localhost:*",
-                "http://127.0.0.1:*",
-                "https://localhost",
-                "ionic://localhost",
-                "https://api-chamapro.onrender.com"));
+                "ionic://localhost" // App no celular
+        ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Authorization"));
@@ -67,4 +64,5 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+
 }
