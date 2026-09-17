@@ -48,20 +48,19 @@ export class LoginPage implements OnInit {
   }
 
   async autenticar() {
-    const loading = await this.loadingController.create({
-      message: 'Aguarde...',
-      spinner: 'crescent'
-    });
-
-    await loading.present();
-
     if (!this.formGroup.valid) {
       this.exibirMensagem('Preencha e-mail e senha.');
       return;
     }
-
+  
+    const loading = await this.loadingController.create({
+      message: 'Aguarde...',
+      spinner: 'crescent'
+    });
+    await loading.present();
+  
     const { email, senha } = this.formGroup.value;
-
+  
     this.usuarioService.login(email, senha).subscribe({
       next: async (token: string) => {
         await loading.dismiss();
@@ -72,15 +71,8 @@ export class LoginPage implements OnInit {
         await loading.dismiss();
         this.exibirMensagem('Email ou senha inválidos.');
         console.log("Erro no login", err);
-          this.exibirMensagem('Erro: ' + JSON.stringify({
-            status: err.status,
-            message: err.message,
-            url: err.url
-          }));
-          console.log("Erro no login", err);
-        }
+      }
     });
-
   }
 
   cadastro() {
