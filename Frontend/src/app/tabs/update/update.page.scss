@@ -1,175 +1,200 @@
-// ── Variáveis (mesma paleta usada em add-servico / perfil) ──
-$laranja: #E8632A;
+// ── Variáveis ─────────────────────────────────────────────
+$laranja: #F27822; // Ajustado levemente para casar com a imagem
 $laranja-hover: #d45520;
-$laranja-light: rgba(232, 99, 42, 0.1);
 $texto: #1A1A1A;
-$texto-sec: #666666;
-$borda: #E5E5E5;
-$fundo: #F7F5F2;
+$texto-sec: #8c8c8c;
+$borda: #EAEAEA;
+$fundo: #FAFAFA;
 $branco: #ffffff;
 
-// ── Content ───────────────────────────────────────────────
-.cadastro-content {
+.editar-perfil-content {
   --background: #{$fundo};
 }
 
-// ── Wrapper ───────────────────────────────────────────────
-.cadastro-wrapper {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 36px 20px 48px;
+// ── HEADER LARANJA ────────────────────────────────────────
+.header-container {
+  background: $laranja;
+  padding: 40px 24px 30px;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  color: $branco;
 }
 
-// ── Header ───────────────────────────────────────────────
-.cadastro-header {
-  margin-bottom: 20px;
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
 
-  .logo-container {
-    display: inline-flex;
-    padding: 6px;
-    border-radius: 24px;
-    background: $laranja;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 16px rgba(232, 99, 42, 0.35);
-
-    .logo-img {
-      width: 60px;
-      height: 60px;
-      border-radius: 18px;
-      object-fit: cover;
-      display: block;
-    }
+  .back-btn {
+    --color: #fff;
+    --padding-start: 0;
+    margin: 0;
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
   }
 
-  .cadastro-title {
-    font-size: 24px;
-    font-weight: 800;
-    color: $texto;
-    margin: 0 0 4px;
-    letter-spacing: -0.5px;
-  }
-
-  .cadastro-subtitle {
-    font-size: 14px;
-    color: $texto-sec;
+  .title {
+    font-size: 18px;
+    font-weight: 700;
     margin: 0;
   }
 }
 
-// ── Back button ──────────────────────────────────────────
-.back-button-container {
-  margin-bottom: 4px;
+.user-info-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.back-btn {
-  --color: #{$texto-sec};
+.avatar {
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    font-size: 22px;
+    font-weight: bold;
+    color: $branco;
+  }
+}
+
+.user-details h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.user-details p {
+  margin: 4px 0 0;
   font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
 }
 
-// ── Formulário ───────────────────────────────────────────
-.cadastro-form {
+// ── WRAPPER DO CONTEÚDO ───────────────────────────────────
+.form-wrapper {
+  padding: 24px 20px;
+}
+
+// ── CARD PROFISSIONAL ─────────────────────────────────────
+.pro-card {
   background: $branco;
-  border-radius: 24px;
-  border: 1px solid $borda;
-  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.04);
-  // padding já vem do style="padding: 30px;" no HTML
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+
+  .pro-info h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: $texto;
+  }
+
+  .pro-info p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: $texto-sec;
+  }
 }
 
-// ── Campos ───────────────────────────────────────────────
-.field-group {
+// ── SEÇÃO DADOS PESSOAIS ──────────────────────────────────
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 16px;
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: $texto;
+    margin: 0;
+  }
+
+  .edit-btn {
+    --color: #{$laranja};
+    font-weight: 600;
+    font-size: 14px;
+    margin: 0;
+  }
 }
 
-.field-label {
-  display: block;
-  font-size: 12px;
-  font-weight: 600;
-  color: $texto-sec;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  margin-bottom: 7px;
+// ── FORMULÁRIO E INPUTS ───────────────────────────────────
+.dados-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field-group {
+  width: 100%;
+}
+
+// Estilo especial para destacar campos editáveis quando clicados em "Editar"
+.field-group.highlight {
+  transition: all 0.3s ease;
+  margin-top: 8px;
+  
+  .label-dica {
+    display: block;
+    font-size: 13px;
+    color: $laranja;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
 }
 
 .input {
-  background: $fundo;
-  border-radius: 14px;
+  background: $branco;
+  border-radius: 16px;
+  border: 1.5px solid $borda;
   color: $texto;
   --padding-start: 16px;
   --padding-end: 16px;
-  --padding-top: 13px;
-  --padding-bottom: 13px;
-  border: 1.5px solid $borda;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
   font-size: 15px;
 
-  &:focus-within {
-    border-color: $laranja;
+  // Quando o input está desabilitado, deixamos ele mesclando com o fundo sem parecer "quebrado"
+  &.ion-color-medium {
+    opacity: 0.8;
   }
 }
 
-.eye-btn {
-  --color: #999;
-  margin-right: 4px;
+.input-icon {
+  color: $texto-sec;
+  font-size: 20px;
 }
 
-// ── Mensagem de erro inline ──────────────────────────────
-.field-error {
-  display: block;
-  font-size: 12px;
-  color: #e64545;
-  margin-top: 5px;
-  padding-left: 4px;
+.submit-btn {
+  --background: #{$laranja};
+  --background-activated: #{$laranja-hover};
+  --border-radius: 14px;
+  --color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  height: 52px;
+  margin-top: 16px;
 }
 
-// ── Toggle profissional ──────────────────────────────────
-.profissional-info {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: $fundo;
+.input {
+  background: $branco;
   border-radius: 16px;
-  padding: 14px 16px;
-  border: 1px solid $borda;
-  margin-bottom: 20px;
-
-  .profissional-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: $texto;
-  }
-}
-
-.profissional-toggle {
-  --track-background-checked: #{$laranja};
-}
-
-// ── Submit ───────────────────────────────────────────────
-.submit-container {
-  .submit-btn {
-    --background: #{$laranja};
-    --background-activated: #{$laranja-hover};
-    --border-radius: 14px;
-    --color: #fff;
-    font-weight: 700;
-    font-size: 16px;
-    height: 52px;
-  }
-}
-
-.edit-container {
-  margin-top: 0;
-  padding: 16px 0 0;
-
-  .edit-btn {
-    --background: #{$branco};
-    --background-activated: #{$fundo};
-    --color: #{$laranja};
-    --border-color: #{$laranja};
-    --border-width: 1.5px;
-    --border-style: solid;
-    --border-radius: 14px;
-    --box-shadow: none;
-    font-weight: 700;
-    height: 52px;
+  border: 1.5px solid $borda;
+  
+  // Força a opacidade e a cor preta mesmo quando o input estiver desabilitado
+  &[disabled] {
+    --opacity: 0.8;
+    --color: #1a1a1a; 
   }
 }

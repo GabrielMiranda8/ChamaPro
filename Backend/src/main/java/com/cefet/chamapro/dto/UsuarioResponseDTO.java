@@ -7,5 +7,6 @@ public record UsuarioResponseDTO(
         String nome,
         Date dtNasc,
         Date dtConta,
-        Double nota
+        Double nota,
+        String email
 ) {}

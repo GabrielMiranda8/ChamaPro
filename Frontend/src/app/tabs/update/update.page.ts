@@ -1,30 +1,20 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { NavController, ToastController } from '@ionic/angular';
 import {
-  IonContent,
-  IonLabel,
-  IonInput,
-  IonButton,
-  IonIcon,
-  IonToggle,
-  ToastController,
+  IonContent, IonButton, IonIcon, IonInput,
+  IonLabel, IonToggle
 } from '@ionic/angular/standalone';
-import { NavController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import {
-  arrowBackOutline,
-  eyeOutline,
-  eyeOffOutline,
-  createOutline,
-  personOutline,
-} from 'ionicons/icons';
+import { arrowBackOutline, calendarOutline } from 'ionicons/icons';
+import { forkJoin } from 'rxjs';
 
-import { UsuarioService } from '../../services/usuario.service';
-import { UsuarioModel } from '../../model/usuario.model';
-import { TokenModel } from 'src/app/model/token.model';
+import { UsuarioService } from 'src/app/services/usuario.service';
 import { TokenService } from 'src/app/services/token.service';
+import { UsuarioModel } from 'src/app/model/usuario.model';
+import { TokenModel } from 'src/app/model/token.model';
 
 @Component({
   selector: 'app-update',
@@ -32,166 +22,156 @@ import { TokenService } from 'src/app/services/token.service';
   styleUrls: ['./update.page.scss'],
   standalone: true,
   imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule,
-    IonContent,
-    IonLabel,
-    IonInput,
-    IonButton,
-    IonIcon,
-    IonToggle,
+    CommonModule, ReactiveFormsModule, RouterModule,
+    IonContent, IonButton, IonIcon, IonInput, IonLabel, IonToggle
   ],
 })
 export class UpdatePage implements OnInit {
-  private usuarioLogado!: UsuarioModel;
+  formGroup: FormGroup;
+  dados: UsuarioModel = new UsuarioModel();
   token!: TokenModel;
-
-  novaSenha = '';
-  confirmarNovaSenha = '';
-  cep = '';
-  cepOriginal = '';
-  isProfissional = false;
-
-  submitted = false;
-  errors: Record<string, string> = {};
-
-  showSenha = signal(false);
-  showConfirmarNovaSenha = signal(false);
+  isEditing = false;
 
   constructor(
+    private formBuilder: FormBuilder,
     private usuarioService: UsuarioService,
-    private navController: NavController,
+    private tokenService: TokenService,
     private toastController: ToastController,
-    private tokenService: TokenService
+    private navController: NavController
   ) {
-    addIcons({
-      arrowBackOutline,
-      createOutline,
-      eyeOutline,
-      eyeOffOutline,
-      personOutline,
+    addIcons({ arrowBackOutline, calendarOutline });
+
+    // 1. Inicializa os campos normalmente (sem "disabled: true")
+    this.formGroup = this.formBuilder.group({
+      nome: [''],
+      email: [''],
+      cpf: [''],
+      dtNasc: [''],
+      cidadeEstado: [''],
+      cep: [''],
+      senha: ['']
     });
   }
 
   ngOnInit(): void {
     this.token = this.tokenService.extrair();
+    this.carregarDados();
+  }
 
-    if (!this.token?.id) {
-      this.navController.navigateRoot('/login');
-      return;
-    }
-
+  carregarDados() {
     this.usuarioService.buscarPorId(this.token.id).subscribe({
       next: (usuario) => {
-        this.usuarioLogado = usuario;
-        this.cep = usuario.endereco?.cep ?? '';
-        this.cepOriginal = this.cep;
-        this.isProfissional = usuario.tipo === 'PROFISSIONAL';
+        this.dados = usuario;
+        console.log("Usuario: ", usuario);
+        
+        let dataNascStr = '';
+        if (usuario.dtNasc) {
+          const data = new Date(usuario.dtNasc);
+          dataNascStr = data.toLocaleDateString('pt-BR');
+        }
+
+        const localidade = `${usuario.endereco?.cidade || ''} - ${usuario.endereco?.bairro || ''}`;
+
+        // 2. Preenche os dados recebidos da API
+        this.formGroup.patchValue({
+          nome: usuario.nome,
+          email: usuario.email,
+          cpf: usuario.cpf,
+          dtNasc: dataNascStr,
+          cidadeEstado: localidade,
+          cep: usuario.endereco?.cep,
+          senha: '' 
+        });
+
+        // 3. Só AGORA desabilita o formulário inteiro
+        this.formGroup.disable();
       },
-      error: async (err) => {
-        console.log('Erro ao carregar usuário:', err);
-        await this.mostrarToast('Erro ao carregar seus dados.', 'danger');
-        this.navController.navigateRoot('/login');
+      error: (err) => {
+        console.log('Erro ao carregar dados:', err);
+        this.exibirMensagem('Erro ao carregar os dados do perfil.');
       },
     });
   }
 
-  toggleSenha(): void {
-    this.showSenha.update((v) => !v);
+  obterIniciais(nome: string): string {
+    if (!nome) return '??';
+    return nome
+      .trim()
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((x) => x[0])
+      .join('')
+      .toUpperCase();
   }
 
-  toggleConfirmarNovaSenha(): void {
-    this.showConfirmarNovaSenha.update((v) => !v);
+  voltar() {
+    this.navController.back();
   }
 
-  onCepInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    let value = input.value.replace(/\D/g, '').slice(0, 8);
+  toggleEdit() {
+    this.isEditing = !this.isEditing;
+    
+    if (this.isEditing) {
+      // Habilita apenas CEP e Senha para edição
+      this.formGroup.get('cep')?.enable();
+      this.formGroup.get('senha')?.enable();
+    } else {
+      // Desabilita os campos novamente e reseta para os valores originais
+      this.formGroup.get('cep')?.disable();
+      this.formGroup.get('senha')?.disable();
+      this.formGroup.get('cep')?.setValue(this.dados.endereco?.cep);
+      this.formGroup.get('senha')?.setValue('');
+    }
+  }
 
-    if (value.length > 5) {
-      value = `${value.slice(0, 5)}-${value.slice(5)}`;
+  salvarAlteracoes() {
+    const cepAtualizado = this.formGroup.get('cep')?.value;
+    const novaSenha = this.formGroup.get('senha')?.value;
+
+    const chamadas = [];
+
+    if (novaSenha && novaSenha.trim().length >= 3) {
+      chamadas.push(this.usuarioService.alterarSenha(this.dados.id, novaSenha));
     }
 
-    this.cep = value;
-  }
-
-  private validate(): boolean {
-    this.errors = {};
-
-    if (this.novaSenha || this.confirmarNovaSenha) {
-      if (this.novaSenha.length < 3) {
-        this.errors['novaSenha'] = 'Senha deve ter no mínimo 3 caracteres.';
-      }
-
-      if (this.confirmarNovaSenha !== this.novaSenha) {
-        this.errors['confirmarNovaSenha'] = 'As senhas não coincidem.';
-      }
+    if (cepAtualizado && cepAtualizado !== this.dados.endereco?.cep) {
+      chamadas.push(this.usuarioService.alterarCep(this.dados.id, cepAtualizado));
     }
 
-    if (!this.cep) {
-      this.errors['cep'] = 'CEP é obrigatório.';
-    } else if (this.cep.replace(/\D/g, '').length !== 8) {
-      this.errors['cep'] = 'CEP inválido.';
-    }
-
-    return Object.keys(this.errors).length === 0;
-  }
-
-  async onSubmit(): Promise<void> {
-    this.submitted = true;
-
-    if (!this.validate()) return;
-
-    if (!this.token?.id) {
-      await this.mostrarToast('Sessão expirada. Faça login novamente.', 'danger');
-      this.navController.navigateRoot('/login');
+    if (chamadas.length === 0) {
+      this.toggleEdit();
       return;
     }
 
-    if (!this.usuarioLogado) {
-      await this.mostrarToast('Dados do usuário ainda não carregados. Tente novamente.', 'danger');
-      return;
-    }
-
-    const senhaFoiAlterada = !!this.novaSenha;
-    const cepFoiAlterado = this.cep !== this.cepOriginal;
-
-    if (!senhaFoiAlterada && !cepFoiAlterado) {
-      await this.mostrarToast('Nenhuma alteração foi feita.', 'warning');
-      return;
-    }
-
-    try {
-      if (senhaFoiAlterada) {
-        await this.usuarioService.alterarSenha(this.token.id, this.novaSenha).toPromise();
+    forkJoin(chamadas).subscribe({
+      next: () => {
+        this.exibirMensagem('Dados atualizados com sucesso!');
+        if(this.dados.endereco) {
+            this.dados.endereco.cep = cepAtualizado; 
+        }
+        this.toggleEdit(); 
+      },
+      error: (err) => {
+        console.log('Erro ao atualizar:', err);
+        this.exibirMensagem('Erro ao atualizar os dados.');
       }
-
-      if (cepFoiAlterado) {
-        await this.usuarioService.alterarCep(this.token.id, this.cep).toPromise();
-        this.cepOriginal = this.cep;
-      }
-
-      this.novaSenha = '';
-      this.confirmarNovaSenha = '';
-
-      await this.mostrarToast('Dados atualizados com sucesso!', 'success');
-      this.navController.navigateBack('/tabs/perfil');
-    } catch (err: any) {
-      console.log('Erro ao atualizar:', err);
-      console.log('Erros de validação:', err?.error?.errors);
-      await this.mostrarToast('Erro ao atualizar dados. Verifique os campos.', 'danger');
-    }
+    });
   }
 
-  private async mostrarToast(message: string, color: 'success' | 'danger' | 'warning'): Promise<void> {
+  mascaraCep(event: Event) {
+    let valor = (event.target as HTMLInputElement).value;
+    valor = valor.replace(/\D/g, '');
+    valor = valor.replace(/^(\d{5})(\d)/, '$1-$2');
+    this.formGroup.patchValue({ cep: valor }, { emitEvent: false });
+  }
+
+  async exibirMensagem(texto: string) {
     const toast = await this.toastController.create({
-      message,
-      duration: 2500,
-      color,
+      message: texto,
+      duration: 2000,
       position: 'bottom',
     });
-
-    await toast.present();
+    toast.present();
   }
 }

@@ -1,73 +1,75 @@
-<ion-content [fullscreen]="true" class="cadastro-content">
-  <div class="cadastro-wrapper">
-
-    <!-- Header -->
-    <div class="cadastro-header ion-text-center">
-      <div class="logo-container">
-        <ion-icon name="person-outline" style="font-size: 32px; color: #fff;"></ion-icon>
-      </div>
-      <h1 class="cadastro-title">Alterar Dados</h1>
-      <p class="cadastro-subtitle">Atualize sua senha e endereço</p>
+<ion-content [fullscreen]="true" class="editar-perfil-content">
+  
+  <!-- HEADER LARANJA -->
+  <div class="header-container">
+    <div class="header-top">
+      <ion-button fill="clear" class="back-btn" (click)="voltar()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+      <h2 class="title">Editar perfil</h2>
+      <!-- Espaçador invisível para centralizar o título -->
+      <div style="width: 48px;"></div> 
     </div>
 
-    <!-- Back button -->
-    <div class="back-button-container" style="padding-left: 15px;">
-      <ion-button fill="clear" class="back-btn" routerLink="/tabs/perfil">
-        <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
-        Voltar
+    <div class="user-info-row">
+      <div class="avatar">
+        <span>{{ obterIniciais(dados.nome) }}</span>
+      </div>
+      <div class="user-details">
+        <h3>{{ dados.nome || 'Carregando...' }}</h3>
+        <p>{{ token?.tipo === 'PROFISSIONAL' ? 'Cliente e profissional disponível' : 'Cliente' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-wrapper">
+  
+
+    <!-- TÍTULO DA SEÇÃO COM BOTÃO DE EDITAR -->
+    <div class="section-header">
+      <h3 class="section-title">Dados Pessoais</h3>
+      <ion-button fill="clear" class="edit-btn" (click)="toggleEdit()">
+        {{ isEditing ? 'Cancelar' : 'Editar' }}
       </ion-button>
     </div>
 
-    <!-- Form -->
-    <form (ngSubmit)="onSubmit()" novalidate class="cadastro-form" style="padding: 30px;">
-
-      <!-- Nova Senha -->
+    <form [formGroup]="formGroup" class="dados-form">
+      
       <div class="field-group">
-        <ion-label class="field-label">Nova Senha</ion-label>
-        <ion-input class="input" [type]="showSenha() ? 'text' : 'password'" placeholder="••••••••"
-          [(ngModel)]="novaSenha" name="novaSenha" >
-          <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleSenha()">
-            <ion-icon slot="icon-only" [name]="showSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
-          </ion-button>
+        <ion-input class="input" type="text" formControlName="nome"></ion-input>
+      </div>
+
+      <div class="field-group">
+        <ion-input class="input" type="email" formControlName="email"></ion-input>
+      </div>
+
+      <div class="field-group">
+        <ion-input class="input" type="text" formControlName="dtNasc">
+          <ion-icon slot="end" name="calendar-outline" class="input-icon"></ion-icon>
         </ion-input>
-        <span class="field-error" *ngIf="submitted && errors['novaSenha']">{{ errors['novaSenha'] }}</span>
       </div>
 
-      <!-- Confirmar Nova Senha -->
       <div class="field-group">
-        <ion-label class="field-label">Confirmar nova senha</ion-label>
-        <ion-input class="input" [type]="showConfirmarNovaSenha() ? 'text' : 'password'" placeholder="••••••••"
-          [(ngModel)]="confirmarNovaSenha" name="confirmarNovaSenha">
-          <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleConfirmarNovaSenha()">
-            <ion-icon slot="icon-only" [name]="showConfirmarNovaSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
-          </ion-button>
-        </ion-input>
-        <span class="field-error" *ngIf="submitted && errors['confirmarNovaSenha']">{{ errors['confirmarNovaSenha']
-          }}</span>
+        <ion-input class="input" type="text" formControlName="cidadeEstado"></ion-input>
       </div>
 
-      <!-- CEP -->
-      <div class="field-group">
-        <ion-label class="field-label">Novo CEP</ion-label>
-        <ion-input class="input" type="text" placeholder="35920-000" [value]="cep" (ionInput)="onCepInput($event)"
-          name="cep" maxlength="9" inputmode="numeric" required></ion-input>
-        <span class="field-error" *ngIf="submitted && errors['cep']">{{ errors['cep'] }}</span>
+      <!-- CAMPOS QUE PODEM SER EDITADOS -->
+      <div class="field-group" [class.highlight]="isEditing">
+        <ion-label *ngIf="isEditing" class="label-dica">Atualizar CEP:</ion-label>
+        <ion-input class="input" type="text" formControlName="cep" maxlength="9" (ionInput)="mascaraCep($event)" placeholder="CEP"></ion-input>
       </div>
 
-      <!-- Submit -->
-      <div class="submit-container">
-        <ion-button type="submit" expand="block" class="submit-btn">
+      <div class="field-group" [class.highlight]="isEditing">
+        <ion-label *ngIf="isEditing" class="label-dica">Atualizar Senha (opcional):</ion-label>
+        <ion-input class="input" type="password" formControlName="senha" placeholder="••••••••"></ion-input>
+      </div>
+
+      <!-- BOTÃO SALVAR (Só aparece no modo edição) -->
+      @if (isEditing) {
+        <ion-button expand="block" class="submit-btn" (click)="salvarAlteracoes()">
           Salvar Alterações
         </ion-button>
-      </div>
-
-      <!-- Sou Profissional -->
-      <div class="edit-container">
-        <ion-button expand="block" fill="outline" class="edit-btn" routerLink="/tabs/inicio">
-          <ion-icon slot="start" name="create-outline"></ion-icon>
-          Se tornar Profissional
-        </ion-button>
-      </div>
+      }
 
     </form>
   </div>

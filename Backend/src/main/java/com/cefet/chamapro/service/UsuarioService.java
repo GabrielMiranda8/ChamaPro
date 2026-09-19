@@ -123,7 +123,8 @@ public class UsuarioService {
                 usuario.getNome(),
                 usuario.getDtNasc(),
                 usuario.getDtConta(),
-                usuario.getNota());
+                usuario.getNota(),
+                usuario.getEmail());
     }
 
     public void alterarSenha(String id, String senha) {
