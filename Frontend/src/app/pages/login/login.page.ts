@@ -48,32 +48,34 @@ export class LoginPage implements OnInit {
   }
 
   async autenticar() {
-    if (!this.formGroup.valid) {
-      this.exibirMensagem('Preencha e-mail e senha.');
-      return;
-    }
-  
-    const loading = await this.loadingController.create({
-      message: 'Aguarde...',
-      spinner: 'crescent'
-    });
-    await loading.present();
-  
-    const { email, senha } = this.formGroup.value;
-  
-    this.usuarioService.login(email, senha).subscribe({
-      next: async (token: string) => {
-        await loading.dismiss();
-        this.tokenService.salvar(token);
-        this.navController.navigateRoot('/tabs/inicio');
-      },
-      error: async (err) => {
-        await loading.dismiss();
-        this.exibirMensagem('Email ou senha inválidos.');
-        console.log("Erro no login", err);
-      }
-    });
+  if (!this.formGroup.valid) {
+    this.exibirMensagem('Preencha e-mail e senha.');
+    return;
   }
+
+  console.log('CHEGOU AQUI ANTES DO LOADING'); // ← teste
+
+  // const loading = await this.loadingController.create({
+  //   message: 'Aguarde...',
+  //   spinner: 'crescent'
+  // });
+  // await loading.present();
+
+  const { email, senha } = this.formGroup.value;
+
+  this.usuarioService.login(email, senha).subscribe({
+    next: async (token: string) => {
+      // await loading.dismiss();
+      this.tokenService.salvar(token);
+      this.navController.navigateRoot('/tabs/inicio');
+    },
+    error: async (err) => {
+      // await loading.dismiss();
+      this.exibirMensagem('Email ou senha inválidos.');
+      console.log("Erro no login", err);
+    }
+  });
+}
 
   cadastro() {
     this.navController.navigateForward('/cadastro');
