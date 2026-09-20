@@ -322,7 +322,7 @@ export class PedidosPage implements OnInit {
   // Só faz sentido conversar depois que o profissional aceitou o pedido -
   // antes disso ainda não há um "outro lado" confirmado pra combinar nada.
   pedidoTemChat(pedido: PedidoModel): boolean {
-    return pedido.status === 'ACEITO' || pedido.status === 'EM_ANDAMENTO' || pedido.status === 'FINALIZADO';
+    return pedido.status === 'ACEITO' || pedido.status === 'EM_ANDAMENTO' || pedido.status === 'FINALIZADO' || pedido.status === 'PENDENTE';;
   }
 
   // Abre o chat específico desse pedido, já passando nome da outra parte

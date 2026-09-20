@@ -63,6 +63,7 @@ export class ChatPage implements OnInit, OnDestroy {
 
     this.idPedido = this.route.snapshot.paramMap.get('pedidoId') || '';
     this.nomeOutraParte = this.route.snapshot.queryParamMap.get('nome') || '';
+    console.log('Nome da outra parte vindo do query param: ', this.nomeOutraParte);
     this.nomeServico = this.route.snapshot.queryParamMap.get('servico') || '';
 
     if (!this.idPedido) {
@@ -90,6 +91,10 @@ export class ChatPage implements OnInit, OnDestroy {
     this.pedidoService.buscarPorId(this.idPedido).subscribe({
       next: (pedido: PedidoModel) => {
         this.nomeOutraParte = tipoUsuario === 'PROFISSIONAL' ? pedido.nomeCliente : pedido.nomeProfissional;
+        console.log('Nome da outra parte carregado do pedido: ', this.nomeOutraParte);  
+        console.log("Tipo Usuario: ", tipoUsuario);
+        console.log("Cliente: ", pedido.nomeCliente);
+        console.log("Profissional: ", pedido.nomeProfissional);
         this.nomeServico = pedido.nomeServico;
       },
       error: (err) => console.log('Erro ao carregar dados do pedido para o chat: ', err),

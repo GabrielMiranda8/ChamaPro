@@ -94,12 +94,6 @@ export class CadastroPage implements OnInit {
   // data, CPF e CEP tem mascara propria e precisam de checagem específicae
 
   async salvar() {
-    const loading = await this.loadingController.create({
-      message: 'Aguarde...',
-      spinner: 'crescent'
-    });
-
-    await loading.present();
 
     const v = this.formGroup.value;
 
@@ -155,12 +149,10 @@ export class CadastroPage implements OnInit {
         if (v.isProfissional) {
           this.usuarioService.criarProfissional(usuarioSalvo.id).subscribe({
             next: async () => {
-              await loading.dismiss();
               await this.salvarCaracteristicas(usuarioSalvo.id, v);
               this.navController.navigateForward(`/add-servico/${usuarioSalvo.id}`);
             },
             error: async () => {
-              await loading.dismiss();
               await this.exibirMensagem('Conta criada, porém não foi possível ativar perfil profissional.');
               await this.salvarCaracteristicas(usuarioSalvo.id, v);
               this.navController.navigateForward(`/add-servico/${usuarioSalvo.id}`);
@@ -174,7 +166,6 @@ export class CadastroPage implements OnInit {
         this.navController.navigateRoot('/login');
       },
       error: async (err) => {
-        await loading.dismiss();
         console.log('Erro ao salvar:', err);
         this.exibirMensagem('Erro ao criar conta. Verifique os dados.');
       }
