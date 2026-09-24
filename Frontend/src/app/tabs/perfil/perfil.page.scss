@@ -59,7 +59,7 @@
 
 .stats-container {
   display: flex;
-  justify-content:space-around;
+  justify-content: space-around;
   padding: 20px 16px;
   margin-top: -20px;
 }
@@ -87,8 +87,9 @@
   }
 }
 
+// ── Menu ──────────────────────────────────────────────────
 .menu-list {
-  padding: 10px 16px 24px;
+  padding: 10px 16px 8px;
 }
 
 .menu-item {
@@ -96,8 +97,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 6px;
+  padding: 14px 6px;
   border-bottom: 1px solid #ececec;
+
+  &:active {
+    background: rgba(0, 0, 0, 0.03);
+  }
 }
 
 .menu-left {
@@ -112,10 +117,10 @@
   }
 }
 
+// Ícones coloridos: fundo em degradê + ícone branco
 .menu-icon {
-  width: 42px;
-  height: 42px;
-  background: #fff1e8;
+  width: 44px;
+  height: 44px;
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -123,24 +128,56 @@
 
   ion-icon {
     font-size: 22px;
-    color: #ff6b00;
+    color: #913f08;
   }
+
+  &.icon-laranja { background: linear-gradient(135deg, #fcede3, #fcede3); }
+  &.icon-azul    { background: linear-gradient(135deg, #fcede3, #fcede3); }
+  &.icon-verde   { background: linear-gradient(135deg, #fcede3, #fcede3); }
+  &.icon-roxo    { background: linear-gradient(135deg, #fcede3, #fcede3); }
+  &.icon-amarelo { background: linear-gradient(135deg, #fcede3, #fcede3); }
+  &.icon-cinza   { background: linear-gradient(135deg, #fcede3, #fcede3); }
 }
 
-.menu-item ion-icon:last-child {
+// Só a setinha da direita (antes o seletor pegava também o ícone dentro do quadradinho
+// e deixava ele cinza/pequeno)
+.menu-item > ion-icon:last-child {
   color: #999;
   font-size: 20px;
 }
 
-.bottom-tab {
-  --background: #ffffff;
-  border-top: 1px solid #ececec;
+// ── Sair da conta ─────────────────────────────────────────
+.logout-wrapper {
+  padding: 14px 6px;
+}
 
-  ion-tab-button {
-    color: #999;
+.logout-item {
+  display: flex;
+  align-items: center;
+
+
+  span {
+    font-size: 17px;
+    font-weight: 700;
+    color: #ef4444;
   }
 
-  ion-tab-button.tab-selected {
-    color: #ff6b00;
+  &:active {
+    background: #ffe3e0;
+  }
+}
+
+.logout-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #fbe8e6, #fbe8e6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    font-size: 22px;
+    color: #ff0000;
   }
 }

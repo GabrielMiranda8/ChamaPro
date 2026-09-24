@@ -30,118 +30,88 @@
     </div>
   </div>
 
-  <!-- STATS 
-  <div class="stats-container">
-
-    <div class="stat-card">
-      <h3>{{ dados.nota || '-' }}</h3>
-      <p>Avaliação</p>
-    </div>
-
-    <div class="stat-card">
-      <h3>{{ token.tipo === 'PROFISSIONAL' ? 'Profissional' : 'Cliente' }}</h3>
-      <p>Tipo de conta</p>
-    </div>
-
-  </div> 
-  -->
-
-
   <!-- MENU -->
   <div class="menu-list">
 
     <!-- Editar Perfil -->
     <div class="menu-item" routerLink="/tabs/update">
       <div class="menu-left">
-
-        <div class="menu-icon">
+        <div class="menu-icon icon-laranja">
           <ion-icon name="person-outline"></ion-icon>
         </div>
-
         <span>Editar perfil</span>
-
       </div>
-
       <ion-icon name="chevron-forward-outline"></ion-icon>
     </div>
 
     <!-- Minhas Características -->
     <div class="menu-item" routerLink="/add-caracteristica">
       <div class="menu-left">
-
-        <div class="menu-icon">
+        <div class="menu-icon icon-roxo">
           <ion-icon name="accessibility-outline"></ion-icon>
         </div>
-
         <span>Características</span>
-
       </div>
-
       <ion-icon name="chevron-forward-outline"></ion-icon>
     </div>
 
-    <!-- Meus Serviços (apenas profissionais) -->
+    <!-- Apenas profissionais -->
     @if (token.tipo === 'PROFISSIONAL') {
     <div class="menu-item" routerLink="/add-servico">
       <div class="menu-left">
-
-        <div class="menu-icon">
+        <div class="menu-icon icon-azul">
           <ion-icon name="briefcase-outline"></ion-icon>
         </div>
-
         <span>Serviços</span>
-
       </div>
-
       <ion-icon name="chevron-forward-outline"></ion-icon>
     </div>
 
-
-    <!-- Agenda -->
     <div class="menu-item" routerLink="/tabs/perfil/agenda">
       <div class="menu-left">
-
-        <div class="menu-icon">
+        <div class="menu-icon icon-verde">
           <ion-icon name="calendar-outline"></ion-icon>
         </div>
-
         <span>Agenda</span>
-
       </div>
-
       <ion-icon name="chevron-forward-outline"></ion-icon>
     </div>
     }
+
     <!-- Notificações -->
     <div class="menu-item" (click)="abrirNotificacoes()">
       <div class="menu-left">
-
-        <div class="menu-icon">
+        <div class="menu-icon icon-amarelo">
           <ion-icon name="notifications-outline"></ion-icon>
         </div>
-
         <span>Notificações</span>
-
       </div>
-
       <ion-icon name="chevron-forward-outline"></ion-icon>
     </div>
 
     <!-- Configurações -->
     <div class="menu-item" routerLink="/tabs/perfil/configuracoes">
       <div class="menu-left">
-
-        <div class="menu-icon">
+        <div class="menu-icon icon-cinza">
           <ion-icon name="settings-outline"></ion-icon>
         </div>
-
         <span>Configurações</span>
-
       </div>
-
       <ion-icon name="chevron-forward-outline"></ion-icon>
     </div>
 
+    <!-- SAIR DA CONTA -->
+    <div class="logout-wrapper">
+      <div class="logout-item" (click)="sair()">
+        <div class="logout-icon">
+          <ion-icon name="log-out-outline"></ion-icon>
+        </div>
+        <span>Sair da conta</span>
+      </div>
+    </div>
+
   </div>
+
+
 
 </ion-content>

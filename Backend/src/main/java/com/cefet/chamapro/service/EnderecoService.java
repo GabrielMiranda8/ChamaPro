@@ -68,16 +68,18 @@ public class EnderecoService {
 
     @Transactional
     public EnderecoResponseDTO atualizar(String id, EnderecoRequestDTO dto) {
-
+ 
         Endereco endereco = enderecoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Endereco não encontrado. Id: " + id));
-
-        if (enderecoRepository.existsByCepAndIdNot(dto.getCep(), id)) {
-            throw new BusinessException("Já existe um endereco com esse cep e id.");
-        }
-
+ 
         endereco.setCep(dto.getCep());
-
+        endereco.setRua(dto.getRua());
+        endereco.setNumero(dto.getNumero());
+        endereco.setBairro(dto.getBairro());
+        endereco.setCidade(dto.getCidade());
+        endereco.setComplemento(dto.getComplemento());
+        endereco.setReferencia(dto.getReferencia());
+ 
         return new EnderecoResponseDTO(enderecoRepository.save(endereco));
     }
 

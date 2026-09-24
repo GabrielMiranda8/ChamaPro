@@ -1,76 +1,119 @@
-<ion-content [fullscreen]="true" class="editar-perfil-content">
-  
-  <!-- HEADER LARANJA -->
-  <div class="header-container">
-    <div class="header-top">
-      <ion-button fill="clear" class="back-btn" (click)="voltar()">
-        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
-      </ion-button>
-      <h2 class="title">Editar perfil</h2>
-      <!-- Espaçador invisível para centralizar o título -->
-      <div style="width: 48px;"></div> 
-    </div>
+<ion-content [fullscreen]="true" class="update-content">
 
-    <div class="user-info-row">
-      <div class="avatar">
-        <span>{{ obterIniciais(dados.nome) }}</span>
-      </div>
-      <div class="user-details">
-        <h3>{{ dados.nome || 'Carregando...' }}</h3>
-        <p>{{ token?.tipo === 'PROFISSIONAL' ? 'Cliente e profissional disponível' : 'Cliente' }}</p>
-      </div>
+  <!-- HEADER -->
+  <div class="update-header">
+    <button class="back-btn" type="button" routerLink="/tabs/perfil" aria-label="Voltar">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <h2>Editar Perfil</h2>
+
+    <div class="avatar">
+      <span>{{ obterIniciais(token.nome) }}</span>
     </div>
   </div>
 
-  <div class="form-wrapper">
-  
+  <form (ngSubmit)="onSubmit()" novalidate class="update-form">
 
-    <!-- TÍTULO DA SEÇÃO COM BOTÃO DE EDITAR -->
-    <div class="section-header">
-      <h3 class="section-title">Dados Pessoais</h3>
-      <ion-button fill="clear" class="edit-btn" (click)="toggleEdit()">
-        {{ isEditing ? 'Cancelar' : 'Editar' }}
-      </ion-button>
+    <!-- DADOS PESSOAIS (somente leitura) -->
+    <p class="section-label">Dados pessoais</p>
+    <div class="card">
+      <div class="field-group">
+        <label class="field-label">Nome</label>
+        <ion-input class="input" [value]="token?.nome" [disabled]="true"></ion-input>
+      </div>
+      <div class="field-group">
+        <label class="field-label">E-mail</label>
+        <ion-input class="input" [value]="token?.email" [disabled]="true"></ion-input>
+      </div>
     </div>
 
-    <form [formGroup]="formGroup" class="dados-form">
-      
+    <!-- SENHA -->
+    <p class="section-label">
+      <ion-icon name="lock-closed-outline"></ion-icon> Alterar senha
+    </p>
+    <div class="card">
       <div class="field-group">
-        <ion-input class="input" type="text" formControlName="nome"></ion-input>
-      </div>
-
-      <div class="field-group">
-        <ion-input class="input" type="email" formControlName="email"></ion-input>
-      </div>
-
-      <div class="field-group">
-        <ion-input class="input" type="text" formControlName="dtNasc">
-          <ion-icon slot="end" name="calendar-outline" class="input-icon"></ion-icon>
+        <label class="field-label">Nova senha</label>
+        <ion-input class="input" [type]="showSenha() ? 'text' : 'password'" placeholder="••••••••"
+          [(ngModel)]="novaSenha" name="novaSenha">
+          <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleSenha()">
+            <ion-icon slot="icon-only" [name]="showSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </ion-button>
         </ion-input>
+        <span class="field-error" *ngIf="submitted && errors['novaSenha']">{{ errors['novaSenha'] }}</span>
       </div>
 
       <div class="field-group">
-        <ion-input class="input" type="text" formControlName="cidadeEstado"></ion-input>
+        <label class="field-label">Confirmar nova senha</label>
+        <ion-input class="input" [type]="showConfirmarNovaSenha() ? 'text' : 'password'" placeholder="••••••••"
+          [(ngModel)]="confirmarNovaSenha" name="confirmarNovaSenha">
+          <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleConfirmarNovaSenha()">
+            <ion-icon slot="icon-only" [name]="showConfirmarNovaSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </ion-button>
+        </ion-input>
+        <span class="field-error" *ngIf="submitted && errors['confirmarNovaSenha']">{{ errors['confirmarNovaSenha'] }}</span>
+      </div>
+      <p class="hint">Deixe em branco se não quiser trocar a senha.</p>
+    </div>
+
+    <!-- ENDEREÇO -->
+    <p class="section-label">
+      <ion-icon name="location-outline"></ion-icon> Meu endereço
+    </p>
+    <div class="card">
+      <div class="field-group">
+        <label class="field-label">CEP</label>
+        <ion-input class="input" type="text" placeholder="35170-000" [value]="cep" (ionInput)="onCepInput($event)"
+          name="cep" maxlength="9" inputmode="numeric"></ion-input>
+        <span class="field-error" *ngIf="submitted && errors['cep']">{{ errors['cep'] }}</span>
       </div>
 
-      <!-- CAMPOS QUE PODEM SER EDITADOS -->
-      <div class="field-group" [class.highlight]="isEditing">
-        <ion-label *ngIf="isEditing" class="label-dica">Atualizar CEP:</ion-label>
-        <ion-input class="input" type="text" formControlName="cep" maxlength="9" (ionInput)="mascaraCep($event)" placeholder="CEP"></ion-input>
+      <div class="field-row">
+        <div class="field-group" style="flex: 2;">
+          <label class="field-label">Rua</label>
+          <ion-input class="input" type="text" placeholder="Rua das Acácias" [(ngModel)]="rua" name="rua"></ion-input>
+          <span class="field-error" *ngIf="submitted && errors['rua']">{{ errors['rua'] }}</span>
+        </div>
+        <div class="field-group" style="flex: 1;">
+          <label class="field-label">Número</label>
+          <ion-input class="input" type="text" placeholder="120" inputmode="numeric" [(ngModel)]="numero" name="numero"></ion-input>
+          <span class="field-error" *ngIf="submitted && errors['numero']">{{ errors['numero'] }}</span>
+        </div>
       </div>
 
-      <div class="field-group" [class.highlight]="isEditing">
-        <ion-label *ngIf="isEditing" class="label-dica">Atualizar Senha (opcional):</ion-label>
-        <ion-input class="input" type="password" formControlName="senha" placeholder="••••••••"></ion-input>
+      <div class="field-row">
+        <div class="field-group" style="flex: 1;">
+          <label class="field-label">Bairro</label>
+          <ion-input class="input" type="text" placeholder="Centro" [(ngModel)]="bairro" name="bairro"></ion-input>
+          <span class="field-error" *ngIf="submitted && errors['bairro']">{{ errors['bairro'] }}</span>
+        </div>
+        <div class="field-group" style="flex: 1;">
+          <label class="field-label">Cidade</label>
+          <ion-input class="input" type="text" placeholder="Coronel Fabriciano" [(ngModel)]="cidade" name="cidade"></ion-input>
+          <span class="field-error" *ngIf="submitted && errors['cidade']">{{ errors['cidade'] }}</span>
+        </div>
       </div>
 
-      <!-- BOTÃO SALVAR (Só aparece no modo edição) -->
-      @if (isEditing) {
-        <ion-button expand="block" class="submit-btn" (click)="salvarAlteracoes()">
-          Salvar Alterações
-        </ion-button>
-      }
+      <div class="field-row">
+        <div class="field-group" style="flex: 1;">
+          <label class="field-label">Complemento</label>
+          <ion-input class="input" type="text" placeholder="Bloco B, Apto 301" [(ngModel)]="complemento" name="complemento"></ion-input>
+        </div>
+        <div class="field-group" style="flex: 1;">
+          <label class="field-label">Referência</label>
+          <ion-input class="input" type="text" placeholder="Perto da praça" [(ngModel)]="referencia" name="referencia"></ion-input>
+        </div>
+      </div>
+    </div>
 
-    </form>
-  </div>
+    <!-- SALVAR -->
+    <ion-button type="submit" expand="block" class="submit-btn" [disabled]="salvando || carregando">
+      <ion-spinner *ngIf="salvando" name="crescent"></ion-spinner>
+      <ng-container *ngIf="!salvando">
+        <ion-icon slot="start" name="checkmark-outline"></ion-icon>
+        Salvar alterações
+      </ng-container>
+    </ion-button>
+
+  </form>
 </ion-content>

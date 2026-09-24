@@ -4,6 +4,7 @@ const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
   appName: 'ChamaPro',
   webDir: 'www'
+  
 };
 
 export default config;
