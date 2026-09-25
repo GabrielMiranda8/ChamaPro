@@ -73,6 +73,17 @@ export class UsuarioService {
     );
   }
 
+  alterarFoto(id: string, fotoUrl: string): Observable<string> {
+    return this.http.patch(
+      `${this.API_URL}/${id}/foto`,
+      { fotoUrl },
+      {
+        headers: this.tokenService.gerarCabecalhoAutenticacao(),
+        responseType: 'text'
+      }
+    );
+  }
+
   alterarCep(id: string, cep: string): Observable<string> {
     return this.http.patch(
       `${this.API_URL}/${id}/cep`,
