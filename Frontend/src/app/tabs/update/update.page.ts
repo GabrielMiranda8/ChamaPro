@@ -20,6 +20,7 @@ import {
   locationOutline,
   personOutline,
   checkmarkOutline,
+  cameraOutline,
 } from 'ionicons/icons';
 import { firstValueFrom } from 'rxjs';
 
@@ -28,6 +29,7 @@ import { EnderecoService } from 'src/app/services/endereco.service';
 import { EnderecoModel } from 'src/app/model/endereco.model';
 import { TokenModel } from 'src/app/model/token.model';
 import { TokenService } from 'src/app/services/token.service';
+import { CloudinaryService } from 'src/app/services/cloudinary.service';
 
 @Component({
   selector: 'app-update',
@@ -42,6 +44,11 @@ export class UpdatePage implements OnInit {
   // Endereço existente (se o usuário já tiver um) e "foto" dos valores originais
   private enderecoAtual: EnderecoModel | null = null;
   private enderecoOriginal = '';
+
+  // Foto de perfil
+  fotoPreview = '';    // o que aparece no avatar (foto atual do usuário ou preview local)
+  private arquivoFoto: File | null = null;
+  private readonly TAMANHO_MAX_FOTO = 5 * 1024 * 1024; // 5 MB
 
   // Senha
   novaSenha = '';
@@ -69,10 +76,11 @@ export class UpdatePage implements OnInit {
     private navController: NavController,
     private toastController: ToastController,
     private tokenService: TokenService,
+    private cloudinaryService: CloudinaryService,
   ) {
     addIcons({
       arrowBackOutline, eyeOutline, eyeOffOutline,
-      lockClosedOutline, locationOutline, personOutline, checkmarkOutline,
+      lockClosedOutline, locationOutline, personOutline, checkmarkOutline, cameraOutline,
     });
   }
 
@@ -85,9 +93,19 @@ export class UpdatePage implements OnInit {
     }
 
     this.carregarEndereco();
+    this.carregarUsuario();
   }
 
   // ─── Carregamento ──────────────────────────────────────────────────────────
+
+  private carregarUsuario(): void {
+    this.usuarioService.buscarPorId(this.token.id).subscribe({
+      next: (usuario) => {
+        this.fotoPreview = this.cloudinaryService.otimizar(usuario.fotoUrl);
+      },
+      error: (err) => console.log('Erro ao carregar dados de usuário:', err),
+    });
+  }
 
   private carregarEndereco(): void {
     this.carregando = true;
@@ -127,6 +145,29 @@ export class UpdatePage implements OnInit {
   obterIniciais(nome: string): string {
     if (!nome) return '?';
     return nome.trim().split(' ').filter(Boolean).slice(0, 2).map((x) => x[0]).join('').toUpperCase();
+  }
+
+  onFotoSelecionada(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const arquivo = input.files?.[0];
+    input.value = ''; // permite escolher a mesma foto de novo
+    if (!arquivo) return;
+
+    if (!arquivo.type.startsWith('image/')) {
+      this.mostrarToast('Selecione um arquivo de imagem.', 'warning');
+      return;
+    }
+    if (arquivo.size > this.TAMANHO_MAX_FOTO) {
+      this.mostrarToast('A imagem deve ter no máximo 5 MB.', 'warning');
+      return;
+    }
+
+    this.arquivoFoto = arquivo;
+
+    // Preview imediato; o envio ao Cloudinary só acontece ao salvar
+    const leitor = new FileReader();
+    leitor.onload = () => (this.fotoPreview = leitor.result as string);
+    leitor.readAsDataURL(arquivo);
   }
 
   toggleSenha(): void {
@@ -201,7 +242,9 @@ export class UpdatePage implements OnInit {
     const senhaFoiAlterada = !!this.novaSenha;
     const enderecoFoiAlterado = this.snapshotEndereco() !== this.enderecoOriginal;
 
-    if (!senhaFoiAlterada && !enderecoFoiAlterado) {
+    const fotoFoiAlterada = !!this.arquivoFoto;
+
+    if (!senhaFoiAlterada && !enderecoFoiAlterado && !fotoFoiAlterada) {
       await this.mostrarToast('Nenhuma alteração foi feita.', 'warning');
       return;
     }
@@ -209,6 +252,13 @@ export class UpdatePage implements OnInit {
     this.salvando = true;
 
     try {
+      if (fotoFoiAlterada) {
+        const url = await firstValueFrom(this.cloudinaryService.enviarImagem(this.arquivoFoto!));
+        await firstValueFrom(this.usuarioService.alterarFoto(this.token.id, url));
+        this.fotoPreview = this.cloudinaryService.otimizar(url);
+        this.arquivoFoto = null;
+      }
+
       if (senhaFoiAlterada) {
         await firstValueFrom(this.usuarioService.alterarSenha(this.token.id, this.novaSenha));
       }

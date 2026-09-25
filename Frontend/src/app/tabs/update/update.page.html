@@ -7,9 +7,15 @@
     </button>
     <h2>Editar Perfil</h2>
 
-    <div class="avatar">
-      <span>{{ obterIniciais(token.nome) }}</span>
-    </div>
+    <button class="avatar" type="button" (click)="fotoInput.click()" aria-label="Alterar foto de perfil">
+      @if (fotoPreview) {
+        <img [src]="fotoPreview" alt="Foto de perfil" />
+      } @else {
+        <span>{{ obterIniciais(token.nome) }}</span>
+      }
+      <span class="avatar-badge"><ion-icon name="camera-outline"></ion-icon></span>
+    </button>
+    <input #fotoInput type="file" accept="image/*" hidden (change)="onFotoSelecionada($event)" />
   </div>
 
   <form (ngSubmit)="onSubmit()" novalidate class="update-form">
