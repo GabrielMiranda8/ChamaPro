@@ -112,6 +112,15 @@ public class UsuarioService {
         repository.save(usuario);
     }
 
+    public void alterarFoto(String id, String fotoUrl) {
+        if (fotoUrl == null || fotoUrl.isBlank()) {
+            throw new IllegalArgumentException("URL da foto é obrigatória");
+        }
+        Usuario usuario = buscarUsuarioPorId(id);
+        usuario.setFotoUrl(fotoUrl);
+        repository.save(usuario);
+    }
+
     private Usuario buscarUsuarioPorId(String id) {
         return repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
@@ -124,7 +133,8 @@ public class UsuarioService {
                 usuario.getDtNasc(),
                 usuario.getDtConta(),
                 usuario.getNota(),
-                usuario.getEmail());
+                usuario.getEmail(),
+                usuario.getFotoUrl());
     }
 
     public void alterarSenha(String id, String senha) {
