@@ -52,6 +52,9 @@ public class Usuario {
     @Column(nullable = false, length = 200)
     private String tipo;
 
+    @Column(length = 500)
+    private String fotoUrl;
+
     //columDefinition para nao quebrar o auto update
     @Column(nullable = false, columnDefinition = "boolean default true")
     private boolean ativo = true;
