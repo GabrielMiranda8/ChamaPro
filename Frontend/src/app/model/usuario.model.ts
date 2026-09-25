@@ -11,6 +11,7 @@ export class UsuarioModel {
     dtConta: Date;
     nota: number
     tipo: string;
+    fotoUrl: string;
     endereco: EnderecoModel;
     caracteristicas: CaracteristicaModel[];
 
@@ -24,6 +25,7 @@ export class UsuarioModel {
         this.dtConta = new Date();
         this.nota = 0;
         this.tipo = "";
+        this.fotoUrl = "";
         this.endereco = new EnderecoModel();
         this.caracteristicas = [];
     }
