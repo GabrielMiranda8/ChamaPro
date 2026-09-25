@@ -8,5 +8,6 @@ public record UsuarioResponseDTO(
         Date dtNasc,
         Date dtConta,
         Double nota,
-        String email
+        String email,
+        String fotoUrl
 ) {}
