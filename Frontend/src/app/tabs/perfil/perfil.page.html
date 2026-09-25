@@ -10,7 +10,11 @@
     <div class="user-info">
 
       <div class="avatar">
-        <span>{{ obterIniciais(dados.nome) }}</span>
+        @if (dados.fotoUrl) {
+          <img [src]="dados.fotoUrl" alt="Foto de perfil" />
+        } @else {
+          <span>{{ obterIniciais(dados.nome) }}</span>
+        }
       </div>
 
       <div class="user-details">
