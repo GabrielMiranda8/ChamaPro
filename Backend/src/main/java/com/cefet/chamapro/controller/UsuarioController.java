@@ -60,4 +60,10 @@ public class UsuarioController {
         service.alterarCep(id, body.get("cep"));
         return ResponseEntity.ok("CEP alterado com sucesso");
     }
+
+    @PatchMapping("/{id}/foto")
+    public ResponseEntity<String> alterarFoto(@PathVariable String id, @RequestBody Map<String, String> body) {
+        service.alterarFoto(id, body.get("fotoUrl"));
+        return ResponseEntity.ok("Foto atualizada com sucesso");
+    }
 }
