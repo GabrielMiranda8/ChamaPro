@@ -1,7 +1,11 @@
 <ion-header class="popup-header">
   <div class="header-content">
     <div class="avatar">
-      <span>{{ obterIniciais(profissional?.nome) }}</span>
+      @if (profissional?.fotoUrl) {
+        <img [src]="profissional.fotoUrl" alt="Foto de perfil" />
+      } @else {
+        <span>{{ obterIniciais(profissional?.nome) }}</span>
+      }
     </div>
     <h2 class="prof-nome">{{ profissional?.nome }}</h2>
     <p class="prof-especialidade">{{ servico?.nome }}</p>
