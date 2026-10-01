@@ -27,6 +27,7 @@ public class UsuarioService {
 
     private final UsuarioRepository repository;
     private final EnderecoRepository enderecoRepository;
+    private final GeocodingService geocodingService;
 
     @Transactional
     public UsuarioResponseDTO criar(UsuarioRequestDTO dto) {
@@ -66,6 +67,13 @@ public class UsuarioService {
             endereco.setComplemento(enderecoDto.getComplemento());
             endereco.setReferencia(enderecoDto.getReferencia());
             endereco.setUsuario(salvo);
+            Double[] coordenadas = geocodingService.geocodificar(
+                    enderecoDto.getRua(), enderecoDto.getNumero(), enderecoDto.getCidade(), enderecoDto.getCep());
+            if (coordenadas != null) {
+                endereco.setLatitude(coordenadas[0]);
+                endereco.setLongitude(coordenadas[1]);
+            }
+
             enderecoRepository.save(endereco);
         }
 
@@ -154,7 +162,19 @@ public class UsuarioService {
         if (enderecos.isEmpty()) {
             throw new EntityNotFoundException("Endereço do usuário não encontrado");
         }
-        enderecos.forEach(endereco -> endereco.setCep(cep));
-        enderecoRepository.saveAll(enderecos);
+        Double[] coordenadas = geocodingService.geocodificarPorCep(cep);
+
+for (Endereco endereco : enderecos) {
+    endereco.setCep(cep);
+
+    if (coordenadas != null) {
+        endereco.setLatitude(coordenadas[0]);
+        endereco.setLongitude(coordenadas[1]);
+    } else {
+        endereco.setLatitude(null);
+        endereco.setLongitude(null);
+    }
+}
+enderecoRepository.saveAll(enderecos);
     }
 }

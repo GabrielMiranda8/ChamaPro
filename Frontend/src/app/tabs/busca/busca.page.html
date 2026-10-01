@@ -6,12 +6,8 @@
     <!-- BUSCA -->
     <div class="search-box">
       <ion-icon name="search-outline"></ion-icon>
-      <input
-        type="text"
-        placeholder="Buscar profissional ou serviço..."
-        [(ngModel)]="textoBusca"
-        (input)="filtrarResultados()"
-      />
+      <input type="text" placeholder="Buscar profissional ou serviço..." [(ngModel)]="textoBusca"
+        (input)="filtrarResultados()" />
     </div>
 
     <!-- FILTROS -->
@@ -30,15 +26,23 @@
       </button>
     </div>
 
+    <div class="origem-info">
+      <ion-icon name="location-outline"></ion-icon>
+      <span *ngIf="origemPosicao === 'gps'">Ordenado pela sua localização atual</span>
+      <span *ngIf="origemPosicao === 'endereco'">Ordenado pelo seu endereço cadastrado</span>
+      <span *ngIf="origemPosicao === ''">Sem localização: ordem sem proximidade</span>
+
+      <button *ngIf="origemPosicao !== 'gps'" (click)="usarMinhaLocalizacao()" [disabled]="buscandoGps">
+        <ion-icon name="navigate-outline"></ion-icon>
+        {{ buscandoGps ? 'Buscando...' : 'Usar minha localização' }}
+      </button>
+    </div>
+
     <!-- CONTAGEM -->
     <p class="results-count">{{ resultadosFiltrados.length }} resultados encontrados</p>
 
     <!-- CARDS -->
-    <div
-      class="professional-card"
-      *ngFor="let item of resultadosFiltrados"
-      (click)="abrirPopupProfissional(item)"
-    >
+    <div class="professional-card" *ngFor="let item of resultadosFiltrados" (click)="abrirPopupProfissional(item)">
       <div class="professional-left">
 
         <div class="avatar">
@@ -70,7 +74,9 @@
       <div class="professional-right">
 
         <span class="price">R$ {{ item.ps.preco }}/h</span>
-
+        <small *ngIf="item.distanciaKm !== null">
+          {{ formatarDistancia(item.distanciaKm) }}
+        </small>
         <span *ngIf="possuiCaracteristica(item.profissional, 'VERIFICADO')" class="verified">
           Verificado
         </span>

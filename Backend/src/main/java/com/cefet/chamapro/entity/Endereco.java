@@ -40,8 +40,8 @@ public class Endereco {
     @Column(nullable = true)
     private Integer numero;
 
-    @Column(length = 100, nullable = true) 
-    private String complemento; 
+    @Column(length = 100, nullable = true)
+    private String complemento;
 
     @Column(length = 200, nullable = true)
     private String referencia;
@@ -49,4 +49,10 @@ public class Endereco {
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
+
+    @Column(nullable = true)
+    private Double latitude;
+
+    @Column(nullable = true)
+    private Double longitude;
 }

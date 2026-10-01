@@ -41,7 +41,7 @@ public class EnderecoController {
     @GetMapping("/{id}")
     @Operation(summary = "Buscar endereco por ID")
     public ResponseEntity<EnderecoResponseDTO> buscarPorId(@PathVariable String id) {
-    	EnderecoResponseDTO enderecoResponseDTO = enderecoService.buscarPorId(id);
+        EnderecoResponseDTO enderecoResponseDTO = enderecoService.buscarPorId(id);
         return ResponseEntity.ok(enderecoResponseDTO);
     }
 
@@ -55,18 +55,19 @@ public class EnderecoController {
     @PostMapping
     @Operation(summary = "Cadastrar endereco")
     public ResponseEntity<EnderecoResponseDTO> inserir(@Valid @RequestBody EnderecoRequestDTO enderecoRequestDTO) {
-    	EnderecoResponseDTO enderecoResponseDTO = enderecoService.inserir(enderecoRequestDTO);
+        EnderecoResponseDTO enderecoResponseDTO = enderecoService.inserir(enderecoRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(enderecoResponseDTO);
     }
-    
+
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar endereco")
-    public ResponseEntity<EnderecoResponseDTO> atualizar(@PathVariable String id, @Valid @RequestBody EnderecoRequestDTO enderecoRequestDTO) {
+    public ResponseEntity<EnderecoResponseDTO> atualizar(@PathVariable String id,
+            @Valid @RequestBody EnderecoRequestDTO enderecoRequestDTO) {
 
-    	EnderecoResponseDTO enderecoResponseDTO = enderecoService.atualizar(id, enderecoRequestDTO);
+        EnderecoResponseDTO enderecoResponseDTO = enderecoService.atualizar(id, enderecoRequestDTO);
 
         return ResponseEntity.ok(enderecoResponseDTO);
-    }    
+    }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Excluir endereco")
@@ -75,4 +76,10 @@ public class EnderecoController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/geocodificar-pendentes")
+    @Operation(summary = "Geocodificar endereços que ainda não têm coordenadas")
+    public ResponseEntity<String> geocodificarPendentes() {
+        int total = enderecoService.geocodificarPendentes();
+        return ResponseEntity.ok(total + " endereço(s) geocodificado(s)");
+    }
 }

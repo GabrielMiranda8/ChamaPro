@@ -7,9 +7,11 @@ export class EnderecoModel {
     numero: number;
     complemento: string;
     referencia: string;
-    idUsuario: string; 
+    latitude: number | null;
+    longitude: number | null;
+    idUsuario: string;
 
-    constructor(){
+    constructor() {
         this.id = "";
         this.cep = "";
         this.rua = "";
@@ -19,5 +21,7 @@ export class EnderecoModel {
         this.complemento = "";
         this.referencia = "";
         this.idUsuario = "";
+        this.latitude = null;
+        this.longitude = null;
     }
 }

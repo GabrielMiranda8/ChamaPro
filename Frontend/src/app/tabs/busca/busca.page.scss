@@ -212,3 +212,31 @@ h2 {
   color: #777;
   font-size: 13px;
 }
+
+.origem-info {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+  color: #777;
+  font-size: 13px;
+
+  ion-icon {
+    color: #ff6b00;
+  }
+
+  button {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border: none;
+    background: #fff1e8;
+    color: #ff6b00;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-weight: 600;
+    font-size: 12px;
+  }
+}

@@ -19,6 +19,9 @@ public class EnderecoResponseDTO {
     private String complemento;
     private String cidade;
     private String referencia;
+    private String idUsuario;
+    private Double latitude;
+    private Double longitude;
 
     public EnderecoResponseDTO(Endereco endereco) {
         this.id = endereco.getId();
@@ -29,6 +32,9 @@ public class EnderecoResponseDTO {
         this.complemento = endereco.getComplemento();
         this.cidade = endereco.getCidade();
         this.referencia = endereco.getReferencia();
+        this.idUsuario = endereco.getUsuario().getId();
+        this.latitude = endereco.getLatitude();
+        this.longitude = endereco.getLongitude();
     }
 
 }

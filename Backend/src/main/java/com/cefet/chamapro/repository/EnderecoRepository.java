@@ -15,4 +15,6 @@ public interface EnderecoRepository extends JpaRepository<Endereco, String>{
 	List<Endereco> findByUsuarioId(String usuarioId);
 
     List<Endereco> findByUsuario_Id(String idUsuario);
+
+	List<Endereco> findByLatitudeIsNull();
 }
