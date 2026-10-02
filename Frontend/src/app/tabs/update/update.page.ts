@@ -21,6 +21,8 @@ import {
   personOutline,
   checkmarkOutline,
   cameraOutline,
+  createOutline,
+  closeOutline
 } from 'ionicons/icons';
 import { firstValueFrom } from 'rxjs';
 
@@ -41,14 +43,17 @@ import { CloudinaryService } from 'src/app/services/cloudinary.service';
 export class UpdatePage implements OnInit {
   token!: TokenModel;
 
-  // Endereço existente (se o usuário já tiver um) e "foto" dos valores originais
+  // Estado da tela
+  isEditando = false;
+
   private enderecoAtual: EnderecoModel | null = null;
   private enderecoOriginal = '';
 
   // Foto de perfil
-  fotoPreview = '';    // o que aparece no avatar (foto atual do usuário ou preview local)
+  fotoPreview = '';    
+  private fotoOriginal = ''; // Guarda a foto original para caso o usuário cancele
   private arquivoFoto: File | null = null;
-  private readonly TAMANHO_MAX_FOTO = 5 * 1024 * 1024; // 5 MB
+  private readonly TAMANHO_MAX_FOTO = 5 * 1024 * 1024; 
 
   // Senha
   novaSenha = '';
@@ -80,7 +85,8 @@ export class UpdatePage implements OnInit {
   ) {
     addIcons({
       arrowBackOutline, eyeOutline, eyeOffOutline,
-      lockClosedOutline, locationOutline, personOutline, checkmarkOutline, cameraOutline,
+      lockClosedOutline, locationOutline, personOutline, 
+      checkmarkOutline, cameraOutline, createOutline, closeOutline
     });
   }
 
@@ -96,12 +102,48 @@ export class UpdatePage implements OnInit {
     this.carregarUsuario();
   }
 
-  // ─── Carregamento ──────────────────────────────────────────────────────────
+  // Alternar entre modo de leitura e edição
+  toggleEditMode(): void {
+    this.isEditando = !this.isEditando;
+    if (!this.isEditando) {
+      this.cancelarEdicao();
+    }
+  }
+
+  // Se cancelar, reseta tudo pro estado original que veio do banco
+  cancelarEdicao(): void {
+    this.arquivoFoto = null;
+    this.fotoPreview = this.fotoOriginal;
+    
+    this.novaSenha = '';
+    this.confirmarNovaSenha = '';
+    this.submitted = false;
+    this.errors = {};
+
+    if (this.enderecoAtual) {
+      this.cep = this.enderecoAtual.cep ?? '';
+      this.rua = this.enderecoAtual.rua ?? '';
+      this.numero = this.enderecoAtual.numero != null ? String(this.enderecoAtual.numero) : '';
+      this.bairro = this.enderecoAtual.bairro ?? '';
+      this.cidade = this.enderecoAtual.cidade ?? '';
+      this.complemento = this.enderecoAtual.complemento ?? '';
+      this.referencia = this.enderecoAtual.referencia ?? '';
+    } else {
+      this.cep = '';
+      this.rua = '';
+      this.numero = '';
+      this.bairro = '';
+      this.cidade = '';
+      this.complemento = '';
+      this.referencia = '';
+    }
+  }
 
   private carregarUsuario(): void {
     this.usuarioService.buscarPorId(this.token.id).subscribe({
       next: (usuario) => {
-        this.fotoPreview = this.cloudinaryService.otimizar(usuario.fotoUrl);
+        this.fotoOriginal = this.cloudinaryService.otimizar(usuario.fotoUrl);
+        this.fotoPreview = this.fotoOriginal;
       },
       error: (err) => console.log('Erro ao carregar dados de usuário:', err),
     });
@@ -140,8 +182,6 @@ export class UpdatePage implements OnInit {
     ]);
   }
 
-  // ─── Helpers de tela ───────────────────────────────────────────────────────
-
   obterIniciais(nome: string): string {
     if (!nome) return '?';
     return nome.trim().split(' ').filter(Boolean).slice(0, 2).map((x) => x[0]).join('').toUpperCase();
@@ -150,7 +190,7 @@ export class UpdatePage implements OnInit {
   onFotoSelecionada(event: Event): void {
     const input = event.target as HTMLInputElement;
     const arquivo = input.files?.[0];
-    input.value = ''; // permite escolher a mesma foto de novo
+    input.value = ''; 
     if (!arquivo) return;
 
     if (!arquivo.type.startsWith('image/')) {
@@ -163,20 +203,13 @@ export class UpdatePage implements OnInit {
     }
 
     this.arquivoFoto = arquivo;
-
-    // Preview imediato; o envio ao Cloudinary só acontece ao salvar
     const leitor = new FileReader();
     leitor.onload = () => (this.fotoPreview = leitor.result as string);
     leitor.readAsDataURL(arquivo);
   }
 
-  toggleSenha(): void {
-    this.showSenha.update((v) => !v);
-  }
-
-  toggleConfirmarNovaSenha(): void {
-    this.showConfirmarNovaSenha.update((v) => !v);
-  }
+  toggleSenha(): void { this.showSenha.update((v) => !v); }
+  toggleConfirmarNovaSenha(): void { this.showConfirmarNovaSenha.update((v) => !v); }
 
   onCepInput(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -185,10 +218,8 @@ export class UpdatePage implements OnInit {
     if (value.length > 5) {
       value = `${value.slice(0, 5)}-${value.slice(5)}`;
     }
-
     this.cep = value;
 
-    // Ao completar o CEP, preenche rua/bairro/cidade automaticamente (ViaCEP)
     if (value.replace(/\D/g, '').length === 8) {
       this.enderecoService.buscarPorCep(value).subscribe({
         next: (dados) => {
@@ -200,30 +231,21 @@ export class UpdatePage implements OnInit {
           this.bairro = dados.bairro || this.bairro;
           this.cidade = dados.localidade || this.cidade;
         },
-        error: () => { /* se falhar, o usuário preenche na mão */ },
+        error: () => {  },
       });
     }
   }
 
-  // ─── Validação ─────────────────────────────────────────────────────────────
-
   private validate(): boolean {
     this.errors = {};
-
     if (this.novaSenha || this.confirmarNovaSenha) {
-      if (this.novaSenha.length < 3) {
-        this.errors['novaSenha'] = 'Senha deve ter no mínimo 3 caracteres.';
-      }
-      if (this.confirmarNovaSenha !== this.novaSenha) {
-        this.errors['confirmarNovaSenha'] = 'As senhas não coincidem.';
-      }
+      if (this.novaSenha.length < 3) this.errors['novaSenha'] = 'Senha deve ter no mínimo 3 caracteres.';
+      if (this.confirmarNovaSenha !== this.novaSenha) this.errors['confirmarNovaSenha'] = 'As senhas não coincidem.';
     }
 
-    if (!this.cep) {
-      this.errors['cep'] = 'CEP é obrigatório.';
-    } else if (this.cep.replace(/\D/g, '').length !== 8) {
-      this.errors['cep'] = 'CEP inválido.';
-    }
+    if (!this.cep) this.errors['cep'] = 'CEP é obrigatório.';
+    else if (this.cep.replace(/\D/g, '').length !== 8) this.errors['cep'] = 'CEP inválido.';
+    
     if (!this.rua.trim()) this.errors['rua'] = 'Rua é obrigatória.';
     if (!this.numero.trim() || isNaN(Number(this.numero))) this.errors['numero'] = 'Número inválido.';
     if (!this.bairro.trim()) this.errors['bairro'] = 'Bairro é obrigatório.';
@@ -232,20 +254,16 @@ export class UpdatePage implements OnInit {
     return Object.keys(this.errors).length === 0;
   }
 
-  // ─── Salvar ────────────────────────────────────────────────────────────────
-
   async onSubmit(): Promise<void> {
     this.submitted = true;
-
     if (this.salvando || !this.validate()) return;
 
     const senhaFoiAlterada = !!this.novaSenha;
     const enderecoFoiAlterado = this.snapshotEndereco() !== this.enderecoOriginal;
-
     const fotoFoiAlterada = !!this.arquivoFoto;
 
     if (!senhaFoiAlterada && !enderecoFoiAlterado && !fotoFoiAlterada) {
-      await this.mostrarToast('Nenhuma alteração foi feita.', 'warning');
+      this.isEditando = false; // Se salvar sem mudar nada, só sai da edição
       return;
     }
 
@@ -255,6 +273,7 @@ export class UpdatePage implements OnInit {
       if (fotoFoiAlterada) {
         const url = await firstValueFrom(this.cloudinaryService.enviarImagem(this.arquivoFoto!));
         await firstValueFrom(this.usuarioService.alterarFoto(this.token.id, url));
+        this.fotoOriginal = url;
         this.fotoPreview = this.cloudinaryService.otimizar(url);
         this.arquivoFoto = null;
       }
@@ -275,7 +294,6 @@ export class UpdatePage implements OnInit {
         endereco.complemento = this.complemento.trim();
         endereco.referencia = this.referencia.trim();
 
-        // Já tinha endereço: atualiza. Não tinha: cria um novo.
         this.enderecoAtual = endereco.id
           ? await firstValueFrom(this.enderecoService.alterar(endereco))
           : await firstValueFrom(this.enderecoService.salvar(endereco));
@@ -286,9 +304,9 @@ export class UpdatePage implements OnInit {
       this.novaSenha = '';
       this.confirmarNovaSenha = '';
       this.submitted = false;
+      this.isEditando = false; // Desliga a edição ao terminar
 
       await this.mostrarToast('Dados atualizados com sucesso!', 'success');
-      this.navController.navigateBack('/tabs/perfil');
     } catch (err: any) {
       console.log('Erro ao atualizar:', err);
       await this.mostrarToast('Erro ao atualizar dados. Verifique os campos.', 'danger');

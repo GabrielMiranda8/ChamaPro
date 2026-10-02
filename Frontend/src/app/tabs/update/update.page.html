@@ -5,15 +5,20 @@
     <button class="back-btn" type="button" routerLink="/tabs/perfil" aria-label="Voltar">
       <ion-icon name="arrow-back-outline"></ion-icon>
     </button>
-    <h2>Editar Perfil</h2>
+    <h2>Meu Perfil</h2>
+    
+    <!-- Botão de ligar/desligar edição -->
+    <button class="edit-btn" type="button" (click)="toggleEditMode()" aria-label="Editar">
+      <ion-icon [name]="isEditando ? 'close-outline' : 'create-outline'"></ion-icon>
+    </button>
 
-    <button class="avatar" type="button" (click)="fotoInput.click()" aria-label="Alterar foto de perfil">
+    <button class="avatar" type="button" (click)="isEditando ? fotoInput.click() : null" aria-label="Alterar foto de perfil">
       @if (fotoPreview) {
         <img [src]="fotoPreview" alt="Foto de perfil" />
       } @else {
         <span>{{ obterIniciais(token.nome) }}</span>
       }
-      <span class="avatar-badge"><ion-icon name="camera-outline"></ion-icon></span>
+      <span class="avatar-badge" *ngIf="isEditando"><ion-icon name="camera-outline"></ion-icon></span>
     </button>
     <input #fotoInput type="file" accept="image/*" hidden (change)="onFotoSelecionada($event)" />
   </div>
@@ -33,34 +38,36 @@
       </div>
     </div>
 
-    <!-- SENHA -->
-    <p class="section-label">
-      <ion-icon name="lock-closed-outline"></ion-icon> Alterar senha
-    </p>
-    <div class="card">
-      <div class="field-group">
-        <label class="field-label">Nova senha</label>
-        <ion-input class="input" [type]="showSenha() ? 'text' : 'password'" placeholder="••••••••"
-          [(ngModel)]="novaSenha" name="novaSenha">
-          <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleSenha()">
-            <ion-icon slot="icon-only" [name]="showSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
-          </ion-button>
-        </ion-input>
-        <span class="field-error" *ngIf="submitted && errors['novaSenha']">{{ errors['novaSenha'] }}</span>
-      </div>
+    <!-- SENHA (exibe apenas se estiver editando) -->
+    <ng-container *ngIf="isEditando">
+      <p class="section-label">
+        <ion-icon name="lock-closed-outline"></ion-icon> Alterar senha
+      </p>
+      <div class="card">
+        <div class="field-group">
+          <label class="field-label">Nova senha</label>
+          <ion-input class="input" [type]="showSenha() ? 'text' : 'password'" placeholder="••••••••"
+            [(ngModel)]="novaSenha" name="novaSenha" [disabled]="!isEditando">
+            <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleSenha()" [disabled]="!isEditando">
+              <ion-icon slot="icon-only" [name]="showSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </ion-button>
+          </ion-input>
+          <span class="field-error" *ngIf="submitted && errors['novaSenha']">{{ errors['novaSenha'] }}</span>
+        </div>
 
-      <div class="field-group">
-        <label class="field-label">Confirmar nova senha</label>
-        <ion-input class="input" [type]="showConfirmarNovaSenha() ? 'text' : 'password'" placeholder="••••••••"
-          [(ngModel)]="confirmarNovaSenha" name="confirmarNovaSenha">
-          <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleConfirmarNovaSenha()">
-            <ion-icon slot="icon-only" [name]="showConfirmarNovaSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
-          </ion-button>
-        </ion-input>
-        <span class="field-error" *ngIf="submitted && errors['confirmarNovaSenha']">{{ errors['confirmarNovaSenha'] }}</span>
+        <div class="field-group">
+          <label class="field-label">Confirmar nova senha</label>
+          <ion-input class="input" [type]="showConfirmarNovaSenha() ? 'text' : 'password'" placeholder="••••••••"
+            [(ngModel)]="confirmarNovaSenha" name="confirmarNovaSenha" [disabled]="!isEditando">
+            <ion-button slot="end" fill="clear" class="eye-btn" type="button" (click)="toggleConfirmarNovaSenha()" [disabled]="!isEditando">
+              <ion-icon slot="icon-only" [name]="showConfirmarNovaSenha() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </ion-button>
+          </ion-input>
+          <span class="field-error" *ngIf="submitted && errors['confirmarNovaSenha']">{{ errors['confirmarNovaSenha'] }}</span>
+        </div>
+        <p class="hint">Deixe em branco se não quiser trocar a senha.</p>
       </div>
-      <p class="hint">Deixe em branco se não quiser trocar a senha.</p>
-    </div>
+    </ng-container>
 
     <!-- ENDEREÇO -->
     <p class="section-label">
@@ -70,19 +77,19 @@
       <div class="field-group">
         <label class="field-label">CEP</label>
         <ion-input class="input" type="text" placeholder="35170-000" [value]="cep" (ionInput)="onCepInput($event)"
-          name="cep" maxlength="9" inputmode="numeric"></ion-input>
+          name="cep" maxlength="9" inputmode="numeric" [disabled]="!isEditando"></ion-input>
         <span class="field-error" *ngIf="submitted && errors['cep']">{{ errors['cep'] }}</span>
       </div>
 
       <div class="field-row">
         <div class="field-group" style="flex: 2;">
           <label class="field-label">Rua</label>
-          <ion-input class="input" type="text" placeholder="Rua das Acácias" [(ngModel)]="rua" name="rua"></ion-input>
+          <ion-input class="input" type="text" placeholder="Rua das Acácias" [(ngModel)]="rua" name="rua" [disabled]="!isEditando"></ion-input>
           <span class="field-error" *ngIf="submitted && errors['rua']">{{ errors['rua'] }}</span>
         </div>
         <div class="field-group" style="flex: 1;">
           <label class="field-label">Número</label>
-          <ion-input class="input" type="text" placeholder="120" inputmode="numeric" [(ngModel)]="numero" name="numero"></ion-input>
+          <ion-input class="input" type="text" placeholder="120" inputmode="numeric" [(ngModel)]="numero" name="numero" [disabled]="!isEditando"></ion-input>
           <span class="field-error" *ngIf="submitted && errors['numero']">{{ errors['numero'] }}</span>
         </div>
       </div>
@@ -90,12 +97,12 @@
       <div class="field-row">
         <div class="field-group" style="flex: 1;">
           <label class="field-label">Bairro</label>
-          <ion-input class="input" type="text" placeholder="Centro" [(ngModel)]="bairro" name="bairro"></ion-input>
+          <ion-input class="input" type="text" placeholder="Centro" [(ngModel)]="bairro" name="bairro" [disabled]="!isEditando"></ion-input>
           <span class="field-error" *ngIf="submitted && errors['bairro']">{{ errors['bairro'] }}</span>
         </div>
         <div class="field-group" style="flex: 1;">
           <label class="field-label">Cidade</label>
-          <ion-input class="input" type="text" placeholder="Coronel Fabriciano" [(ngModel)]="cidade" name="cidade"></ion-input>
+          <ion-input class="input" type="text" placeholder="Coronel Fabriciano" [(ngModel)]="cidade" name="cidade" [disabled]="!isEditando"></ion-input>
           <span class="field-error" *ngIf="submitted && errors['cidade']">{{ errors['cidade'] }}</span>
         </div>
       </div>
@@ -103,17 +110,17 @@
       <div class="field-row">
         <div class="field-group" style="flex: 1;">
           <label class="field-label">Complemento</label>
-          <ion-input class="input" type="text" placeholder="Bloco B, Apto 301" [(ngModel)]="complemento" name="complemento"></ion-input>
+          <ion-input class="input" type="text" placeholder="Bloco B, Apto 301" [(ngModel)]="complemento" name="complemento" [disabled]="!isEditando"></ion-input>
         </div>
         <div class="field-group" style="flex: 1;">
           <label class="field-label">Referência</label>
-          <ion-input class="input" type="text" placeholder="Perto da praça" [(ngModel)]="referencia" name="referencia"></ion-input>
+          <ion-input class="input" type="text" placeholder="Perto da praça" [(ngModel)]="referencia" name="referencia" [disabled]="!isEditando"></ion-input>
         </div>
       </div>
     </div>
 
     <!-- SALVAR -->
-    <ion-button type="submit" expand="block" class="submit-btn" [disabled]="salvando || carregando">
+    <ion-button *ngIf="isEditando" type="submit" expand="block" class="submit-btn" [disabled]="salvando || carregando">
       <ion-spinner *ngIf="salvando" name="crescent"></ion-spinner>
       <ng-container *ngIf="!salvando">
         <ion-icon slot="start" name="checkmark-outline"></ion-icon>

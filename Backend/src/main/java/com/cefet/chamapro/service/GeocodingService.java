@@ -42,18 +42,19 @@ public class GeocodingService {
 
         if (!vazio(rua) && !vazio(cidade)) {
             if (numero != null && numero > 0) {
-                consultas.add(rua + ", " + numero + ", " + cidade + ", Brasil");
+                // Busca mais precisa possível
+                consultas.add(rua + ", " + numero + ", " + cidade + ", Minas Gerais, Brasil");
             }
-            consultas.add(rua + ", " + cidade + ", Brasil");
-        }
-
-        if (!vazio(cep)) {
-            consultas.add(cep + ", Brasil");
+            // Fallback sem o número (muitas ruas no OSM não tem a numeração mapeada)
+            consultas.add(rua + ", " + cidade + ", Minas Gerais, Brasil");
         }
 
         if (!vazio(cidade)) {
-            consultas.add(cidade + ", Brasil");
+            // Fallback para o centro da cidade
+            consultas.add(cidade + ", Minas Gerais, Brasil");
         }
+
+        // Remova a busca de "cep + Brasil" para evitar as coordenadas bizarras no RS.
 
         for (String consulta : consultas) {
             Double[] resultado = buscarNoNominatim(consulta);

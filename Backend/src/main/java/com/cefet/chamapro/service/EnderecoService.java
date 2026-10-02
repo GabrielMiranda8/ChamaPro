@@ -80,16 +80,18 @@ public class EnderecoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Endereco não encontrado. Id: " + id));
 
         endereco.setCep(dto.getCep());
-
-        Double[] coordenadas = geocodingService.geocodificarPorCep(dto.getCep());
-        aplicarCoordenadas(endereco, coordenadas);
-
         endereco.setRua(dto.getRua());
         endereco.setNumero(dto.getNumero());
         endereco.setBairro(dto.getBairro());
         endereco.setCidade(dto.getCidade());
         endereco.setComplemento(dto.getComplemento());
         endereco.setReferencia(dto.getReferencia());
+
+        // CORREÇÃO: Use o geocodificar completo em vez de geocodificarPorCep
+        Double[] coordenadas = geocodingService.geocodificar(
+                dto.getRua(), dto.getNumero(), dto.getCidade(), dto.getCep());
+                
+        aplicarCoordenadas(endereco, coordenadas);
 
         return new EnderecoResponseDTO(enderecoRepository.save(endereco));
     }
