@@ -92,7 +92,8 @@
       <div class="professional-left">
 
         <div class="avatar">
-          {{ obterIniciais(item.profissional.nome) }}
+          <img *ngIf="item.profissional.fotoUrl" [src]="item.profissional.fotoUrl" alt="Foto de perfil" />
+          <span *ngIf="!item.profissional.fotoUrl">{{ obterIniciais(item.profissional.nome) }}</span>
         </div>
 
         <div class="professional-info">
