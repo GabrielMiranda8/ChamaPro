@@ -74,33 +74,43 @@
   <div class="section">
 
     <h3>Mais próximos</h3>
+    <div class="origem-info">
+      <ion-icon name="location-outline"></ion-icon>
+      <span *ngIf="origemPosicao === 'gps'">Ordenado pela sua localização atual</span>
+      <span *ngIf="origemPosicao === 'endereco'">Ordenado pelo seu endereço cadastrado</span>
+      <span *ngIf="origemPosicao === ''">Sem localização: ordem sem proximidade</span>
 
-    <div class="professional-card" *ngFor="let profissional of profissionais" (click)="abrirProfissional(profissional)">
+      <button *ngIf="origemPosicao !== 'gps'" (click)="usarMinhaLocalizacao()" [disabled]="buscandoGps">
+        <ion-icon name="navigate-outline"></ion-icon>
+        {{ buscandoGps ? 'Buscando...' : 'Usar minha localização' }}
+      </button>
+    </div>
+
+    <!-- Mude o *ngFor para varrer 'resultados' -->
+    <div class="professional-card" *ngFor="let item of resultados" (click)="abrirProfissional(item)">
 
       <div class="professional-left">
 
         <div class="avatar">
-          {{ profissional.iniciais }}
+          {{ obterIniciais(item.profissional.nome) }}
         </div>
 
         <div class="professional-info">
 
           <div class="name-row">
+            <h4>{{ item.profissional.nome }}</h4>
 
-            <h4>{{ profissional.nome }}</h4>
-
-            <div class="libras-badge" *ngIf="profissional.libras">
+            <div class="libras-badge" *ngIf="possuiCaracteristica(item.profissional, 'LIBRAS')">
               <ion-icon name="hand-left-outline"></ion-icon>
             </div>
-
           </div>
 
-          <p>{{ profissional.especialidade }}</p>
+          <!-- Usa o nome do serviço real -->
+          <p>{{ item.servico.nome }}</p>
 
           <div class="rating">
             <ion-icon name="star"></ion-icon>
-            <span>{{ profissional.nota }}</span>
-            <span>({{ profissional.avaliacoes }})</span>
+            <span>{{ item.profissional.nota || 5.0 }}</span>
           </div>
 
         </div>
@@ -110,18 +120,28 @@
       <div class="professional-right">
 
         <span class="price">
-          R$ {{ profissional.valor }}/h
+          R$ {{ item.ps.preco }}/h
         </span>
-        <!-- <span
+        
+        <!-- Mostra a distância em tela se houver -->
+        <small *ngIf="item.distanciaKm !== null" style="color: #777; font-size: 13px; display: block; margin-top: 4px;">
+          {{ formatarDistancia(item.distanciaKm) }}
+        </small>
+
+        <span
           class="verified"
-          *ngIf="profissional.verificado"
+          *ngIf="possuiCaracteristica(item.profissional, 'VERIFICADO')"
         >
           Verificado
         </span>
- -->
 
       </div>
 
+    </div>
+
+    <!-- Estado vazio caso não encontre ninguém -->
+    <div class="empty-state" *ngIf="resultados.length === 0 && !carregando" style="text-align: center; color: #888; padding: 20px 0;">
+      <p>Nenhum profissional encontrado.</p>
     </div>
 
   </div>
