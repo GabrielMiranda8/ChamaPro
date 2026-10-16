@@ -17,6 +17,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -28,6 +29,7 @@ public class UsuarioService {
     private final UsuarioRepository repository;
     private final EnderecoRepository enderecoRepository;
     private final GeocodingService geocodingService;
+    private final CloudinaryService cloudinaryService;
 
     @Transactional
     public UsuarioResponseDTO criar(UsuarioRequestDTO dto) {
@@ -127,6 +129,15 @@ public class UsuarioService {
         Usuario usuario = buscarUsuarioPorId(id);
         usuario.setFotoUrl(fotoUrl);
         repository.save(usuario);
+    }
+
+    /** Recebe o arquivo, envia ao Cloudinary e grava a URL devolvida no usuário. */
+    public String uploadFoto(String id, MultipartFile arquivo) {
+        Usuario usuario = buscarUsuarioPorId(id);
+        String url = cloudinaryService.enviarImagem(arquivo);
+        usuario.setFotoUrl(url);
+        repository.save(usuario);
+        return url;
     }
 
     private Usuario buscarUsuarioPorId(String id) {
