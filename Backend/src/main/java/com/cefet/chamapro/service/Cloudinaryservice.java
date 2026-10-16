@@ -61,7 +61,6 @@ public class CloudinaryService {
                 return nomeOriginal;
             }
         };
-
         MultiValueMap<String, Object> form = new LinkedMultiValueMap<>();
         form.add("file", recurso);
         form.add("upload_preset", uploadPreset);
