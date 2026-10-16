@@ -43,6 +43,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/caracteristicas").permitAll()
                         .requestMatchers("/ws-chat/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        // Sem isso, qualquer erro (400, 404, 415, 500) é redirecionado internamente
+                        // para /error, que exige login, e o cliente vê um 403 enganoso.
+                        .requestMatchers("/error").permitAll()
 
                         // ===== Restrições por perfil (403 Forbidden se o tipo do token não bater) =====
                         // Pedidos: POST aberto (Cliente e Profissional podem pedir); só PROFISSIONAL aceita/recusa
