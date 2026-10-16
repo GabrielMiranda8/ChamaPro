@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,5 +67,12 @@ public class UsuarioController {
     public ResponseEntity<String> alterarFoto(@PathVariable String id, @RequestBody Map<String, String> body) {
         service.alterarFoto(id, body.get("fotoUrl"));
         return ResponseEntity.ok("Foto atualizada com sucesso");
+    }
+
+    @PostMapping(value = "/{id}/foto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Map<String, String>> uploadFoto(@PathVariable String id,
+            @RequestParam("arquivo") MultipartFile arquivo) {
+        String url = service.uploadFoto(id, arquivo);
+        return ResponseEntity.ok(Map.of("fotoUrl", url));
     }
 }
