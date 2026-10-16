@@ -29,7 +29,7 @@ public class UsuarioService {
     private final UsuarioRepository repository;
     private final EnderecoRepository enderecoRepository;
     private final GeocodingService geocodingService;
-    private final CloudinaryService cloudinaryService;
+    private final ArquivoService arquivoService;
 
     @Transactional
     public UsuarioResponseDTO criar(UsuarioRequestDTO dto) {
@@ -134,7 +134,7 @@ public class UsuarioService {
     /** Recebe o arquivo, envia ao Cloudinary e grava a URL devolvida no usuário. */
     public String uploadFoto(String id, MultipartFile arquivo) {
         Usuario usuario = buscarUsuarioPorId(id);
-        String url = cloudinaryService.enviarImagem(arquivo);
+        String url = arquivoService.salvar(arquivo).getUrl();
         usuario.setFotoUrl(url);
         repository.save(usuario);
         return url;
