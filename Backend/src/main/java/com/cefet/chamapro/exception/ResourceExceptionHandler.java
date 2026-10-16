@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -41,6 +42,40 @@ public class ResourceExceptionHandler {
                 status.value(),
                 "Erro de banco de dados",
                 e.getMessage(),
+                request.getRequestURI());
+
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<StandardError> illegalArgument(
+            IllegalArgumentException e,
+            HttpServletRequest request) {
+
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        StandardError err = new StandardError(
+                Instant.now(),
+                status.value(),
+                "Requisição inválida",
+                e.getMessage(),
+                request.getRequestURI());
+
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<StandardError> arquivoGrande(
+            MaxUploadSizeExceededException e,
+            HttpServletRequest request) {
+
+        HttpStatus status = HttpStatus.PAYLOAD_TOO_LARGE;
+
+        StandardError err = new StandardError(
+                Instant.now(),
+                status.value(),
+                "Arquivo muito grande",
+                "O arquivo excede o tamanho máximo de 5MB",
                 request.getRequestURI());
 
         return ResponseEntity.status(status).body(err);
